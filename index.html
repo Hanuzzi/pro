@@ -233,6 +233,20 @@
                     <p id="wisdom-text" class="text-gray-400 text-center italic">Click the button to generate a success nugget...</p>
                     <div id="wisdom-loader" class="hidden spinner h-8 w-8 border-4 rounded-full"></div>
                  </div>
+                 
+                 <!-- Quick Dictionary Section -->
+                 <div class="mt-8">
+                    <h3 class="text-xl font-semibold mb-4 text-center text-blue-400">Quick Dictionary</h3>
+                    <div class="flex space-x-2 bg-gray-800 p-4 rounded-lg">
+                        <input type="text" id="word-input" class="flex-1 bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white" placeholder="Enter a word to simplify...">
+                        <button id="simplify-word-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Simplify</button>
+                    </div>
+                    <div id="definition-container" class="mt-4 bg-gray-800 p-6 rounded-lg min-h-[100px] flex items-center justify-center">
+                        <p id="definition-text" class="text-gray-400 text-center italic">Simplified definition will appear here...</p>
+                        <div id="definition-loader" class="hidden spinner h-8 w-8 border-4 rounded-full"></div>
+                    </div>
+                 </div>
+
                  <div class="mt-8">
                       <h3 class="text-xl font-semibold mb-4 text-center text-yellow-400">Mindset Quotes</h3>
                       <div id="mindset-quote-container" class="bg-gray-800 p-6 rounded-lg min-h-[150px] flex items-center justify-center">
@@ -380,6 +394,10 @@
         const addExpenseBtn = document.getElementById('add-expense-btn');
         const expenseList = document.getElementById('expense-list');
         const workoutLogContainer = document.getElementById('workout-log-container');
+        const wordInput = document.getElementById('word-input');
+        const simplifyWordBtn = document.getElementById('simplify-word-btn');
+        const definitionText = document.getElementById('definition-text');
+        const definitionLoader = document.getElementById('definition-loader');
 
         // --- UTILITY FUNCTIONS ---
         const toISODateString = (date) => new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
@@ -950,6 +968,56 @@
             }
         }
 
+        async function simplifyWord() {
+            const word = wordInput.value.trim();
+            if (!word) {
+                definitionText.textContent = "Please enter a word.";
+                return;
+            }
+
+            definitionText.classList.add('hidden');
+            definitionLoader.classList.remove('hidden');
+            simplifyWordBtn.disabled = true;
+
+            const isCanvasEnv = typeof __firebase_config !== 'undefined' && __firebase_config.trim() !== '';
+            const apiUrl = isCanvasEnv 
+                ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=`
+                : `/.netlify/functions/simplify-word`;
+
+            try {
+                let response;
+                if (isCanvasEnv) {
+                    const prompt = `Explain the word "${word}" in very simple terms for someone whose third language is English. Provide a short, easy-to-understand definition.`;
+                    const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+                    response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                } else {
+                    response = await fetch(apiUrl, { 
+                        method: 'POST',
+                        body: JSON.stringify({ word: word })
+                    });
+                }
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates[0].content.parts[0].text) {
+                    definitionText.textContent = result.candidates[0].content.parts[0].text;
+                } else if (result.definition) {
+                    definitionText.textContent = result.definition;
+                } else if (result.error) {
+                    definitionText.textContent = `Error: ${result.error}`;
+                } else {
+                    definitionText.textContent = "Could not simplify the word. Please try again.";
+                }
+            } catch (error) {
+                console.error("Error simplifying word:", error);
+                definitionText.textContent = "An error occurred. Please check the console.";
+            } finally {
+                definitionText.classList.remove('hidden');
+                definitionLoader.classList.add('hidden');
+                simplifyWordBtn.disabled = false;
+            }
+        }
+
         function updateTime() {
             const now = new Date();
             const options = {
@@ -1043,6 +1111,7 @@
             setInterval(setBibleVerse, 600000); // New verse every 10 minutes
             setInterval(() => updateCurrentTaskHighlight(new Date()), 60000); // Update highlight every minute
             generateWisdomBtn.addEventListener('click', generateWisdom);
+            simplifyWordBtn.addEventListener('click', simplifyWord);
             newQuoteBtn.addEventListener('click', setMindsetQuote);
             todayBtn.addEventListener('click', () => {
                 displayedDate = new Date();

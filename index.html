@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hans 3.3 v7.7</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-active {
+            border-bottom-color: #fbbf24; /* Vision Yellow */
+            color: #fbbf24;
+            font-weight: 600;
+        }
+        .day-btn-active {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+        .task-current {
+            background-color: #1e3a8a !important; /* Darker blue for current task */
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+            border-left-color: #60a5fa;
+        }
+        .task-item {
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        .progress-bar {
+            transition: width 0.5s ease-in-out;
+        }
+        .date-nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .spinner {
+            border-top-color: #3498db;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .delete-log-btn.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white p-4 sm:p-6 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-blue-400">Hans 3.3</h1>
+            <div class="flex items-center justify-center mt-2">
+                <button id="prev-day-btn" class="date-nav-btn p-2 rounded-full hover:bg-gray-700 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                </button>
+                <div class="w-64 text-center mx-4">
+                    <p id="current-date" class="text-gray-400 text-lg"></p>
+                    <p id="current-time" class="text-gray-500 text-sm h-5"></p>
+                </div>
+                <button id="next-day-btn" class="date-nav-btn p-2 rounded-full hover:bg-gray-700 transition">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </button>
+            </div>
+            <button id="today-btn" class="hidden mt-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1 px-4 rounded-lg text-sm">Go to Today</button>
+            <div id="daily-quote" class="text-gray-400 italic mt-4 text-sm px-4"></div>
+            <div id="bible-verse" class="text-gray-300 italic mt-4 text-sm px-4 border-t border-gray-700 pt-4"></div>
+        </header>
+
+        <!-- Tabs -->
+        <div class="mb-8 border-b border-gray-700">
+            <nav class="flex flex-wrap -mb-px space-x-2 sm:space-x-4 text-xs sm:text-sm" aria-label="Tabs">
+                <button class="tab py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-yellow-400 hover:border-yellow-400" data-tab="vision">Vision</button>
+                <button class="tab py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-blue-400 hover:border-blue-400" data-tab="dashboard">Dashboard</button>
+                <button class="tab py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-yellow-400 hover:border-yellow-400" data-tab="powerlist">Power List</button>
+                <button class="tab py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-blue-400 hover:border-blue-400" data-tab="training">Training</button>
+                <button class="tab py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-blue-400 hover:border-blue-400" data-tab="nutrition">Nutrition</button>
+                <button class="tab py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-yellow-400 hover:border-yellow-400" data-tab="wisdom">Wisdom</button>
+                <button class="tab py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-blue-400 hover:border-blue-400" data-tab="finances">Finances</button>
+            </nav>
+        </div>
+
+        <!-- Content Sections -->
+        <main>
+            <!-- Vision Section -->
+            <div id="vision-content" class="tab-content hidden">
+                <h2 class="text-2xl font-semibold mb-6 text-yellow-400">The Vision: Brand-First Tech Empire</h2>
+                <div class="space-y-8">
+                    <div class="bg-gray-800 p-5 rounded-lg border-l-4 border-yellow-400">
+                        <h3 class="font-bold text-xl text-gray-100 mb-2">Phase 1: Build the Audience (The Foundation)</h3>
+                        <p class="text-gray-300">This is where it all begins. Your primary mission is to provide immense, undeniable value for free. Through your YouTube channel, you will teach the principles of mindset, health, and discipline. You are not just creating content; you are building a tribe. This community, built on trust and your authentic expertise, is the bedrock of the entire empire. It is your single most valuable asset.</p>
+                        <p class="mt-3 text-sm text-yellow-500"><span class="font-bold">Goal:</span> Become the go-to authority in personal transformation for your niche.</p>
+                    </div>
+                    <div class="bg-gray-800 p-5 rounded-lg border-l-4 border-yellow-400">
+                        <h3 class="font-bold text-xl text-gray-100 mb-2">Phase 2: Monetize with E-commerce (The Fuel)</h3>
+                        <p class="text-gray-300">Once the community is established, you will introduce the uniform for your tribe. This is not just "gym clothing." It is a physical representation of the identity and values you teach. When someone wears your brand, they are making a statement about who they are and what they stand for. This phase generates the initial cash flow, proving the commercial viability of your brand and providing the seed capital for the next stage. You are funding your own dream.</p>
+                         <p class="mt-3 text-sm text-yellow-500"><span class="font-bold">Goal:</span> Generate self-sustaining cash flow and build brand identity.</p>
+                    </div>
+                    <div class="bg-gray-800 p-5 rounded-lg border-l-4 border-yellow-400">
+                        <h3 class="font-bold text-xl text-gray-100 mb-2">Phase 3: Introduce Digital Products (The Engine)</h3>
+                        <p class="text-gray-300">With cash flow and a loyal audience, you now escalate. You will launch infinitely scalable, high-margin digital products. Think premium online courses ("The 30-Day Mindset Overhaul"), paid mastermind communities, and detailed e-books. Unlike a t-shirt, a digital product costs nothing to replicate. This is where you transition to tech company economics, building a significant capital base for the final assault.</p>
+                         <p class="mt-3 text-sm text-yellow-500"><span class="font-bold">Goal:</span> Dramatically increase profit margins and deepen customer engagement.</p>
+                    </div>
+                    <div class="bg-gray-800 p-5 rounded-lg border-l-4 border-yellow-400">
+                        <h3 class="font-bold text-xl text-gray-100 mb-2">Phase 4: Launch the SaaS Platform (The Empire)</h3>
+                        <p class="text-gray-300">This is the culmination of all previous phases. With a massive audience, a powerful brand, strong cash flow, and deep customer insight, you now have everything you need to launch the "Success OS" as a full-fledged SaaS platform. It's no longer a risky idea; it's the inevitable solution your community is demanding. This platform will lock in your audience with recurring revenue, scale globally, and become the billion-dollar engine of your vision.</p>
+                         <p class="mt-3 text-sm text-yellow-500"><span class="font-bold">Goal:</span> Achieve global scale and create a recurring revenue machine.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div id="dashboard-content" class="tab-content">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-200">Weekly Battle Plan</h2>
+                
+                <!-- Water Tracker -->
+                <div class="bg-gray-800 p-4 rounded-lg mb-6">
+                    <h3 class="font-semibold text-lg text-gray-100 mb-3">Daily Water Intake</h3>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex-1">
+                            <div class="w-full bg-gray-700 rounded-full h-4">
+                                <div id="water-progress" class="bg-blue-500 h-4 rounded-full progress-bar" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                        <div class="w-24 text-center">
+                            <span id="water-amount" class="font-bold text-lg">0.0L</span> / 4.0L
+                        </div>
+                        <div id="water-controls-default" class="flex items-center space-x-2">
+                            <button id="add-water-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">+</button>
+                            <button id="edit-water-btn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold p-2 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" /></svg>
+                            </button>
+                        </div>
+                        <div id="water-controls-confirm" class="hidden flex items-center space-x-2">
+                            <button id="confirm-reset-btn" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-3 rounded-lg text-xs">Reset</button>
+                            <button id="cancel-reset-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-3 rounded-lg text-xs">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="day-switcher" class="flex space-x-2 mb-4 bg-gray-800 p-1 rounded-lg">
+                    <button class="day-btn flex-1 text-center py-2 px-3 rounded-md text-sm font-medium transition" data-day="weekdays">Mon - Fri</button>
+                    <button class="day-btn flex-1 text-center py-2 px-3 rounded-md text-sm font-medium transition" data-day="saturday">Saturday</button>
+                    <button class="day-btn flex-1 text-center py-2 px-3 rounded-md text-sm font-medium transition" data-day="sunday">Sunday</button>
+                </div>
+                <div id="schedule-container">
+                    <!-- Schedule will be injected here by JS -->
+                </div>
+            </div>
+
+            <!-- Power List Section -->
+            <div id="powerlist-content" class="tab-content hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-semibold text-yellow-400">Daily Power List</h2>
+                    <div class="text-right">
+                        <p class="text-gray-400 text-sm">CURRENT STREAK</p>
+                        <p id="streak-counter" class="text-3xl font-bold text-yellow-400">0</p>
+                    </div>
+                </div>
+                <p class="text-gray-400 mb-6">Define and conquer the 5 critical tasks that will win the day. No excuses.</p>
+                <div id="powerlist-container" class="space-y-4">
+                    <!-- Power List items will be injected here -->
+                </div>
+            </div>
+
+            <!-- Training Section -->
+            <div id="training-content" class="tab-content hidden">
+                 <h2 class="text-2xl font-semibold mb-6 text-gray-200">Greg Plitt Training Protocol</h2>
+                
+                <!-- Vision Image -->
+                <div class="mb-6 rounded-lg overflow-hidden shadow-lg relative">
+                    <img id="vision-image" src="https://i.ibb.co/ZR8q3Tzx/2-0.jpg" alt="Physical Vision" class="w-full h-auto" onerror="this.onerror=null;this.src='https://placehold.co/600x400/111827/7f8c8d?text=Image+Not+Found';">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-75 p-2">
+                        <p class="text-center text-yellow-400 font-semibold">THE GOAL IS THE STANDARD</p>
+                    </div>
+                </div>
+
+                 <!-- Mission Timer -->
+                <div class="bg-gray-800 p-4 rounded-lg mb-8">
+                    <h3 class="font-semibold text-lg text-gray-100 mb-3">Mission Timer</h3>
+                    <div class="flex items-center justify-center space-x-4">
+                        <div id="timer-display" class="font-mono text-5xl text-blue-400">01:00</div>
+                        <div class="flex flex-col space-y-2">
+                            <button id="start-timer-btn" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-1 px-4 rounded-lg text-sm">Start</button>
+                            <button id="pause-timer-btn" class="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-1 px-4 rounded-lg text-sm">Pause</button>
+                            <button id="reset-timer-btn" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-4 rounded-lg text-sm">Reset</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="workout-log-container" class="space-y-8">
+                    <!-- Workout logs will be injected here by JS -->
+                </div>
+            </div>
+
+            <!-- Nutrition Section -->
+            <div id="nutrition-content" class="tab-content hidden">
+                 <h2 class="text-2xl font-semibold mb-6 text-gray-200">Animal-Based Fuel Plan</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Principles -->
+                    <div class="bg-gray-800 p-5 rounded-lg">
+                        <h3 class="font-bold text-lg text-blue-400 mb-2">Core Principles</h3>
+                        <ul class="list-disc list-inside text-gray-300 space-y-2">
+                            <li><strong>Animal-First:</strong> The vast majority of your calories should come from high-quality meat, fish, eggs, and animal fats.</li>
+                            <li><strong>Strategic Carbs:</strong> Carbohydrates are used as a tool, primarily around your training window to maximize performance and recovery.</li>
+                            <li><strong>Nutrient Density is Key:</strong> Incorporate organ meats and bone broth to provide a full spectrum of vitamins and minerals.</li>
+                            <li><strong>Eliminate Toxins:</strong> Strictly avoid processed foods, industrial seed oils (canola, soy, etc.), refined sugars, and grains.</li>
+                             <li><strong>Hydration & Electrolytes:</strong> Drink plenty of quality water and use unrefined salt (like sea salt) to maintain mineral balance.</li>
+                        </ul>
+                    </div>
+                    <!-- Sample Meal Plan -->
+                    <div class="bg-gray-800 p-5 rounded-lg">
+                        <h3 class="font-bold text-lg text-blue-400 mb-2">Daily Meal Structure (Training Day)</h3>
+                        <div class="space-y-4 text-gray-300">
+                            <p><strong>Pre-Workout (30-60 mins prior):</strong><br> A small amount of easily digestible carbs for quick energy. <br><em>Example: 1-2 tablespoons of raw honey or maple syrup.</em></p>
+                            <p><strong>Post-Workout (Within 60 mins):</strong><br> This is your primary carb-reloading window. <br><em>Example: 400-500g of ground beef (80/20), 4-5 whole eggs, and a side of white rice (approx. 1 cup cooked) or a large sweet potato.</em></p>
+                            <p><strong>Second Meal (4-5 hours later):</strong><br> Focus on protein and fat for sustained energy and rebuilding. <br><em>Example: 400-500g Ribeye or Sirloin steak cooked in butter or tallow.</em></p>
+                             <p><strong>Nutrient-Dense Add-in:</strong><br> Aim for 80-100g of beef liver, pan-fried in butter, 2-3 times per week with one of your meals.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Wisdom Section -->
+            <div id="wisdom-content" class="tab-content hidden">
+                 <h2 class="text-2xl font-semibold mb-6 text-yellow-400">Wisdom</h2>
+                 <div class="text-center">
+                    <button id="generate-wisdom-btn" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg transition duration-300">Generate Wisdom</button>
+                 </div>
+                 <div id="wisdom-container" class="mt-6 bg-gray-800 p-6 rounded-lg min-h-[150px] flex items-center justify-center">
+                    <p id="wisdom-text" class="text-gray-400 text-center italic">Click the button to generate a success nugget...</p>
+                    <div id="wisdom-loader" class="hidden spinner h-8 w-8 border-4 rounded-full"></div>
+                 </div>
+                 <div class="mt-8">
+                      <h3 class="text-xl font-semibold mb-4 text-center text-yellow-400">Mindset Quotes</h3>
+                      <div id="mindset-quote-container" class="bg-gray-800 p-6 rounded-lg min-h-[150px] flex items-center justify-center">
+                         <p id="mindset-quote-text" class="text-gray-300 text-center italic"></p>
+                      </div>
+                      <div class="text-center mt-4">
+                         <button id="new-quote-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">New Quote</button>
+                      </div>
+                 </div>
+            </div>
+
+            <!-- Finances Section -->
+            <div id="finances-content" class="tab-content hidden">
+                <h2 class="text-2xl font-semibold mb-4 text-blue-400">Daily Expense Log</h2>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <div class="flex space-x-2">
+                        <input type="text" id="expense-input" class="flex-1 bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white" placeholder="Enter expense description (e.g., Coffee - $5)">
+                        <button id="add-expense-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Add</button>
+                    </div>
+                    <ul id="expense-list" class="mt-4 space-y-2">
+                        <!-- Expenses will be injected here -->
+                    </ul>
+                </div>
+            </div>
+
+        </main>
+        <footer class="text-center text-gray-500 text-xs mt-12">
+            <p>&copy; 2025 Hans. All Rights Reserved.</p>
+        </footer>
+    </div>
+
+    <script type="module">
+        // --- Firebase SDK Imports ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- App Data (Constants) ---
+        const schedules = {
+            weekdays: [
+                { time: '05:00', task: 'Wake Up & Ignition Sequence', details: 'No snooze. Get out of bed immediately.<br><em>Principle: The first victory of the day is over the self.</em>' },
+                { time: '05:05', task: 'Stairmaster Cardio', details: '15 minutes of steady-state cardio to prime the body and mind.<br><em>Principle: Win the morning, win the day.</em>' },
+                { time: '05:20', task: 'Drive & Learn', details: 'University on Wheels. High-value audiobook or podcast.<br><em>Principle: Do not waste a single moment. Memento Mori.</em>' },
+                { time: '05:40', task: 'Physical Training', details: 'Forge the body to strengthen the mind. Execute with intensity.<br><em>Principle: The obstacle is the way. The iron is the obstacle.</em>' },
+                { time: '06:30', task: 'Return Drive & Learn', details: 'Continue absorbing knowledge.<br><em>Principle: An empty mind is a liability.</em>' },
+                { time: '06:50', task: 'Post-Workout Recovery & Fuel', details: 'Refuel the machine with high-quality nutrients.<br><em>Principle: A warrior honors his vessel.</em>' },
+                { time: '07:30', task: 'Meditation & Strategic Journaling', details: 'Calibrate your mind. Define your mission for the day.<br><em>Principle: You have power over your mind, not outside events.</em>' },
+                { time: '08:00', task: 'Deep Work Block #1', details: 'Sacred time. Phone off. No distractions.<br><em>Principle: To be everywhere is to be nowhere. Focus is your superpower.</em>' },
+                { time: '12:00', task: 'Deliberate Recharge', details: 'Eat. Go outside. Let your mind rest.<br><em>Principle: Even a sword must be sharpened. Rest is a strategic weapon.</em>' },
+                { time: '12:45', task: 'Deep Work Block #2 (Part 1)', details: 'Sustain high-level focus. Attack your second objective.<br><em>Principle: Concentrate every minute like a Roman.</em>' },
+                { time: '14:00', task: 'Drive & Connect', details: 'Pick up GF. Be present. Disconnect from work.<br><em>Principle: Fulfill your duties to others with your full attention.</em>' },
+                { time: '14:30', task: 'Deep Work Block #2 (Part 2)', details: 'Return to a state of complete focus for the final work sprint.<br><em>Principle: Finish the task at hand.</em>' },
+                { time: '15:45', task: 'Shallow Work', details: 'Batch all low-value tasks. Execute with speed and indifference.<br><em>Principle: Some things must be done, but they do not deserve your soul.</em>' },
+                { time: '17:00', task: 'Skill Practice', details: 'Active practice, not passive learning. Sharpen your weapons.<br><em>Principle: We are what we repeatedly do. Excellence is a habit.</em>' },
+                { time: '18:00', task: 'Dinner & Connection', details: 'Be fully present with family. No phones.<br><em>Principle: A strong foundation at home supports the empire abroad.</em>' },
+                { time: '19:00', task: 'Evening Walk & Decompression', details: 'Disconnect from work. Reflect on the day.<br><em>Principle: An unexamined day is a day wasted.</em>' },
+                { time: '19:45', task: 'Prepare for Tomorrow & Kill Screens', details: 'KILL THE SCREENS. Read biography. Prepare for victory.<br><em>Principle: The wise warrior wins the battle before it is fought.</em>' },
+                { time: '20:30', task: 'Sleep', details: 'Cool, dark, quiet. This is a non-negotiable duty.<br><em>Principle: Sleep is not a luxury; it is a weapon of recovery.</em>' },
+            ],
+            saturday: [
+                { time: '05:30', task: 'Wake Up & Morning Routine', details: 'Consistency builds discipline. Maintain the standard.<br><em>Principle: Discipline in all things is the foundation of power.</em>' },
+                { time: '08:00', task: 'The CEO Block: Work ON Your Vision', details: 'Zoom out. Strategize the war, not just the daily battles.<br><em>Principle: A man without a plan is a ship without a rudder.</em>' },
+                { time: '12:00', task: 'Lunch', details: 'Refuel for the afternoon mission.<br><em>Principle: Efficiency in all things.</em>' },
+                { time: '13:00', task: 'Deep Skill Development', details: 'Invest in your intellectual capital. Acquire new assets.<br><em>Principle: The more you know, the more you are worth.</em>' },
+                { time: '16:00', task: 'Complete Disconnect & Recharge', details: 'True rest. Engage in activities that restore your energy.<br><em>Principle: The bow that is always bent will break.</em>' },
+                { time: '20:30', task: 'Sleep', details: 'Prepare for the final day of the week.<br><em>Principle: Recovery is part of the training.</em>' },
+            ],
+            sunday: [
+                { time: '06:00', task: 'Relaxed Morning & Active Recovery', details: 'Gentle movement and rest. Prepare the body for the week ahead.<br><em>Principle: A Sunday well spent brings a week of content.</em>' },
+                { time: '09:00', task: 'Free Time / Hobbies', details: 'Engage your creativity. A rested mind is a powerful mind.<br><em>Principle: To be interesting, be interested.</em>' },
+                { time: '13:00', task: 'Life Administration & Meal Prep', details: 'Systemize your life to reduce weekly friction. Prepare for success.<br><em>Principle: Order and calm in your environment create order and calm in your mind.</em>' },
+                { time: '15:00', task: 'Free Time / Family Time', details: 'Strengthen your core support system.<br><em>Principle: No success is worth failure at home.</em>' },
+                { time: '19:00', task: 'Prepare for the Week', details: 'Review the upcoming week’s battle plan.<br><em>Principle: Luck is what happens when preparation meets opportunity.</em>' },
+                { time: '20:30', task: 'Sleep', details: 'Full recovery to start the week at 100% capacity.<br><em>Principle: Enter the week as a lion, not a lamb.</em>' },
+            ]
+        };
+        schedules.friday = schedules.weekdays; // Friday uses the same schedule as weekdays
+
+        const workoutData = [
+            { day: "Monday", key: "monday", title: "Chest Annihilation", focus: "Build thickness and width across the entire pectoral region.", exercises: [
+                { name: "Incline Barbell Press", details: "4 sets x 8-12 reps" }, { name: "Flat Dumbbell Press", details: "4 sets x 8-12 reps" }, { name: "Decline Hammer Strength Press", details: "3 sets x 10-15 reps" }, { name: "Cable Crossovers", details: "3 sets x 12-15 reps (high-to-low)" }, { name: "Push-ups", details: "3 sets to failure" }, { name: "Dumbbell Pullovers", details: "3 sets x 15 reps (focus on the stretch)" }
+            ], note: "On the last set of every exercise, perform a dropset. Immediately reduce the weight by 30-40% and rep to failure." },
+            { day: "Tuesday", key: "tuesday", title: "Back Demolition", focus: "Develop V-taper width and dense thickness.", exercises: [
+                { name: "Weighted Pull-ups", details: "4 sets x 6-10 reps (or to failure)" }, { name: "Barbell Bent-Over Rows", details: "4 sets x 8-12 reps" }, { name: "T-Bar Rows", details: "3 sets x 10-15 reps" }, { name: "Seated Cable Rows (Wide Grip)", details: "3 sets x 12-15 reps" }, { name: "Straight-Arm Pulldowns", details: "3 sets x 15-20 reps (to isolate lats)" }
+            ], note: "Keep rest periods to 60 seconds maximum. Focus on squeezing the back muscles, not just pulling with your arms." },
+            { day: "Wednesday", key: "wednesday", title: "Shoulder Shock", focus: "Build round, 3D deltoids.", exercises: [
+                { name: "Seated Dumbbell Press", details: "4 sets x 8-12 reps" }, { name: "Lateral Raises", details: "3 sets x 12-15 reps" }, { name: "Front Raises", details: "3 sets x 12-15 reps" }, { name: "Bent-Over Rear Delt Raises", details: "3 sets x 12-15 reps" }, { name: "Upright Rows (with EZ bar)", details: "3 sets x 10-12 reps" }, { name: "Barbell Shrugs", details: "4 sets x 15-20 reps" }
+            ], note: "Focus on continuous movement and muscle burn, especially on the raises." },
+            { day: "Thursday", key: "thursday", title: "Arms Warfare", focus: "High-volume supersets to maximize the pump.", exercises: [
+                { name: "Barbell Curls", details: "4 sets x 8-12 reps" }, { name: "Triceps Pushdowns (Rope)", details: "4 sets x 12-15 reps" }, { name: "Incline Dumbbell Curls", details: "4 sets x 10-15 reps" }, { name: "Skull Crushers", details: "4 sets x 10-15 reps" }, { name: "Hammer Curls", details: "3 sets x 12-15 reps" }, { name: "Overhead Dumbbell Extension", details: "3 sets x 12-15 reps" }
+            ], note: "Superset the first two bicep exercises with the first two tricep exercises. Rest only 60 seconds after each superset." },
+            { day: "Friday", key: "friday", title: "Legit Legs", focus: "Build a powerful foundation. This will be the hardest day.", exercises: [
+                { name: "Barbell Squats", details: "5 sets x 8-12 reps" }, { name: "Leg Press", details: "4 sets x 15-20 reps" }, { name: "Walking Lunges", details: "3 sets x 20 steps per leg" }, { name: "Lying Leg Curls", details: "4 sets x 12-15 reps" }, { name: "Seated Calf Raises", details: "5 sets x 20-25 reps" }
+            ], note: "Do not be afraid of high reps on legs. Push past the burn. Your mental strength is built here." }
+        ];
+
+        const quotes = [
+            { text: "The only true wisdom is in knowing you know nothing.", author: "Socrates" }, { text: "We cannot learn without pain.", author: "Aristotle" }, { text: "The obstacle is the way.", author: "Ryan Holiday (after Marcus Aurelius)" }, { text: "We suffer more often in imagination than in reality.", author: "Seneca" }, { text: "If you are distressed by anything external, the pain is not due to the thing itself, but to your estimate of it; and this you have the power to revoke at any moment.", author: "Marcus Aurelius" }, { text: "The best revenge is to be unlike him who performed the injury.", author: "Marcus Aurelius" }, { text: "Waste no more time arguing about what a good man should be. Be one.", author: "Marcus Aurelius" }, { text: "First say to yourself what you would be; and then do what you have to do.", author: "Epictetus" }, { text: "It's not what happens to you, but how you react to it that matters.", author: "Epictetus" }, { text: "He who fears death will never do anything worthy of a man who is alive.", author: "Seneca" }, { text: "Luck is what happens when preparation meets opportunity.", author: "Seneca" }, { text: "The whole future lies in uncertainty: live immediately.", author: "Seneca" }, { text: "Man conquers the world by conquering himself.", author: "Zeno of Citium" }, { text: "No man is free who is not master of himself.", author: "Epictetus" }, { text: "The happiness of your life depends upon the quality of your thoughts.", author: "Marcus Aurelius" }, { text: "Be tolerant with others and strict with yourself.", author: "Marcus Aurelius" }, { text: "The key is to keep company only with people who uplift you, whose presence calls forth your best.", author: "Epictetus" }, { text: "How long are you going to wait before you demand the best for yourself?", author: "Epictetus" }, { text: "I begin to speak only when I am certain what I will say is not better left unsaid.", author: "Cato the Younger" }, { text: "To be evenminded is the greatest virtue.", author: "Heraclitus" }
+        ];
+        const bibleVerses = [
+            { text: "I can do all things through Christ who strengthens me.", reference: "Philippians 4:13" }, { text: "For God has not given us a spirit of fear, but of power and of love and of a sound mind.", reference: "2 Timothy 1:7" }, { text: "Be strong and of good courage; do not be afraid, nor be dismayed, for the Lord your God is with you wherever you go.", reference: "Joshua 1:9" }, { text: "The Lord is my strength and my shield; in him my heart trusts, and I am helped.", reference: "Psalm 28:7" }, { text: "But they who wait for the Lord shall renew their strength; they shall mount up with wings like eagles; they shall run and not be weary; they shall walk and not faint.", reference: "Isaiah 40:31" }, { text: "Commit your work to the Lord, and your plans will be established.", reference: "Proverbs 16:3" }, { text: "Whatever you do, work heartily, as for the Lord and not for men.", reference: "Colossians 3:23" }, { text: "For I know the plans I have for you, declares the Lord, plans for welfare and not for evil, to give you a future and a hope.", reference: "Jeremiah 29:11" }
+        ];
+        const mindsetQuotes = [
+            { text: "The person you will be in 5 years is based on the books you read and the people you surround yourself with today.", author: "Charlie 'Tremendous' Jones" }, { text: "Discipline is the bridge between goals and accomplishment.", author: "Jim Rohn" }, { text: "You don't have to be great to start, but you have to start to be great.", author: "Zig Ziglar" }, { text: "The future belongs to those who learn more skills and combine them in creative ways.", author: "Robert Greene" }, { text: "Your network is your net worth.", author: "Porter Gale" }, { text: "Don’t wish it were easier, wish you were better.", author: "Jim Rohn" }, { text: "The successful warrior is the average man, with laser-like focus.", author: "Bruce Lee" }, { text: "You are the average of the five people you spend the most time with.", author: "Jim Rohn" }, { text: "A man who conquers himself is greater than one who conquers a thousand men in battle.", author: "Buddha" }, { text: "The only limit to our realization of tomorrow will be our doubts of today.", author: "Franklin D. Roosevelt" }
+        ];
+
+        // --- GLOBAL STATE & ELEMENTS ---
+        let db, auth, userId, appId;
+        let displayedDate = new Date();
+        let timerInterval;
+        let timerSeconds = 60;
+        let isAuthReady = false;
+
+        const scheduleContainer = document.getElementById('schedule-container');
+        const currentDateEl = document.getElementById('current-date');
+        const currentTimeEl = document.getElementById('current-time');
+        const todayBtn = document.getElementById('today-btn');
+        const dailyQuoteEl = document.getElementById('daily-quote');
+        const bibleVerseEl = document.getElementById('bible-verse');
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const daySwitcher = document.getElementById('day-switcher');
+        const addWaterBtn = document.getElementById('add-water-btn');
+        const waterAmountEl = document.getElementById('water-amount');
+        const waterProgressEl = document.getElementById('water-progress');
+        const prevDayBtn = document.getElementById('prev-day-btn');
+        const nextDayBtn = document.getElementById('next-day-btn');
+        const editWaterBtn = document.getElementById('edit-water-btn');
+        const waterControlsDefault = document.getElementById('water-controls-default');
+        const waterControlsConfirm = document.getElementById('water-controls-confirm');
+        const confirmResetBtn = document.getElementById('confirm-reset-btn');
+        const cancelResetBtn = document.getElementById('cancel-reset-btn');
+        const startTimerBtn = document.getElementById('start-timer-btn');
+        const pauseTimerBtn = document.getElementById('pause-timer-btn');
+        const resetTimerBtn = document.getElementById('reset-timer-btn');
+        const timerDisplay = document.getElementById('timer-display');
+        const generateWisdomBtn = document.getElementById('generate-wisdom-btn');
+        const wisdomText = document.getElementById('wisdom-text');
+        const wisdomLoader = document.getElementById('wisdom-loader');
+        const newQuoteBtn = document.getElementById('new-quote-btn');
+        const mindsetQuoteText = document.getElementById('mindset-quote-text');
+        const powerlistContainer = document.getElementById('powerlist-container');
+        const streakCounter = document.getElementById('streak-counter');
+        const expenseInput = document.getElementById('expense-input');
+        const addExpenseBtn = document.getElementById('add-expense-btn');
+        const expenseList = document.getElementById('expense-list');
+        const workoutLogContainer = document.getElementById('workout-log-container');
+
+        // --- UTILITY FUNCTIONS ---
+        const toISODateString = (date) => new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+        const getDayKeyForDate = (date) => {
+            const day = date.getDay();
+            if (day >= 1 && day <= 5) return 'weekdays'; // Mon-Fri
+            if (day === 6) return 'saturday';
+            if (day === 0) return 'sunday';
+        };
+        const getWorkoutDayKey = (date) => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][date.getDay()];
+        
+        // --- FIRESTORE DATA HANDLING ---
+        /**
+         * Fetches data for a specific date from Firestore.
+         * @param {Date} date The date to fetch data for.
+         * @returns {Promise<object>} A promise that resolves with the day's data.
+         */
+        async function getDataForDate(date) {
+            if (!isAuthReady) return null;
+            const dateString = toISODateString(date);
+            const docRef = doc(db, `/artifacts/${appId}/users/${userId}/dailyData`, dateString);
+            try {
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    let powerList = data.powerList;
+                    
+                    // BUG FIX: Robustly validate and correct the powerList structure.
+                    if (!Array.isArray(powerList) || powerList.length !== 5) {
+                        powerList = Array.from({ length: 5 }, () => ({ text: "", completed: false }));
+                    } else {
+                        // Ensure each item in the array is a valid object
+                        powerList = powerList.map(item => {
+                            if (typeof item === 'object' && item !== null && 'completed' in item && 'text' in item) {
+                                return item;
+                            }
+                            return { text: "", completed: false };
+                        });
+                    }
+
+                    return {
+                        water: data.water || 0,
+                        checkedTasks: data.checkedTasks || [],
+                        powerList: powerList,
+                        expenses: data.expenses || [],
+                        workoutLog: data.workoutLog || {}
+                    };
+                } else {
+                    // Return a default structure if no document exists for the date
+                    return { 
+                        water: 0, 
+                        checkedTasks: [], 
+                        powerList: Array.from({ length: 5 }, () => ({ text: "", completed: false })), 
+                        expenses: [], 
+                        workoutLog: {} 
+                    };
+                }
+            } catch (error) {
+                console.error("Error fetching data for date:", dateString, error);
+                return null; // Return null on error
+            }
+        }
+
+        /**
+         * Saves data for a specific date to Firestore.
+         * @param {Date} date The date to save data for.
+         * @param {object} data The data object to save.
+         */
+        async function saveDataForDate(date, data) {
+            if (!isAuthReady) return;
+            const dateString = toISODateString(date);
+            const docRef = doc(db, `/artifacts/${appId}/users/${userId}/dailyData`, dateString);
+            try {
+                await setDoc(docRef, data, { merge: true }); // Use merge to avoid overwriting fields
+            } catch (error) {
+                console.error("Error saving data for date:", dateString, error);
+            }
+        }
+
+        // --- UI RENDERING (Now mostly async) ---
+        async function renderUIForDate(date) {
+            const dateString = toISODateString(date);
+            const todayString = toISODateString(new Date());
+            const isToday = (dateString === todayString);
+
+            // Update Date Display
+            currentDateEl.textContent = date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+            nextDayBtn.disabled = isToday;
+            
+            // Show/hide today button
+            todayBtn.classList.toggle('hidden', isToday);
+
+            // Highlight the correct day in the switcher
+            const dayKey = getDayKeyForDate(date);
+            daySwitcher.querySelectorAll('.day-btn').forEach(btn => {
+                btn.classList.remove('day-btn-active');
+                if (btn.dataset.day === dayKey) {
+                    btn.classList.add('day-btn-active');
+                }
+            });
+
+            // Enable/disable controls based on whether it's today
+            waterControlsDefault.classList.remove('hidden');
+            waterControlsConfirm.classList.add('hidden');
+            addWaterBtn.disabled = !isToday;
+            editWaterBtn.disabled = !isToday;
+
+            // Render all components for the selected date
+            await renderScheduleForDate(date);
+            await renderPowerList(date);
+            await renderFinances(date);
+            await renderTrainingLogs(date);
+            await updateWaterDisplayForDate(date);
+            updateCurrentTaskHighlight(date);
+            setDailyQuote(date);
+            await updateStreakDisplay();
+        }
+
+        async function renderScheduleForDate(date) {
+            scheduleContainer.innerHTML = '';
+            const dayKey = getDayKeyForDate(date);
+            const schedule = schedules[dayKey];
+            const dataForDay = await getDataForDate(date);
+            if (!dataForDay || !schedule) return; 
+            const isToday = (toISODateString(date) === toISODateString(new Date()));
+
+            const dayContainer = document.createElement('div');
+            dayContainer.className = 'space-y-3';
+            dayContainer.innerHTML = schedule.map((item, index) => {
+                const isChecked = dataForDay.checkedTasks.includes(index);
+                return `
+                    <div id="task-${dayKey}-${index}" class="task-item flex items-center bg-gray-800 p-4 rounded-lg shadow-md">
+                        <div class="w-1/4 sm:w-1/5"><p class="font-mono text-blue-400">${item.time}</p></div>
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-100">${item.task}</p>
+                            <p class="text-sm text-gray-400 mt-1">${item.details}</p>
+                        </div>
+                        <input type="checkbox" data-task-id="${index}" class="form-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500 flex-shrink-0" ${isChecked ? 'checked' : ''} ${!isToday ? 'disabled' : ''}>
+                    </div>`;
+            }).join('');
+            scheduleContainer.appendChild(dayContainer);
+            if (isToday) {
+                dayContainer.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.addEventListener('change', handleCheckboxChange));
+            }
+        }
+
+        function displayScheduleTemplate(dayKey) {
+            scheduleContainer.innerHTML = '';
+            const schedule = schedules[dayKey];
+            if (!schedule) return;
+
+            const dayContainer = document.createElement('div');
+            dayContainer.className = 'space-y-3';
+            dayContainer.innerHTML = schedule.map((item, index) => {
+                // Note: Checkboxes are disabled as this is a template view
+                return `
+                    <div id="task-template-${dayKey}-${index}" class="task-item flex items-center bg-gray-800 p-4 rounded-lg shadow-md">
+                        <div class="w-1/4 sm:w-1/5"><p class="font-mono text-blue-400">${item.time}</p></div>
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-100">${item.task}</p>
+                            <p class="text-sm text-gray-400 mt-1">${item.details}</p>
+                        </div>
+                        <input type="checkbox" disabled class="form-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500 flex-shrink-0">
+                    </div>`;
+            }).join('');
+            scheduleContainer.appendChild(dayContainer);
+        }
+        
+        async function renderPowerList(date) {
+            powerlistContainer.innerHTML = '';
+            const dataForDay = await getDataForDate(date);
+            if (!dataForDay) return;
+            const isToday = (toISODateString(date) === toISODateString(new Date()));
+
+            for (let i = 0; i < 5; i++) {
+                const task = dataForDay.powerList[i] || { text: "", completed: false };
+                const itemHtml = `
+                    <div class="flex items-center bg-gray-800 p-4 rounded-lg">
+                        <span class="text-yellow-400 font-bold mr-4">${i + 1}.</span>
+                        <input type="text" class="powerlist-input flex-1 bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-yellow-500 text-white" placeholder="Enter critical task #${i + 1}" value="${task.text}" data-index="${i}" ${!isToday ? 'disabled' : ''}>
+                        <input type="checkbox" class="powerlist-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-yellow-500 focus:ring-yellow-500" data-index="${i}" ${task.completed ? 'checked' : ''} ${!isToday ? 'disabled' : ''}>
+                    </div>`;
+                powerlistContainer.innerHTML += itemHtml;
+            }
+
+            if(isToday) {
+                powerlistContainer.querySelectorAll('.powerlist-input').forEach(input => input.addEventListener('input', handlePowerListTextChange));
+                powerlistContainer.querySelectorAll('.powerlist-checkbox').forEach(checkbox => checkbox.addEventListener('change', handlePowerListCheckChange));
+            }
+        }
+
+        async function renderFinances(date) {
+            expenseList.innerHTML = '';
+            const dataForDay = await getDataForDate(date);
+            if (!dataForDay) return;
+            const isToday = (toISODateString(date) === toISODateString(new Date()));
+
+            expenseInput.disabled = !isToday;
+            addExpenseBtn.disabled = !isToday;
+
+            if (dataForDay.expenses.length === 0) {
+                expenseList.innerHTML = `<li class="text-gray-500 italic">No expenses logged for this day.</li>`;
+            } else {
+                dataForDay.expenses.forEach((expense, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'flex justify-between items-center text-gray-300 bg-gray-700 p-2 rounded';
+                    li.innerHTML = `<span>${expense}</span>`;
+                    if (isToday) {
+                        li.innerHTML += `<button class="text-red-500 hover:text-red-400 ml-4 font-bold text-lg" data-index="${index}">&times;</button>`;
+                    }
+                    expenseList.appendChild(li);
+                });
+                if (isToday) {
+                    expenseList.querySelectorAll('button').forEach(btn => btn.addEventListener('click', handleExpenseDelete));
+                }
+            }
+        }
+
+        async function renderTrainingLogs(date) {
+            workoutLogContainer.innerHTML = '';
+            const isToday = (toISODateString(date) === toISODateString(new Date()));
+            const workoutDayKey = getWorkoutDayKey(date);
+            const workoutForDay = workoutData.find(w => w.key === workoutDayKey);
+
+            if (!workoutForDay) {
+                workoutLogContainer.innerHTML = `<div class="bg-gray-800 p-5 rounded-lg text-center text-gray-400">Rest Day. No workout scheduled.</div>`;
+                return;
+            }
+
+            const dayContainer = document.createElement('div');
+            dayContainer.className = 'bg-gray-800 p-5 rounded-lg';
+
+            const lastWeekDate = new Date(date);
+            lastWeekDate.setDate(lastWeekDate.getDate() - 7);
+            const lastWeekData = await getDataForDate(lastWeekDate);
+            const todayData = await getDataForDate(date);
+
+            if (!lastWeekData || !todayData) return;
+
+            let dayHtml = `
+                <h3 class="font-bold text-lg text-blue-400 mb-2">${workoutForDay.title}</h3>
+                <p class="text-gray-400 mb-4">${workoutForDay.focus}</p>
+                <ul class="space-y-4">`;
+
+            workoutForDay.exercises.forEach(exercise => {
+                const logKey = `${workoutForDay.key}-${exercise.name}`;
+                const lastLog = lastWeekData.workoutLog[logKey] || 'N/A';
+                const todayLog = todayData.workoutLog[logKey] || '';
+                dayHtml += `
+                    <li class="border-t border-gray-700 pt-4">
+                        <div class="flex justify-between items-center">
+                            <p class="font-semibold text-gray-100">${exercise.name}</p>
+                            <p class="text-sm text-gray-400">${exercise.details}</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 items-center mt-2">
+                            <span class="text-gray-500 text-sm">Last: ${lastLog}</span>
+                            <div class="flex items-center">
+                                <input type="text" class="workout-log-input w-full bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white text-sm p-1" placeholder="Today's Log..." value="${todayLog}" data-log-key="${logKey}" ${!isToday ? 'disabled' : ''}>
+                                <button class="delete-log-btn text-red-500 hover:text-red-400 ml-2 font-bold ${todayLog ? '' : 'hidden'}" data-log-key="${logKey}">&times;</button>
+                            </div>
+                        </div>
+                    </li>`;
+            });
+            dayHtml += `</ul><p class="mt-4 text-sm text-yellow-400"><span class="font-bold">Intensity Note:</span> ${workoutForDay.note}</p>`;
+            dayContainer.innerHTML = dayHtml;
+            workoutLogContainer.appendChild(dayContainer);
+
+            if (isToday) {
+                workoutLogContainer.querySelectorAll('.workout-log-input').forEach(input => input.addEventListener('input', handleWorkoutLogChange));
+                workoutLogContainer.querySelectorAll('.delete-log-btn').forEach(button => button.addEventListener('click', handleWorkoutLogDelete));
+            }
+        }
+        
+        async function updateWaterDisplayForDate(date) {
+            const dataForDay = await getDataForDate(date);
+            if (!dataForDay) return;
+            const amount = dataForDay.water || 0;
+            const waterGoal = 4.0;
+            waterAmountEl.textContent = `${amount.toFixed(1)}L`;
+            const progress = Math.min((amount / waterGoal) * 100, 100);
+            waterProgressEl.style.width = `${progress}%`;
+        }
+
+        function updateCurrentTaskHighlight(date) {
+            document.querySelectorAll('.task-item').forEach(item => item.classList.remove('task-current'));
+            if (toISODateString(date) !== toISODateString(new Date())) return;
+
+            const now = new Date();
+            const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+            const dayKey = getDayKeyForDate(now);
+            const todaySchedule = schedules[dayKey];
+            if (!todaySchedule) return;
+
+            let currentTaskIndex = -1;
+            for (let i = todaySchedule.length - 1; i >= 0; i--) {
+                if (currentTime >= todaySchedule[i].time) {
+                    currentTaskIndex = i;
+                    break;
+                }
+            }
+            if (currentTaskIndex !== -1) {
+                const currentTaskElement = document.getElementById(`task-${dayKey}-${currentTaskIndex}`);
+                if (currentTaskElement) currentTaskElement.classList.add('task-current');
+            }
+        }
+        
+        function setDailyQuote(date) {
+            const start = new Date(date.getFullYear(), 0, 0);
+            const diff = date - start;
+            const oneDay = 1000 * 60 * 60 * 24;
+            const dayOfYear = Math.floor(diff / oneDay);
+            const quote = quotes[dayOfYear % quotes.length];
+            dailyQuoteEl.innerHTML = `<em>"${quote.text}"</em><br>- ${quote.author}`;
+        }
+
+        function setBibleVerse() {
+            const verse = bibleVerses[Math.floor(Math.random() * bibleVerses.length)];
+            bibleVerseEl.innerHTML = `<em>"${verse.text}"</em><br>- ${verse.reference}`;
+        }
+
+        function setMindsetQuote() {
+            const quote = mindsetQuotes[Math.floor(Math.random() * mindsetQuotes.length)];
+            mindsetQuoteText.innerHTML = `<em>"${quote.text}"</em><br>- ${quote.author}`;
+        }
+
+        async function calculateStreak() {
+            let streak = 0;
+            let date = new Date();
+            date.setDate(date.getDate() - 1); // Start from yesterday
+
+            for (let i = 0; i < 365; i++) {
+                const data = await getDataForDate(date);
+                if (!data) break; // Stop if data fetch fails
+                const allTasksDone = data.powerList && data.powerList.length === 5 && data.powerList.every(task => task.completed);
+                if (allTasksDone) {
+                    streak++;
+                    date.setDate(date.getDate() - 1);
+                } else {
+                    break;
+                }
+            }
+            return streak;
+        }
+
+        async function updateStreakDisplay() {
+            const currentData = await getDataForDate(new Date());
+            if (!currentData) return;
+            const allToday = currentData.powerList && currentData.powerList.length === 5 && currentData.powerList.every(task => task.completed);
+            let streak = await calculateStreak();
+            if (allToday) {
+                streak++;
+            }
+            streakCounter.textContent = streak;
+        }
+
+        // --- EVENT HANDLERS (Now mostly async) ---
+        async function handleCheckboxChange(e) {
+            const taskId = parseInt(e.target.dataset.taskId);
+            const dataForDay = await getDataForDate(displayedDate);
+            if (!dataForDay) return;
+            if (e.target.checked) {
+                if (!dataForDay.checkedTasks.includes(taskId)) dataForDay.checkedTasks.push(taskId);
+            } else {
+                dataForDay.checkedTasks = dataForDay.checkedTasks.filter(id => id !== taskId);
+            }
+            await saveDataForDate(displayedDate, dataForDay);
+        }
+
+        async function handlePowerListTextChange(e) {
+            const index = parseInt(e.target.dataset.index);
+            const dataForDay = await getDataForDate(displayedDate);
+            if (!dataForDay) return;
+            dataForDay.powerList[index].text = e.target.value;
+            await saveDataForDate(displayedDate, dataForDay);
+        }
+
+        async function handlePowerListCheckChange(e) {
+            const index = parseInt(e.target.dataset.index);
+            const dataForDay = await getDataForDate(displayedDate);
+            if (!dataForDay) return;
+            dataForDay.powerList[index].completed = e.target.checked;
+            await saveDataForDate(displayedDate, dataForDay);
+            await updateStreakDisplay();
+        }
+        
+        async function handleWorkoutLogChange(e) {
+            const logKey = e.target.dataset.logKey;
+            const dataForDay = await getDataForDate(displayedDate);
+            if (!dataForDay) return;
+            dataForDay.workoutLog[logKey] = e.target.value;
+            
+            // Show/hide delete button based on input value
+            const deleteBtn = e.target.nextElementSibling;
+            if (deleteBtn && deleteBtn.classList.contains('delete-log-btn')) {
+                deleteBtn.classList.toggle('hidden', !e.target.value);
+            }
+
+            await saveDataForDate(displayedDate, dataForDay);
+        }
+
+        async function handleWorkoutLogDelete(e) {
+            const logKey = e.target.dataset.logKey;
+            const dataForDay = await getDataForDate(displayedDate);
+            if (!dataForDay) return;
+            dataForDay.workoutLog[logKey] = '';
+            await saveDataForDate(displayedDate, dataForDay);
+            await renderTrainingLogs(displayedDate);
+        }
+
+        async function handleExpenseDelete(e) {
+            const index = parseInt(e.target.dataset.index);
+            const dataForDay = await getDataForDate(displayedDate);
+            if (!dataForDay) return;
+            dataForDay.expenses.splice(index, 1);
+            await saveDataForDate(displayedDate, dataForDay);
+            await renderFinances(displayedDate);
+        }
+
+        addExpenseBtn.addEventListener('click', async () => {
+            const expenseText = expenseInput.value.trim();
+            if (expenseText) {
+                const dataForDay = await getDataForDate(displayedDate);
+                if (!dataForDay) return;
+                dataForDay.expenses.push(expenseText);
+                await saveDataForDate(displayedDate, dataForDay);
+                await renderFinances(displayedDate);
+                expenseInput.value = '';
+            }
+        });
+
+        prevDayBtn.addEventListener('click', () => {
+            displayedDate.setDate(displayedDate.getDate() - 1);
+            renderUIForDate(displayedDate);
+        });
+
+        nextDayBtn.addEventListener('click', () => {
+            displayedDate.setDate(displayedDate.getDate() + 1);
+            renderUIForDate(displayedDate);
+        });
+
+        addWaterBtn.addEventListener('click', async () => {
+            const dataForDay = await getDataForDate(displayedDate);
+            if (!dataForDay) return;
+            dataForDay.water += 0.5;
+            await saveDataForDate(displayedDate, dataForDay);
+            await updateWaterDisplayForDate(displayedDate);
+        });
+        
+        editWaterBtn.addEventListener('click', () => {
+            waterControlsDefault.classList.add('hidden');
+            waterControlsConfirm.classList.remove('hidden');
+        });
+
+        cancelResetBtn.addEventListener('click', () => {
+            waterControlsDefault.classList.remove('hidden');
+            waterControlsConfirm.classList.add('hidden');
+        });
+
+        confirmResetBtn.addEventListener('click', async () => {
+            const dataForDay = await getDataForDate(displayedDate);
+            if (!dataForDay) return;
+            dataForDay.water = 0;
+            await saveDataForDate(displayedDate, dataForDay);
+            await updateWaterDisplayForDate(displayedDate);
+            waterControlsDefault.classList.remove('hidden');
+            waterControlsConfirm.classList.add('hidden');
+        });
+        
+        // --- TIMER LOGIC ---
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
+            const seconds = (timerSeconds % 60).toString().padStart(2, '0');
+            timerDisplay.textContent = `${minutes}:${seconds}`;
+        }
+
+        startTimerBtn.addEventListener('click', () => {
+            clearInterval(timerInterval); // Clear any existing timer
+
+            const tick = () => {
+                timerSeconds--;
+                updateTimerDisplay();
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    return;
+                }
+            };
+
+            tick(); // Call immediately to avoid 1-second delay
+            timerInterval = setInterval(tick, 1000);
+        });
+
+        pauseTimerBtn.addEventListener('click', () => {
+            clearInterval(timerInterval);
+        });
+
+        resetTimerBtn.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerSeconds = 60;
+            updateTimerDisplay();
+        });
+
+        // --- SETUP & INITIALIZATION ---
+        function setupTabs() {
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('tab-active'));
+                    tab.classList.add('tab-active');
+                    const target = tab.getAttribute('data-tab');
+                    tabContents.forEach(content => {
+                        content.id === `${target}-content` ? content.classList.remove('hidden') : content.classList.add('hidden');
+                    });
+                });
+            });
+            tabs[1].click(); // Default to Dashboard tab
+        }
+
+        function setupDaySwitcher() {
+            daySwitcher.querySelectorAll('.day-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    daySwitcher.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('day-btn-active'));
+                    button.classList.add('day-btn-active');
+                    const dayKey = button.dataset.day;
+                    displayScheduleTemplate(dayKey);
+                });
+            });
+        }
+        
+        async function generateWisdom() {
+            wisdomText.classList.add('hidden');
+            wisdomLoader.classList.remove('hidden');
+            generateWisdomBtn.disabled = true;
+
+            const isCanvasEnv = typeof __firebase_config !== 'undefined' && __firebase_config.trim() !== '';
+            const apiUrl = isCanvasEnv 
+                ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=`
+                : `/.netlify/functions/generate-wisdom`;
+
+            try {
+                let response;
+                if (isCanvasEnv) {
+                    const prompt = "Generate a short, actionable 'success nugget' (2-3 sentences) for an aspiring billionaire. The tone should be direct and motivating, focusing on principles of wealth creation, extreme discipline, or strategic thinking. Style of Naval Ravikant or Morgan Housel.";
+                    const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+                    response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                } else {
+                    response = await fetch(apiUrl, { method: 'POST'});
+                }
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates[0].content.parts[0].text) {
+                    wisdomText.textContent = result.candidates[0].content.parts[0].text;
+                } else if (result.wisdom) {
+                    wisdomText.textContent = result.wisdom;
+                }
+                else {
+                    wisdomText.textContent = "Could not retrieve wisdom. Please try again.";
+                }
+            } catch (error) {
+                console.error("Error fetching wisdom:", error);
+                wisdomText.textContent = "An error occurred. Please check the console.";
+            } finally {
+                wisdomText.classList.remove('hidden');
+                wisdomLoader.classList.add('hidden');
+                generateWisdomBtn.disabled = false;
+            }
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const options = {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+                timeZone: 'Europe/Copenhagen'
+            };
+            currentTimeEl.textContent = now.toLocaleTimeString('en-GB', options);
+        }
+
+        // --- Main App Initialization ---
+        async function main() {
+            let firebaseConfig;
+            let initialAuthToken;
+            let isCanvasEnv = typeof __firebase_config !== 'undefined' && __firebase_config.trim() !== '';
+
+            if (isCanvasEnv) {
+                try {
+                    // Try to use the credentials provided by the Canvas environment
+                    firebaseConfig = JSON.parse(__firebase_config);
+                    initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : undefined;
+                    appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                    console.log("Running in Canvas environment.");
+                } catch (e) {
+                    console.error("Could not parse Canvas Firebase config, falling back to hardcoded config.", e);
+                    isCanvasEnv = false; // Force fallback
+                }
+            }
+            
+            if (!isCanvasEnv) {
+                // Fallback for Netlify or if Canvas config fails
+                console.log("Running in standalone mode or Canvas config failed. Using hardcoded Firebase config.");
+                firebaseConfig = {
+                  apiKey: "AIzaSyC0eAiglVV-ucbsNeC1UmnNs_xxa-hgOh4",
+                  authDomain: "hanuzzi.firebaseapp.com",
+                  projectId: "hanuzzi",
+                  storageBucket: "hanuzzi.appspot.com",
+                  messagingSenderId: "223419940249",
+                  appId: "1:223419940249:web:a5b346892e67d6df312708"
+                };
+                appId = firebaseConfig.appId;
+            }
+            
+            if (!firebaseConfig || !firebaseConfig.apiKey) {
+                console.error("Firebase config is invalid or missing.");
+                document.body.innerHTML = '<div class="text-red-500 text-center p-8">Error: Firebase configuration is invalid. The app cannot be initialized.</div>';
+                return;
+            }
+
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    userId = user.uid;
+                    isAuthReady = true;
+                    console.log("Authenticated with UID:", userId);
+                    // Once authenticated, render the UI
+                    await renderUIForDate(displayedDate);
+                } else {
+                    isAuthReady = false;
+                    console.log("User is not authenticated.");
+                }
+            });
+            
+            try {
+                if (isCanvasEnv && initialAuthToken) {
+                    // Use the token provided by the Canvas environment
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    // Fallback to anonymous sign-in for Netlify or if token is missing
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Authentication failed:", error);
+                document.body.innerHTML = '<div class="text-red-500 text-center p-8">Error: Authentication failed. Please refresh the page. For Netlify deployment, ensure Anonymous sign-in is enabled in your Firebase project.</div>';
+                return;
+            }
+
+            // Setup static parts of the UI
+            setupTabs();
+            setupDaySwitcher();
+            setBibleVerse();
+            setMindsetQuote();
+            updateTime();
+            setInterval(updateTime, 1000);
+            setInterval(setBibleVerse, 600000); // New verse every 10 minutes
+            setInterval(() => updateCurrentTaskHighlight(new Date()), 60000); // Update highlight every minute
+            generateWisdomBtn.addEventListener('click', generateWisdom);
+            newQuoteBtn.addEventListener('click', setMindsetQuote);
+            todayBtn.addEventListener('click', () => {
+                displayedDate = new Date();
+                renderUIForDate(displayedDate);
+            });
+        }
+
+        // Run the app
+        main();
+    </script>
+</body>
+</html>

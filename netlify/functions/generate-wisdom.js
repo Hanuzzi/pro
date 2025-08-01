@@ -10,11 +10,9 @@ exports.handler = async function(event, context) {
     }]
   };
 
-  // Your API key is securely accessed from Netlify's environment variables.
   const apiKey = process.env.GOOGLE_AI_API_KEY;
+  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
-  // --- DIAGNOSTIC STEP ---
-  // First, check if the API key was found in the Netlify environment.
   if (!apiKey) {
     console.error("CRITICAL ERROR: Google AI API key is missing from environment variables.");
     return {
@@ -23,8 +21,6 @@ exports.handler = async function(event, context) {
     };
   }
 
-  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-
   try {
     const response = await fetch(apiUrl, {
       method: 'POST',
@@ -32,18 +28,18 @@ exports.handler = async function(event, context) {
       body: JSON.stringify(payload)
     });
 
+    const responseBody = await response.text(); // Read the response body once
+
     if (!response.ok) {
-        const errorBody = await response.text();
-        console.error("Error from Google AI API:", errorBody);
+        console.error("Error from Google AI API:", responseBody);
+        // Return the actual error from Google's API to the frontend for better debugging
         return {
             statusCode: response.status,
-            body: JSON.stringify({ error: `The API call failed with status: ${response.status}. Please check the Netlify function log for details from the Google AI API.` })
+            body: responseBody 
         };
     }
 
-    const result = await response.json();
-    
-    // Safely access the nested property to prevent crashes
+    const result = JSON.parse(responseBody);
     const wisdomText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (wisdomText) {

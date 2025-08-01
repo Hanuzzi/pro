@@ -933,6 +933,9 @@
                     wisdomText.textContent = result.candidates[0].content.parts[0].text;
                 } else if (result.wisdom) {
                     wisdomText.textContent = result.wisdom;
+                } else if (result.error) {
+                    // Display the detailed error from the Netlify function
+                    wisdomText.textContent = `Error: ${result.error}`;
                 }
                 else {
                     wisdomText.textContent = "Could not retrieve wisdom. Please try again.";

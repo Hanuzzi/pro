@@ -283,9 +283,20 @@
             <div id="finances-content" class="tab-content hidden">
                 <h2 class="text-2xl font-semibold mb-4 text-blue-400">Daily Expense Log</h2>
                 <div class="bg-gray-800 p-4 rounded-lg">
-                    <div class="flex space-x-2">
-                        <input type="text" id="expense-input" class="flex-1 bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white" placeholder="Enter expense description (e.g., Coffee - $5)">
-                        <button id="add-expense-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Add</button>
+                    <div class="flex flex-col space-y-2">
+                        <input type="text" id="expense-description" class="w-full bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white" placeholder="Description (e.g., Lunch with client)">
+                        <div class="flex space-x-2">
+                            <select id="expense-category" class="w-1/2 bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white">
+                                <option>Gasoline</option>
+                                <option>Supermarket</option>
+                                <option>Dining Out</option>
+                                <option>Shopping</option>
+                                <option>Utilities</option>
+                                <option>Other</option>
+                            </select>
+                            <input type="number" id="expense-amount" class="w-1/2 bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white" placeholder="Amount">
+                            <button id="add-expense-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Add</button>
+                        </div>
                     </div>
                     <ul id="expense-list" class="mt-4 space-y-2">
                         <!-- Expenses will be injected here -->
@@ -466,6 +477,9 @@
         const yearSelect = document.getElementById('year-select');
         const calculateTotalBtn = document.getElementById('calculate-total-btn');
         const monthlyTotalText = document.getElementById('monthly-total-text');
+        const expenseCategory = document.getElementById('expense-category');
+        const expenseAmount = document.getElementById('expense-amount');
+        const expenseDescription = document.getElementById('expense-description');
 
         // --- UTILITY FUNCTIONS ---
         const toISODateString = (date) => new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
@@ -664,7 +678,9 @@
             if (!dataForDay) return;
             const isToday = (toISODateString(date) === toISODateString(new Date()));
 
-            expenseInput.disabled = !isToday;
+            expenseCategory.disabled = !isToday;
+            expenseAmount.disabled = !isToday;
+            expenseDescription.disabled = !isToday;
             addExpenseBtn.disabled = !isToday;
 
             if (dataForDay.expenses.length === 0) {
@@ -673,7 +689,7 @@
                 dataForDay.expenses.forEach((expense, index) => {
                     const li = document.createElement('li');
                     li.className = 'flex justify-between items-center text-gray-300 bg-gray-700 p-2 rounded';
-                    li.innerHTML = `<span>${expense}</span>`;
+                    li.innerHTML = `<span>${expense.category}: $${expense.amount.toFixed(2)}${expense.description ? ` - <em class="text-gray-400">${expense.description}</em>` : ''}</span>`;
                     if (isToday) {
                         li.innerHTML += `<button class="text-red-500 hover:text-red-400 ml-4 font-bold text-lg" data-index="${index}">&times;</button>`;
                     }
@@ -893,14 +909,21 @@
         }
 
         addExpenseBtn.addEventListener('click', async () => {
-            const expenseText = expenseInput.value.trim();
-            if (expenseText) {
+            const category = expenseCategory.value;
+            const amount = parseFloat(expenseAmount.value);
+            const description = expenseDescription.value.trim();
+
+            if (category && amount > 0) {
                 const dataForDay = await getDataForDate(displayedDate);
                 if (!dataForDay) return;
-                dataForDay.expenses.push(expenseText);
+                
+                const newExpense = { category, amount, description };
+                dataForDay.expenses.push(newExpense);
+                
                 await saveDataForDate(displayedDate, dataForDay);
                 await renderFinances(displayedDate);
-                expenseInput.value = '';
+                expenseAmount.value = '';
+                expenseDescription.value = '';
             }
         });
 
@@ -1106,6 +1129,71 @@
             currentTimeEl.textContent = now.toLocaleTimeString('en-GB', options);
         }
 
+        function populateFinanceSelectors() {
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const currentYear = new Date().getFullYear();
+            
+            months.forEach((month, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = month;
+                monthSelect.appendChild(option);
+            });
+
+            for (let i = 0; i < 5; i++) {
+                const year = currentYear - i;
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            }
+
+            monthSelect.value = new Date().getMonth();
+            yearSelect.value = currentYear;
+        }
+
+        async function calculateMonthlyTotal() {
+            if (!isAuthReady) {
+                monthlyTotalText.textContent = "Authentication not ready.";
+                return;
+            }
+            const month = parseInt(monthSelect.value);
+            const year = parseInt(yearSelect.value);
+            const startDate = new Date(year, month, 1);
+            const endDate = new Date(year, month + 1, 0);
+
+            let total = 0;
+            const categoryTotals = {};
+            monthlyTotalText.textContent = "Calculating...";
+
+            try {
+                for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                    const data = await getDataForDate(new Date(d));
+                    if (data && data.expenses) {
+                        data.expenses.forEach(expense => {
+                            if (typeof expense === 'object' && expense.amount) {
+                                total += expense.amount;
+                                categoryTotals[expense.category] = (categoryTotals[expense.category] || 0) + expense.amount;
+                            }
+                        });
+                    }
+                }
+
+                let breakdownHtml = `<p class="text-white text-lg">Total for ${startDate.toLocaleString('default', { month: 'long' })} ${year}: <span class="font-bold">$${total.toFixed(2)}</span></p>`;
+                breakdownHtml += '<div class="mt-2 space-y-1">';
+                for (const category in categoryTotals) {
+                    breakdownHtml += `<p class="text-gray-400 text-sm">${category}: $${categoryTotals[category].toFixed(2)}</p>`;
+                }
+                breakdownHtml += '</div>';
+
+                monthlyTotalText.innerHTML = breakdownHtml;
+
+            } catch (error) {
+                console.error("Error calculating monthly total:", error);
+                monthlyTotalText.textContent = "Error calculating total.";
+            }
+        }
+
         // --- Main App Initialization ---
         async function main() {
             let firebaseConfig;
@@ -1180,6 +1268,7 @@
             // Setup static parts of the UI
             setupTabs();
             setupDaySwitcher();
+            populateFinanceSelectors();
             setBibleVerse();
             setMindsetQuote();
             updateTime();
@@ -1193,6 +1282,7 @@
                 displayedDate = new Date();
                 renderUIForDate(displayedDate);
             });
+            calculateTotalBtn.addEventListener('click', calculateMonthlyTotal);
         }
 
         // Run the app

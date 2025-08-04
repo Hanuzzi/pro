@@ -463,7 +463,6 @@
         const mindsetQuoteText = document.getElementById('mindset-quote-text');
         const powerlistContainer = document.getElementById('powerlist-container');
         const streakCounter = document.getElementById('streak-counter');
-        const expenseInput = document.getElementById('expense-input');
         const addExpenseBtn = document.getElementById('add-expense-btn');
         const expenseList = document.getElementById('expense-list');
         const workoutLogContainer = document.getElementById('workout-log-container');
@@ -905,7 +904,7 @@
             if (!dataForDay) return;
             dataForDay.expenses.splice(index, 1);
             await saveDataForDate(displayedDate, dataForDay);
-            await renderFinances(displayedDate);
+            await renderFinances(displayedDate, dataForDay);
         }
 
         async function handleAddExpense() {
@@ -925,7 +924,7 @@
                 dataForDay.expenses.push(newExpense);
                 
                 await saveDataForDate(displayedDate, dataForDay);
-                await renderFinances(displayedDate);
+                await renderFinances(displayedDate, dataForDay);
                 expenseAmount.value = '';
                 expenseDescription.value = '';
             }

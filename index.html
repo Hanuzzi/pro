@@ -206,7 +206,7 @@
                  <h2 class="text-2xl font-semibold mb-4 text-gray-200">Bulletproof Nutrition Protocol</h2>
                  <div class="bg-gray-800 p-4 rounded-lg mb-6 text-center">
                     <p class="text-gray-400">Daily Target:</p>
-                    <p class="text-xl font-bold text-white">~2,550 kcal | ~199g Protein | ~99g Fat | ~223g Carbs</p>
+                    <p class="text-xl font-bold text-white">~2,563 kcal | ~198g Protein | ~99g Fat | ~230g Carbs</p>
                  </div>
                  <div class="space-y-8">
                     <!-- Supplement Schedule -->
@@ -226,7 +226,7 @@
                     <div class="bg-gray-800 p-6 rounded-lg">
                         <h3 class="font-bold text-xl text-blue-400 mb-4">Daily Meal Plan</h3>
                         <div class="space-y-4 text-gray-300">
-                            <div><p class="font-semibold text-gray-100">Meal 1 (Post-Workout ~07:30):</p><ul class="list-disc list-inside text-sm pl-4"><li>200g Sirloin Steak</li><li>3 tbsp (63g) Raw Honey</li><li>300g Pineapple Chunks</li><li>300g Mango Chunks</li><li>200g Papaya Chunks</li></ul></div>
+                            <div><p class="font-semibold text-gray-100">Meal 1 (Post-Workout ~07:30):</p><ul class="list-disc list-inside text-sm pl-4"><li>200g Flank Steak</li><li>3 tbsp (63g) Raw Honey</li><li>300g Pineapple Chunks</li><li>300g Mango Chunks</li><li>200g Kiwi</li></ul></div>
                             <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">Meal 2 (Lunch ~12:30):</p><ul class="list-disc list-inside text-sm pl-4"><li>250g 90/10 Grass-Fed Ground Beef</li><li>4 Large Scrambled Eggs</li></ul></div>
                             <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">Meal 3 (Dinner ~18:30):</p><ul class="list-disc list-inside text-sm pl-4"><li>180g Pan-Seared Salmon or Chicken Breast</li><li>200g Full-Fat Greek Yogurt</li><li>2 Large Bananas</li></ul></div>
                         </div>
@@ -908,7 +908,7 @@
             await renderFinances(displayedDate);
         }
 
-        addExpenseBtn.addEventListener('click', async () => {
+        async function handleAddExpense() {
             const category = expenseCategory.value;
             const amount = parseFloat(expenseAmount.value);
             const description = expenseDescription.value.trim();
@@ -918,6 +918,10 @@
                 if (!dataForDay) return;
                 
                 const newExpense = { category, amount, description };
+                
+                if (!dataForDay.expenses) {
+                    dataForDay.expenses = [];
+                }
                 dataForDay.expenses.push(newExpense);
                 
                 await saveDataForDate(displayedDate, dataForDay);
@@ -925,78 +929,14 @@
                 expenseAmount.value = '';
                 expenseDescription.value = '';
             }
-        });
+        }
 
-        prevDayBtn.addEventListener('click', () => {
-            displayedDate.setDate(displayedDate.getDate() - 1);
-            renderUIForDate(displayedDate);
-        });
-
-        nextDayBtn.addEventListener('click', () => {
-            displayedDate.setDate(displayedDate.getDate() + 1);
-            renderUIForDate(displayedDate);
-        });
-
-        addWaterBtn.addEventListener('click', async () => {
-            const dataForDay = await getDataForDate(displayedDate);
-            if (!dataForDay) return;
-            dataForDay.water += 0.5;
-            await saveDataForDate(displayedDate, dataForDay);
-            await updateWaterDisplayForDate(displayedDate);
-        });
-        
-        editWaterBtn.addEventListener('click', () => {
-            waterControlsDefault.classList.add('hidden');
-            waterControlsConfirm.classList.remove('hidden');
-        });
-
-        cancelResetBtn.addEventListener('click', () => {
-            waterControlsDefault.classList.remove('hidden');
-            waterControlsConfirm.classList.add('hidden');
-        });
-
-        confirmResetBtn.addEventListener('click', async () => {
-            const dataForDay = await getDataForDate(displayedDate);
-            if (!dataForDay) return;
-            dataForDay.water = 0;
-            await saveDataForDate(displayedDate, dataForDay);
-            await updateWaterDisplayForDate(displayedDate);
-            waterControlsDefault.classList.remove('hidden');
-            waterControlsConfirm.classList.add('hidden');
-        });
-        
         // --- TIMER LOGIC ---
         function updateTimerDisplay() {
             const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
             const seconds = (timerSeconds % 60).toString().padStart(2, '0');
             timerDisplay.textContent = `${minutes}:${seconds}`;
         }
-
-        startTimerBtn.addEventListener('click', () => {
-            clearInterval(timerInterval); // Clear any existing timer
-
-            const tick = () => {
-                timerSeconds--;
-                updateTimerDisplay();
-                if (timerSeconds <= 0) {
-                    clearInterval(timerInterval);
-                    return;
-                }
-            };
-
-            tick(); // Call immediately to avoid 1-second delay
-            timerInterval = setInterval(tick, 1000);
-        });
-
-        pauseTimerBtn.addEventListener('click', () => {
-            clearInterval(timerInterval);
-        });
-
-        resetTimerBtn.addEventListener('click', () => {
-            clearInterval(timerInterval);
-            timerSeconds = 60;
-            updateTimerDisplay();
-        });
 
         // --- SETUP & INITIALIZATION ---
         function setupTabs() {
@@ -1275,6 +1215,8 @@
             setInterval(updateTime, 1000);
             setInterval(setBibleVerse, 600000); // New verse every 10 minutes
             setInterval(() => updateCurrentTaskHighlight(new Date()), 60000); // Update highlight every minute
+            
+            // Setup Event Listeners
             generateWisdomBtn.addEventListener('click', generateWisdom);
             simplifyWordBtn.addEventListener('click', simplifyWord);
             newQuoteBtn.addEventListener('click', setMindsetQuote);
@@ -1283,6 +1225,58 @@
                 renderUIForDate(displayedDate);
             });
             calculateTotalBtn.addEventListener('click', calculateMonthlyTotal);
+            addExpenseBtn.addEventListener('click', handleAddExpense);
+            prevDayBtn.addEventListener('click', () => {
+                displayedDate.setDate(displayedDate.getDate() - 1);
+                renderUIForDate(displayedDate);
+            });
+            nextDayBtn.addEventListener('click', () => {
+                displayedDate.setDate(displayedDate.getDate() + 1);
+                renderUIForDate(displayedDate);
+            });
+            addWaterBtn.addEventListener('click', async () => {
+                const dataForDay = await getDataForDate(displayedDate);
+                if (!dataForDay) return;
+                dataForDay.water += 0.5;
+                await saveDataForDate(displayedDate, dataForDay);
+                await updateWaterDisplayForDate(displayedDate);
+            });
+            editWaterBtn.addEventListener('click', () => {
+                waterControlsDefault.classList.add('hidden');
+                waterControlsConfirm.classList.remove('hidden');
+            });
+            cancelResetBtn.addEventListener('click', () => {
+                waterControlsDefault.classList.remove('hidden');
+                waterControlsConfirm.classList.add('hidden');
+            });
+            confirmResetBtn.addEventListener('click', async () => {
+                const dataForDay = await getDataForDate(displayedDate);
+                if (!dataForDay) return;
+                dataForDay.water = 0;
+                await saveDataForDate(displayedDate, dataForDay);
+                await updateWaterDisplayForDate(displayedDate);
+                waterControlsDefault.classList.remove('hidden');
+                waterControlsConfirm.classList.add('hidden');
+            });
+            startTimerBtn.addEventListener('click', () => {
+                clearInterval(timerInterval);
+                const tick = () => {
+                    timerSeconds--;
+                    updateTimerDisplay();
+                    if (timerSeconds <= 0) {
+                        clearInterval(timerInterval);
+                        return;
+                    }
+                };
+                tick();
+                timerInterval = setInterval(tick, 1000);
+            });
+            pauseTimerBtn.addEventListener('click', () => clearInterval(timerInterval));
+            resetTimerBtn.addEventListener('click', () => {
+                clearInterval(timerInterval);
+                timerSeconds = 60;
+                updateTimerDisplay();
+            });
         }
 
         // Run the app

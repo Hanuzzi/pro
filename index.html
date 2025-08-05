@@ -652,7 +652,7 @@
                 dataForDay.expenses.forEach((expense, index) => {
                     const li = document.createElement('li');
                     li.className = 'flex justify-between items-center text-gray-300 bg-gray-700 p-2 rounded';
-                    li.innerHTML = `<span>${expense.category}: $${expense.amount.toFixed(2)}${expense.description ? ` - <em class="text-gray-400">${expense.description}</em>` : ''}</span>`;
+                    li.innerHTML = `<span>${expense.category}: ${expense.amount.toFixed(2)} kr.${expense.description ? ` - <em class="text-gray-400">${expense.description}</em>` : ''}</span>`;
                     if (isToday) {
                         li.innerHTML += `<button class="text-red-500 hover:text-red-400 ml-4 font-bold text-lg" data-index="${index}">&times;</button>`;
                     }
@@ -876,7 +876,7 @@
             const amount = parseFloat(expenseAmount.value);
             const description = expenseDescription.value.trim();
 
-            if (category && amount > 0) {
+            if (category && !isNaN(amount) && amount > 0) {
                 const dataForDay = await getDataForDate(displayedDate);
                 if (!dataForDay) return;
                 
@@ -1086,10 +1086,10 @@
                     }
                 }
 
-                let breakdownHtml = `<p class="text-white text-lg">Total for ${startDate.toLocaleString('default', { month: 'long' })} ${year}: <span class="font-bold">$${total.toFixed(2)}</span></p>`;
+                let breakdownHtml = `<p class="text-white text-lg">Total for ${startDate.toLocaleString('default', { month: 'long' })} ${year}: <span class="font-bold">${total.toFixed(2)} kr.</span></p>`;
                 breakdownHtml += '<div class="mt-2 space-y-1">';
                 for (const category in categoryTotals) {
-                    breakdownHtml += `<p class="text-gray-400 text-sm">${category}: $${categoryTotals[category].toFixed(2)}</p>`;
+                    breakdownHtml += `<p class="text-gray-400 text-sm">${category}: ${categoryTotals[category].toFixed(2)} kr.</p>`;
                 }
                 breakdownHtml += '</div>';
 

@@ -545,12 +545,6 @@
                 }
             });
 
-            // Enable/disable controls based on whether it's today
-            waterControlsDefault.classList.remove('hidden');
-            waterControlsConfirm.classList.add('hidden');
-            addWaterBtn.disabled = !isToday;
-            editWaterBtn.disabled = !isToday;
-
             // Render all components for the selected date
             await renderScheduleForDate(date);
             await renderPowerList(date);
@@ -639,13 +633,7 @@
             expenseList.innerHTML = '';
             const dataForDay = currentData || await getDataForDate(date);
             if (!dataForDay) return;
-            const isToday = (toISODateString(date) === toISODateString(new Date()));
-
-            expenseCategory.disabled = !isToday;
-            expenseAmount.disabled = !isToday;
-            expenseDescription.disabled = !isToday;
-            addExpenseBtn.disabled = !isToday;
-
+            
             if (dataForDay.expenses.length === 0) {
                 expenseList.innerHTML = `<li class="text-gray-500 italic">No expenses logged for this day.</li>`;
             } else {
@@ -653,20 +641,15 @@
                     const li = document.createElement('li');
                     li.className = 'flex justify-between items-center text-gray-300 bg-gray-700 p-2 rounded';
                     li.innerHTML = `<span>${expense.category}: ${expense.amount.toFixed(2)} kr.${expense.description ? ` - <em class="text-gray-400">${expense.description}</em>` : ''}</span>`;
-                    if (isToday) {
-                        li.innerHTML += `<button class="text-red-500 hover:text-red-400 ml-4 font-bold text-lg" data-index="${index}">&times;</button>`;
-                    }
+                    li.innerHTML += `<button class="text-red-500 hover:text-red-400 ml-4 font-bold text-lg" data-index="${index}">&times;</button>`;
                     expenseList.appendChild(li);
                 });
-                if (isToday) {
-                    expenseList.querySelectorAll('button').forEach(btn => btn.addEventListener('click', handleExpenseDelete));
-                }
+                expenseList.querySelectorAll('button').forEach(btn => btn.addEventListener('click', handleExpenseDelete));
             }
         }
 
         async function renderTrainingLogs(date) {
             workoutLogContainer.innerHTML = '';
-            const isToday = (toISODateString(date) === toISODateString(new Date()));
             const workoutDayKey = getWorkoutDayKey(date);
             const workoutForDay = workoutData.find(w => w.key === workoutDayKey);
 
@@ -701,7 +684,7 @@
                         <div class="grid grid-cols-2 gap-2 items-center mt-2">
                             <span class="text-gray-500 text-sm">Last: ${lastLog}</span>
                             <div class="flex items-center">
-                                <input type="text" class="workout-log-input w-full bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white text-sm p-1" placeholder="Today's Log..." value="${todayLog}" data-log-key="${logKey}" ${!isToday ? 'disabled' : ''}>
+                                <input type="text" class="workout-log-input w-full bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white text-sm p-1" placeholder="Today's Log..." value="${todayLog}" data-log-key="${logKey}">
                                 <button class="delete-log-btn text-red-500 hover:text-red-400 ml-2 font-bold ${todayLog ? '' : 'hidden'}" data-log-key="${logKey}">&times;</button>
                             </div>
                         </div>`;
@@ -720,7 +703,7 @@
             dayContainer.innerHTML = dayHtml;
             workoutLogContainer.appendChild(dayContainer);
 
-            if (isToday && workoutForDay.loggable) {
+            if (workoutForDay.loggable) {
                 workoutLogContainer.querySelectorAll('.workout-log-input').forEach(input => input.addEventListener('input', handleWorkoutLogChange));
                 workoutLogContainer.querySelectorAll('.delete-log-btn').forEach(button => button.addEventListener('click', handleWorkoutLogDelete));
             }

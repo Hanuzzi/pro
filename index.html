@@ -433,52 +433,16 @@
         let timerSeconds = 60;
         let isAuthReady = false;
 
-        const scheduleContainer = document.getElementById('schedule-container');
-        const currentDateEl = document.getElementById('current-date');
-        const currentTimeEl = document.getElementById('current-time');
-        const todayBtn = document.getElementById('today-btn');
-        const dailyQuoteEl = document.getElementById('daily-quote');
-        const bibleVerseEl = document.getElementById('bible-verse');
-        const tabs = document.querySelectorAll('.tab');
-        const tabContents = document.querySelectorAll('.tab-content');
-        const daySwitcher = document.getElementById('day-switcher');
-        const addWaterBtn = document.getElementById('add-water-btn');
-        const waterAmountEl = document.getElementById('water-amount');
-        const waterProgressEl = document.getElementById('water-progress');
-        const prevDayBtn = document.getElementById('prev-day-btn');
-        const nextDayBtn = document.getElementById('next-day-btn');
-        const editWaterBtn = document.getElementById('edit-water-btn');
-        const waterControlsDefault = document.getElementById('water-controls-default');
-        const waterControlsConfirm = document.getElementById('water-controls-confirm');
-        const confirmResetBtn = document.getElementById('confirm-reset-btn');
-        const cancelResetBtn = document.getElementById('cancel-reset-btn');
-        const startTimerBtn = document.getElementById('start-timer-btn');
-        const pauseTimerBtn = document.getElementById('pause-timer-btn');
-        const resetTimerBtn = document.getElementById('reset-timer-btn');
-        const timerDisplay = document.getElementById('timer-display');
-        const generateWisdomBtn = document.getElementById('generate-wisdom-btn');
-        const wisdomText = document.getElementById('wisdom-text');
-        const wisdomLoader = document.getElementById('wisdom-loader');
-        const newQuoteBtn = document.getElementById('new-quote-btn');
-        const mindsetQuoteText = document.getElementById('mindset-quote-text');
-        const powerlistContainer = document.getElementById('powerlist-container');
-        const streakCounter = document.getElementById('streak-counter');
-        const addExpenseBtn = document.getElementById('add-expense-btn');
-        const expenseList = document.getElementById('expense-list');
-        const workoutLogContainer = document.getElementById('workout-log-container');
-        const wordInput = document.getElementById('word-input');
-        const simplifyWordBtn = document.getElementById('simplify-word-btn');
-        const definitionText = document.getElementById('definition-text');
-        const definitionLoader = document.getElementById('definition-loader');
-        const nutritionDaySwitcher = document.getElementById('nutrition-day-switcher');
-        const nutritionPlanContainer = document.getElementById('nutrition-plan-container');
-        const monthSelect = document.getElementById('month-select');
-        const yearSelect = document.getElementById('year-select');
-        const calculateTotalBtn = document.getElementById('calculate-total-btn');
-        const monthlyTotalText = document.getElementById('monthly-total-text');
-        const expenseCategory = document.getElementById('expense-category');
-        const expenseAmount = document.getElementById('expense-amount');
-        const expenseDescription = document.getElementById('expense-description');
+        // --- UI ELEMENT REFERENCES (will be populated in main) ---
+        let scheduleContainer, currentDateEl, currentTimeEl, todayBtn, dailyQuoteEl, bibleVerseEl,
+            tabs, tabContents, daySwitcher, addWaterBtn, waterAmountEl, waterProgressEl,
+            prevDayBtn, nextDayBtn, editWaterBtn, waterControlsDefault, waterControlsConfirm,
+            confirmResetBtn, cancelResetBtn, startTimerBtn, pauseTimerBtn, resetTimerBtn,
+            timerDisplay, generateWisdomBtn, wisdomText, wisdomLoader, newQuoteBtn,
+            mindsetQuoteText, powerlistContainer, streakCounter, addExpenseBtn, expenseList,
+            workoutLogContainer, wordInput, simplifyWordBtn, definitionText, definitionLoader,
+            monthSelect, yearSelect, calculateTotalBtn, monthlyTotalText, expenseCategory,
+            expenseAmount, expenseDescription;
 
         // --- UTILITY FUNCTIONS ---
         const toISODateString = (date) => new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
@@ -671,9 +635,9 @@
             }
         }
 
-        async function renderFinances(date) {
+        async function renderFinances(date, currentData) {
             expenseList.innerHTML = '';
-            const dataForDay = await getDataForDate(date);
+            const dataForDay = currentData || await getDataForDate(date);
             if (!dataForDay) return;
             const isToday = (toISODateString(date) === toISODateString(new Date()));
 
@@ -923,8 +887,12 @@
                 }
                 dataForDay.expenses.push(newExpense);
                 
-                await saveDataForDate(displayedDate, dataForDay);
-                await renderFinances(displayedDate, dataForDay);
+                // Update UI immediately
+                renderFinances(displayedDate, dataForDay);
+                
+                // Save to Firestore in the background
+                saveDataForDate(displayedDate, dataForDay);
+
                 expenseAmount.value = '';
                 expenseDescription.value = '';
             }
@@ -1134,7 +1102,53 @@
         }
 
         // --- Main App Initialization ---
-        async function main() {
+        document.addEventListener('DOMContentLoaded', async () => {
+            // --- Populate UI Element References ---
+            scheduleContainer = document.getElementById('schedule-container');
+            currentDateEl = document.getElementById('current-date');
+            currentTimeEl = document.getElementById('current-time');
+            todayBtn = document.getElementById('today-btn');
+            dailyQuoteEl = document.getElementById('daily-quote');
+            bibleVerseEl = document.getElementById('bible-verse');
+            tabs = document.querySelectorAll('.tab');
+            tabContents = document.querySelectorAll('.tab-content');
+            daySwitcher = document.getElementById('day-switcher');
+            addWaterBtn = document.getElementById('add-water-btn');
+            waterAmountEl = document.getElementById('water-amount');
+            waterProgressEl = document.getElementById('water-progress');
+            prevDayBtn = document.getElementById('prev-day-btn');
+            nextDayBtn = document.getElementById('next-day-btn');
+            editWaterBtn = document.getElementById('edit-water-btn');
+            waterControlsDefault = document.getElementById('water-controls-default');
+            waterControlsConfirm = document.getElementById('water-controls-confirm');
+            confirmResetBtn = document.getElementById('confirm-reset-btn');
+            cancelResetBtn = document.getElementById('cancel-reset-btn');
+            startTimerBtn = document.getElementById('start-timer-btn');
+            pauseTimerBtn = document.getElementById('pause-timer-btn');
+            resetTimerBtn = document.getElementById('reset-timer-btn');
+            timerDisplay = document.getElementById('timer-display');
+            generateWisdomBtn = document.getElementById('generate-wisdom-btn');
+            wisdomText = document.getElementById('wisdom-text');
+            wisdomLoader = document.getElementById('wisdom-loader');
+            newQuoteBtn = document.getElementById('new-quote-btn');
+            mindsetQuoteText = document.getElementById('mindset-quote-text');
+            powerlistContainer = document.getElementById('powerlist-container');
+            streakCounter = document.getElementById('streak-counter');
+            addExpenseBtn = document.getElementById('add-expense-btn');
+            expenseList = document.getElementById('expense-list');
+            workoutLogContainer = document.getElementById('workout-log-container');
+            wordInput = document.getElementById('word-input');
+            simplifyWordBtn = document.getElementById('simplify-word-btn');
+            definitionText = document.getElementById('definition-text');
+            definitionLoader = document.getElementById('definition-loader');
+            monthSelect = document.getElementById('month-select');
+            yearSelect = document.getElementById('year-select');
+            calculateTotalBtn = document.getElementById('calculate-total-btn');
+            monthlyTotalText = document.getElementById('monthly-total-text');
+            expenseCategory = document.getElementById('expense-category');
+            expenseAmount = document.getElementById('expense-amount');
+            expenseDescription = document.getElementById('expense-description');
+            
             let firebaseConfig;
             let initialAuthToken;
             let isCanvasEnv = typeof __firebase_config !== 'undefined' && __firebase_config.trim() !== '';
@@ -1276,10 +1290,8 @@
                 timerSeconds = 60;
                 updateTimerDisplay();
             });
-        }
+        });
 
-        // Run the app
-        main();
     </script>
 </body>
 </html>

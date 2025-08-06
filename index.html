@@ -199,6 +199,7 @@
                 <div id="workout-log-container" class="space-y-8">
                     <!-- Workout logs will be injected here by JS -->
                 </div>
+                <div id="next-day-workout-preview" class="mt-8"></div>
             </div>
 
             <!-- Nutrition Section -->
@@ -442,7 +443,7 @@
             mindsetQuoteText, powerlistContainer, streakCounter, addExpenseBtn, expenseList,
             workoutLogContainer, wordInput, simplifyWordBtn, definitionText, definitionLoader,
             monthSelect, yearSelect, calculateTotalBtn, monthlyTotalText, expenseCategory,
-            expenseAmount, expenseDescription;
+            expenseAmount, expenseDescription, nextDayWorkoutPreview;
 
         // --- UTILITY FUNCTIONS ---
         const toISODateString = (date) => new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
@@ -550,6 +551,7 @@
             await renderPowerList(date);
             await renderFinances(date);
             await renderTrainingLogs(date);
+            await renderNextDayWorkoutPreview(date);
             await updateWaterDisplayForDate(date);
             updateCurrentTaskHighlight(date);
             setDailyQuote(date);
@@ -610,23 +612,20 @@
             powerlistContainer.innerHTML = '';
             const dataForDay = await getDataForDate(date);
             if (!dataForDay) return;
-            const isToday = (toISODateString(date) === toISODateString(new Date()));
 
             for (let i = 0; i < 5; i++) {
                 const task = dataForDay.powerList[i] || { text: "", completed: false };
                 const itemHtml = `
                     <div class="flex items-center bg-gray-800 p-4 rounded-lg">
                         <span class="text-yellow-400 font-bold mr-4">${i + 1}.</span>
-                        <input type="text" class="powerlist-input flex-1 bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-yellow-500 text-white" placeholder="Enter critical task #${i + 1}" value="${task.text}" data-index="${i}" ${!isToday ? 'disabled' : ''}>
-                        <input type="checkbox" class="powerlist-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-yellow-500 focus:ring-yellow-500" data-index="${i}" ${task.completed ? 'checked' : ''} ${!isToday ? 'disabled' : ''}>
+                        <input type="text" class="powerlist-input flex-1 bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-yellow-500 text-white" placeholder="Enter critical task #${i + 1}" value="${task.text}" data-index="${i}">
+                        <input type="checkbox" class="powerlist-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-yellow-500 focus:ring-yellow-500" data-index="${i}" ${task.completed ? 'checked' : ''}>
                     </div>`;
                 powerlistContainer.innerHTML += itemHtml;
             }
 
-            if(isToday) {
-                powerlistContainer.querySelectorAll('.powerlist-input').forEach(input => input.addEventListener('input', handlePowerListTextChange));
-                powerlistContainer.querySelectorAll('.powerlist-checkbox').forEach(checkbox => checkbox.addEventListener('change', handlePowerListCheckChange));
-            }
+            powerlistContainer.querySelectorAll('.powerlist-input').forEach(input => input.addEventListener('input', handlePowerListTextChange));
+            powerlistContainer.querySelectorAll('.powerlist-checkbox').forEach(checkbox => checkbox.addEventListener('change', handlePowerListCheckChange));
         }
 
         async function renderFinances(date, currentData) {
@@ -707,6 +706,24 @@
                 workoutLogContainer.querySelectorAll('.workout-log-input').forEach(input => input.addEventListener('input', handleWorkoutLogChange));
                 workoutLogContainer.querySelectorAll('.delete-log-btn').forEach(button => button.addEventListener('click', handleWorkoutLogDelete));
             }
+        }
+
+        async function renderNextDayWorkoutPreview(date) {
+            const nextDay = new Date(date);
+            nextDay.setDate(nextDay.getDate() + 1);
+            const workoutDayKey = getWorkoutDayKey(nextDay);
+            const workoutForDay = workoutData.find(w => w.key === workoutDayKey);
+            
+            let previewHtml = `<h3 class="text-xl font-semibold mb-4 text-center text-yellow-400">Tomorrow's Battle Plan: ${workoutForDay.title}</h3>`;
+            previewHtml += `<div class="bg-gray-800 p-6 rounded-lg">`;
+            previewHtml += `<p class="text-gray-400 mb-4">${workoutForDay.focus}</p>`;
+            previewHtml += '<ul class="space-y-2">';
+            workoutForDay.exercises.forEach(ex => {
+                previewHtml += `<li class="text-gray-300">${ex.name} - <span class="text-gray-400">${ex.details}</span></li>`;
+            });
+            previewHtml += '</ul></div>';
+
+            nextDayWorkoutPreview.innerHTML = previewHtml;
         }
         
         async function updateWaterDisplayForDate(date) {
@@ -1131,6 +1148,7 @@
             expenseCategory = document.getElementById('expense-category');
             expenseAmount = document.getElementById('expense-amount');
             expenseDescription = document.getElementById('expense-description');
+            nextDayWorkoutPreview = document.getElementById('next-day-workout-preview');
             
             let firebaseConfig;
             let initialAuthToken;

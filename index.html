@@ -25,7 +25,7 @@
             border-left-color: #60a5fa;
         }
         .task-item {
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            transition: background-color: 0.3s ease, box-shadow: 0.3s ease;
             border-left: 4px solid transparent;
         }
         .progress-bar {
@@ -124,7 +124,7 @@
             <!-- Power Day Section -->
             <div id="powerday-content" class="tab-content">
                 <h2 class="text-2xl font-semibold mb-4 text-gray-200">Power Day</h2>
-                
+
                 <!-- Water Tracker -->
                 <div class="bg-gray-800 p-4 rounded-lg mb-6">
                     <h3 class="font-semibold text-lg text-gray-100 mb-3">Daily Water Intake</h3>
@@ -179,7 +179,7 @@
             <!-- Training Section -->
             <div id="training-content" class="tab-content hidden">
                  <h2 class="text-2xl font-semibold mb-6 text-gray-200">Greg Plitt Training Protocol</h2>
-                
+
                 <!-- Vision Image -->
                 <div class="mb-6 rounded-lg overflow-hidden shadow-lg relative">
                     <img id="vision-image" src="https://i.ibb.co/ZR8q3Tzx/2-0.jpg" alt="Physical Vision" class="w-full h-auto" onerror="this.onerror=null;this.src='https://placehold.co/600x400/111827/7f8c8d?text=Image+Not+Found';">
@@ -200,7 +200,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div id="workout-log-container" class="space-y-8">
                     <!-- Workout logs will be injected here by JS -->
                 </div>
@@ -249,7 +249,7 @@
                     </div>
                  </div>
             </div>
-            
+
             <!-- Wisdom Section -->
             <div id="wisdom-content" class="tab-content hidden">
                  <h2 class="text-2xl font-semibold mb-6 text-yellow-400">Wisdom</h2>
@@ -260,7 +260,7 @@
                     <p id="wisdom-text" class="text-gray-400 text-center italic">Click the button to generate a success nugget...</p>
                     <div id="wisdom-loader" class="hidden spinner h-8 w-8 border-4 rounded-full"></div>
                  </div>
-                 
+
                  <!-- Quick Dictionary Section -->
                  <div class="mt-8">
                     <h3 class="text-xl font-semibold mb-4 text-center text-blue-400">Quick Dictionary</h3>
@@ -431,7 +431,7 @@
         const mindsetQuotes = [
             { text: "The person you will be in 5 years is based on the books you read and the people you surround yourself with today.", author: "Charlie 'Tremendous' Jones" }, { text: "Discipline is the bridge between goals and accomplishment.", author: "Jim Rohn" }, { text: "You don't have to be great to start, but you have to start to be great.", author: "Zig Ziglar" }, { text: "The future belongs to those who learn more skills and combine them in creative ways.", author: "Robert Greene" }, { text: "Your network is your net worth.", author: "Porter Gale" }, { text: "Don’t wish it were easier, wish you were better.", author: "Jim Rohn" }, { text: "The successful warrior is the average man, with laser-like focus.", author: "Bruce Lee" }, { text: "You are the average of the five people you spend the most time with.", author: "Jim Rohn" }, { text: "A man who conquers himself is greater than one who conquers a thousand men in battle.", author: "Buddha" }, { text: "The only limit to our realization of tomorrow will be our doubts of today.", author: "Franklin D. Roosevelt" }
         ];
-        
+
         // --- GLOBAL STATE & ELEMENTS ---
         let db, auth, userId, appId;
         let displayedDate = new Date();
@@ -460,7 +460,7 @@
             if (day === 0) return 'sunday';
         };
         const getWorkoutDayKey = (date) => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][date.getDay()];
-        
+
         // --- FIRESTORE DATA HANDLING ---
         /**
          * Fetches data for a specific date from Firestore.
@@ -476,7 +476,7 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     let powerList = data.powerList;
-                    
+
                     // BUG FIX: Robustly validate and correct the powerList structure.
                     if (!Array.isArray(powerList) || powerList.length !== 5) {
                         powerList = Array.from({ length: 5 }, () => ({ text: "", completed: false }));
@@ -500,13 +500,13 @@
                     };
                 } else {
                     // Return a default structure if no document exists for the date
-                    return { 
-                        water: 0, 
-                        checkedTasks: [], 
-                        powerList: Array.from({ length: 5 }, () => ({ text: "", completed: false })), 
-                        expenses: [], 
+                    return {
+                        water: 0,
+                        checkedTasks: [],
+                        powerList: Array.from({ length: 5 }, () => ({ text: "", completed: false })),
+                        expenses: [],
                         workoutLog: {},
-                        completedSets: {} 
+                        completedSets: {}
                     };
                 }
             } catch (error) {
@@ -540,7 +540,7 @@
             // Update Date Display
             currentDateEl.textContent = date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
             nextDayBtn.disabled = isToday;
-            
+
             // Show/hide today button
             todayBtn.classList.toggle('hidden', isToday);
 
@@ -570,7 +570,7 @@
             const dayKey = getDayKeyForDate(date);
             const schedule = schedules[dayKey];
             const dataForDay = await getDataForDate(date);
-            if (!dataForDay || !schedule) return; 
+            if (!dataForDay || !schedule) return;
 
             const dayContainer = document.createElement('div');
             dayContainer.className = 'space-y-3';
@@ -587,7 +587,7 @@
                     </div>`;
             }).join('');
             scheduleContainer.appendChild(dayContainer);
-            
+
             dayContainer.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.addEventListener('change', handleCheckboxChange));
         }
 
@@ -612,7 +612,7 @@
             }).join('');
             scheduleContainer.appendChild(dayContainer);
         }
-        
+
         async function renderPowerList(date) {
             powerlistContainer.innerHTML = '';
             const dataForDay = await getDataForDate(date);
@@ -637,7 +637,7 @@
             expenseList.innerHTML = '';
             const dataForDay = currentData || await getDataForDate(date);
             if (!dataForDay) return;
-            
+
             if (dataForDay.expenses.length === 0) {
                 expenseList.innerHTML = `<li class="text-gray-500 italic">No expenses logged for this day.</li>`;
             } else {
@@ -681,7 +681,7 @@
                 const logKey = `${workoutDayKey}-${exercise.name}`;
                 const lastLog = lastWeekData.workoutLog[logKey] || 'N/A';
                 const todayLog = todayData.workoutLog[logKey] || '';
-                
+
                 let logInputHtml = '';
                 let setCheckboxesHtml = '';
 
@@ -733,7 +733,7 @@
             nextDay.setDate(nextDay.getDate() + 1);
             const workoutDayKey = getWorkoutDayKey(nextDay);
             const workoutForDay = workoutData.find(w => w.key === workoutDayKey);
-            
+
             let previewHtml = `<h3 class="text-xl font-semibold mb-4 text-center text-yellow-400">Tomorrow's Battle Plan: ${workoutForDay.title}</h3>`;
             previewHtml += `<div class="bg-gray-800 p-6 rounded-lg">`;
             previewHtml += `<p class="text-gray-400 mb-4">${workoutForDay.focus}</p>`;
@@ -745,7 +745,7 @@
 
             nextDayWorkoutPreview.innerHTML = previewHtml;
         }
-        
+
         async function updateWaterDisplayForDate(date) {
             const dataForDay = await getDataForDate(date);
             if (!dataForDay) return;
@@ -778,7 +778,7 @@
                 if (currentTaskElement) currentTaskElement.classList.add('task-current');
             }
         }
-        
+
         function setDailyQuote(date) {
             const start = new Date(date.getFullYear(), 0, 0);
             const diff = date - start;
@@ -857,13 +857,13 @@
             await saveDataForDate(displayedDate, dataForDay);
             await updateStreakDisplay();
         }
-        
+
         async function handleWorkoutLogChange(e) {
             const logKey = e.target.dataset.logKey;
             const dataForDay = await getDataForDate(displayedDate);
             if (!dataForDay) return;
             dataForDay.workoutLog[logKey] = e.target.value;
-            
+
             // Show/hide delete button based on input value
             const deleteBtn = e.target.nextElementSibling;
             if (deleteBtn && deleteBtn.classList.contains('delete-log-btn')) {
@@ -911,17 +911,17 @@
             if (category && !isNaN(amount) && amount > 0) {
                 const dataForDay = await getDataForDate(displayedDate);
                 if (!dataForDay) return;
-                
+
                 const newExpense = { category, amount, description };
-                
+
                 if (!dataForDay.expenses) {
                     dataForDay.expenses = [];
                 }
                 dataForDay.expenses.push(newExpense);
-                
+
                 // Update UI immediately
                 renderFinances(displayedDate, dataForDay);
-                
+
                 // Save to Firestore in the background
                 saveDataForDate(displayedDate, dataForDay);
 
@@ -962,38 +962,24 @@
                 });
             });
         }
-        
+
         async function generateWisdom() {
             wisdomText.classList.add('hidden');
             wisdomLoader.classList.remove('hidden');
             generateWisdomBtn.disabled = true;
 
-            const isCanvasEnv = typeof __firebase_config !== 'undefined' && __firebase_config.trim() !== '';
-            const apiUrl = isCanvasEnv 
-                ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=`
-                : `/.netlify/functions/generate-wisdom`;
+            const apiUrl = `/.netlify/functions/generate-wisdom`;
 
             try {
-                let response;
-                if (isCanvasEnv) {
-                    const prompt = "Generate a short, actionable 'success nugget' (2-3 sentences) for an aspiring billionaire. The tone should be direct and motivating, focusing on principles of wealth creation, extreme discipline, or strategic thinking. Style of Naval Ravikant or Morgan Housel.";
-                    const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
-                    response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                } else {
-                    response = await fetch(apiUrl, { method: 'POST'});
-                }
-
+                const response = await fetch(apiUrl, { method: 'POST'});
                 const result = await response.json();
-                
-                if (result.candidates && result.candidates[0].content.parts[0].text) {
-                    wisdomText.textContent = result.candidates[0].content.parts[0].text;
-                } else if (result.wisdom) {
+
+                if (result.wisdom) {
                     wisdomText.textContent = result.wisdom;
                 } else if (result.error) {
-                    // Display the detailed error from the Netlify function
-                    wisdomText.textContent = `Error: ${result.error}`;
-                }
-                else {
+                    const errorMessage = typeof result.error === 'object' ? result.error.message : result.error;
+                    wisdomText.textContent = `Error: ${errorMessage || 'An unknown error occurred.'}`;
+                } else {
                     wisdomText.textContent = "Could not retrieve wisdom. Please try again.";
                 }
             } catch (error) {
@@ -1017,32 +1003,21 @@
             definitionLoader.classList.remove('hidden');
             simplifyWordBtn.disabled = true;
 
-            const isCanvasEnv = typeof __firebase_config !== 'undefined' && __firebase_config.trim() !== '';
-            const apiUrl = isCanvasEnv 
-                ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=`
-                : `/.netlify/functions/simplify-word`;
+            const apiUrl = `/.netlify/functions/simplify-word`;
 
             try {
-                let response;
-                if (isCanvasEnv) {
-                    const prompt = `Explain the word "${word}" in very simple terms for someone whose third language is English. Provide a short, easy-to-understand definition.`;
-                    const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
-                    response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                } else {
-                    response = await fetch(apiUrl, { 
-                        method: 'POST',
-                        body: JSON.stringify({ word: word })
-                    });
-                }
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    body: JSON.stringify({ word: word })
+                });
 
                 const result = await response.json();
-                
-                if (result.candidates && result.candidates[0].content.parts[0].text) {
-                    definitionText.textContent = result.candidates[0].content.parts[0].text;
-                } else if (result.definition) {
+
+                if (result.definition) {
                     definitionText.textContent = result.definition;
                 } else if (result.error) {
-                    definitionText.textContent = `Error: ${result.error}`;
+                    const errorMessage = typeof result.error === 'object' ? result.error.message : result.error;
+                    definitionText.textContent = `Error: ${errorMessage || 'An unknown error occurred.'}`;
                 } else {
                     definitionText.textContent = "Could not simplify the word. Please try again.";
                 }
@@ -1071,7 +1046,7 @@
         function populateFinanceSelectors() {
             const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             const currentYear = new Date().getFullYear();
-            
+
             months.forEach((month, index) => {
                 const option = document.createElement('option');
                 option.value = index;
@@ -1181,7 +1156,7 @@
             expenseAmount = document.getElementById('expense-amount');
             expenseDescription = document.getElementById('expense-description');
             nextDayWorkoutPreview = document.getElementById('next-day-workout-preview');
-            
+
             let firebaseConfig;
             let initialAuthToken;
             let isCanvasEnv = typeof __firebase_config !== 'undefined' && __firebase_config.trim() !== '';
@@ -1198,7 +1173,7 @@
                     isCanvasEnv = false; // Force fallback
                 }
             }
-            
+
             if (!isCanvasEnv) {
                 // Fallback for Netlify or if Canvas config fails
                 console.log("Running in standalone mode or Canvas config failed. Using hardcoded Firebase config.");
@@ -1212,7 +1187,7 @@
                 };
                 appId = firebaseConfig.appId;
             }
-            
+
             if (!firebaseConfig || !firebaseConfig.apiKey) {
                 console.error("Firebase config is invalid or missing.");
                 document.body.innerHTML = '<div class="text-red-500 text-center p-8">Error: Firebase configuration is invalid. The app cannot be initialized.</div>';
@@ -1236,7 +1211,7 @@
                     console.log("User is not authenticated.");
                 }
             });
-            
+
             try {
                 if (isCanvasEnv && initialAuthToken) {
                     // Use the token provided by the Canvas environment
@@ -1261,7 +1236,7 @@
             setInterval(updateTime, 1000);
             setInterval(setBibleVerse, 600000); // New verse every 10 minutes
             setInterval(() => updateCurrentTaskHighlight(new Date()), 60000); // Update highlight every minute
-            
+
             // Setup Event Listeners
             generateWisdomBtn.addEventListener('click', generateWisdom);
             simplifyWordBtn.addEventListener('click', simplifyWord);

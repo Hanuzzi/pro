@@ -438,6 +438,7 @@
         let timerInterval;
         let timerSeconds = 60;
         let isAuthReady = false;
+        let currentDayData = null;
 
         // --- UI ELEMENT REFERENCES (will be populated in main) ---
         let scheduleContainer, currentDateEl, currentTimeEl, todayBtn, dailyQuoteEl, bibleVerseEl,
@@ -533,6 +534,9 @@
 
         // --- UI RENDERING (Now mostly async) ---
         async function renderUIForDate(date) {
+            currentDayData = await getDataForDate(date);
+            if (!currentDayData) return;
+
             const dateString = toISODateString(date);
             const todayString = toISODateString(new Date());
             const isToday = (dateString === todayString);
@@ -554,22 +558,21 @@
             });
 
             // Render all components for the selected date
-            await renderScheduleForDate(date);
-            await renderPowerList(date);
-            await renderFinances(date);
-            await renderTrainingLogs(date);
+            renderScheduleForDate(date, currentDayData);
+            renderPowerList(currentDayData);
+            renderFinances(currentDayData);
+            await renderTrainingLogs(date, currentDayData);
             await renderNextDayWorkoutPreview(date);
-            await updateWaterDisplayForDate(date);
+            updateWaterDisplay(currentDayData.water);
             updateCurrentTaskHighlight(date);
             setDailyQuote(date);
             await updateStreakDisplay();
         }
 
-        async function renderScheduleForDate(date) {
+        function renderScheduleForDate(date, dataForDay) {
             scheduleContainer.innerHTML = '';
             const dayKey = getDayKeyForDate(date);
             const schedule = schedules[dayKey];
-            const dataForDay = await getDataForDate(date);
             if (!dataForDay || !schedule) return;
 
             const dayContainer = document.createElement('div');
@@ -613,9 +616,8 @@
             scheduleContainer.appendChild(dayContainer);
         }
 
-        async function renderPowerList(date) {
+        function renderPowerList(dataForDay) {
             powerlistContainer.innerHTML = '';
-            const dataForDay = await getDataForDate(date);
             if (!dataForDay) return;
 
             for (let i = 0; i < 5; i++) {
@@ -633,9 +635,8 @@
             powerlistContainer.querySelectorAll('.powerlist-checkbox').forEach(checkbox => checkbox.addEventListener('change', handlePowerListCheckChange));
         }
 
-        async function renderFinances(date, currentData) {
+        function renderFinances(dataForDay) {
             expenseList.innerHTML = '';
-            const dataForDay = currentData || await getDataForDate(date);
             if (!dataForDay) return;
 
             if (dataForDay.expenses.length === 0) {
@@ -652,7 +653,7 @@
             }
         }
 
-        async function renderTrainingLogs(date) {
+        async function renderTrainingLogs(date, todayData) {
             workoutLogContainer.innerHTML = '';
             const workoutDayKey = getWorkoutDayKey(date);
             const workoutForDay = workoutData.find(w => w.key === workoutDayKey);
@@ -668,7 +669,6 @@
             const lastWeekDate = new Date(date);
             lastWeekDate.setDate(lastWeekDate.getDate() - 7);
             const lastWeekData = await getDataForDate(lastWeekDate);
-            const todayData = await getDataForDate(date);
 
             if (!lastWeekData || !todayData) return;
 
@@ -746,10 +746,7 @@
             nextDayWorkoutPreview.innerHTML = previewHtml;
         }
 
-        async function updateWaterDisplayForDate(date) {
-            const dataForDay = await getDataForDate(date);
-            if (!dataForDay) return;
-            const amount = dataForDay.water || 0;
+        function updateWaterDisplay(amount) {
             const waterGoal = 4.0;
             waterAmountEl.textContent = `${amount.toFixed(1)}L`;
             const progress = Math.min((amount / waterGoal) * 100, 100);
@@ -829,101 +826,90 @@
         }
 
         // --- EVENT HANDLERS (Now mostly async) ---
-        async function handleCheckboxChange(e) {
+        function handleCheckboxChange(e) {
+            if (!currentDayData) return;
             const taskId = parseInt(e.target.dataset.taskId);
-            const dataForDay = await getDataForDate(displayedDate);
-            if (!dataForDay) return;
             if (e.target.checked) {
-                if (!dataForDay.checkedTasks.includes(taskId)) dataForDay.checkedTasks.push(taskId);
+                if (!currentDayData.checkedTasks.includes(taskId)) {
+                    currentDayData.checkedTasks.push(taskId);
+                }
             } else {
-                dataForDay.checkedTasks = dataForDay.checkedTasks.filter(id => id !== taskId);
+                currentDayData.checkedTasks = currentDayData.checkedTasks.filter(id => id !== taskId);
             }
-            await saveDataForDate(displayedDate, dataForDay);
+            saveDataForDate(displayedDate, currentDayData);
         }
 
-        async function handlePowerListTextChange(e) {
+        function handlePowerListTextChange(e) {
+            if (!currentDayData) return;
             const index = parseInt(e.target.dataset.index);
-            const dataForDay = await getDataForDate(displayedDate);
-            if (!dataForDay) return;
-            dataForDay.powerList[index].text = e.target.value;
-            await saveDataForDate(displayedDate, dataForDay);
+            currentDayData.powerList[index].text = e.target.value;
+            saveDataForDate(displayedDate, currentDayData);
         }
 
-        async function handlePowerListCheckChange(e) {
+        function handlePowerListCheckChange(e) {
+            if (!currentDayData) return;
             const index = parseInt(e.target.dataset.index);
-            const dataForDay = await getDataForDate(displayedDate);
-            if (!dataForDay) return;
-            dataForDay.powerList[index].completed = e.target.checked;
-            await saveDataForDate(displayedDate, dataForDay);
-            await updateStreakDisplay();
+            currentDayData.powerList[index].completed = e.target.checked;
+            saveDataForDate(displayedDate, currentDayData);
+            updateStreakDisplay();
         }
 
-        async function handleWorkoutLogChange(e) {
+        function handleWorkoutLogChange(e) {
+            if (!currentDayData) return;
             const logKey = e.target.dataset.logKey;
-            const dataForDay = await getDataForDate(displayedDate);
-            if (!dataForDay) return;
-            dataForDay.workoutLog[logKey] = e.target.value;
+            currentDayData.workoutLog[logKey] = e.target.value;
 
-            // Show/hide delete button based on input value
             const deleteBtn = e.target.nextElementSibling;
             if (deleteBtn && deleteBtn.classList.contains('delete-log-btn')) {
                 deleteBtn.classList.toggle('hidden', !e.target.value);
             }
 
-            await saveDataForDate(displayedDate, dataForDay);
+            saveDataForDate(displayedDate, currentDayData);
         }
 
-        async function handleWorkoutLogDelete(e) {
+        function handleWorkoutLogDelete(e) {
+            if (!currentDayData) return;
             const logKey = e.target.dataset.logKey;
-            const dataForDay = await getDataForDate(displayedDate);
-            if (!dataForDay) return;
-            dataForDay.workoutLog[logKey] = '';
-            await saveDataForDate(displayedDate, dataForDay);
-            await renderTrainingLogs(displayedDate);
+            currentDayData.workoutLog[logKey] = '';
+            saveDataForDate(displayedDate, currentDayData);
+            renderTrainingLogs(displayedDate, currentDayData);
         }
 
-        async function handleSetCheckboxChange(e) {
+        function handleSetCheckboxChange(e) {
+            if (!currentDayData) return;
             const setId = e.target.dataset.setId;
-            const dataForDay = await getDataForDate(displayedDate);
-            if (!dataForDay) return;
 
-            if (!dataForDay.completedSets) {
-                dataForDay.completedSets = {};
+            if (!currentDayData.completedSets) {
+                currentDayData.completedSets = {};
             }
-            dataForDay.completedSets[setId] = e.target.checked;
-            await saveDataForDate(displayedDate, dataForDay);
+            currentDayData.completedSets[setId] = e.target.checked;
+            saveDataForDate(displayedDate, currentDayData);
         }
 
-        async function handleExpenseDelete(e) {
+        function handleExpenseDelete(e) {
+            if (!currentDayData) return;
             const index = parseInt(e.target.dataset.index);
-            const dataForDay = await getDataForDate(displayedDate);
-            if (!dataForDay) return;
-            dataForDay.expenses.splice(index, 1);
-            await saveDataForDate(displayedDate, dataForDay);
-            await renderFinances(displayedDate, dataForDay);
+            currentDayData.expenses.splice(index, 1);
+            saveDataForDate(displayedDate, currentDayData);
+            renderFinances(currentDayData);
         }
 
-        async function handleAddExpense() {
+        function handleAddExpense() {
+            if (!currentDayData) return;
             const category = expenseCategory.value;
             const amount = parseFloat(expenseAmount.value);
             const description = expenseDescription.value.trim();
 
             if (category && !isNaN(amount) && amount > 0) {
-                const dataForDay = await getDataForDate(displayedDate);
-                if (!dataForDay) return;
-
                 const newExpense = { category, amount, description };
 
-                if (!dataForDay.expenses) {
-                    dataForDay.expenses = [];
+                if (!currentDayData.expenses) {
+                    currentDayData.expenses = [];
                 }
-                dataForDay.expenses.push(newExpense);
+                currentDayData.expenses.push(newExpense);
 
-                // Update UI immediately
-                renderFinances(displayedDate, dataForDay);
-
-                // Save to Firestore in the background
-                saveDataForDate(displayedDate, dataForDay);
+                renderFinances(currentDayData);
+                saveDataForDate(displayedDate, currentDayData);
 
                 expenseAmount.value = '';
                 expenseDescription.value = '';
@@ -1255,12 +1241,11 @@
                 displayedDate.setDate(displayedDate.getDate() + 1);
                 renderUIForDate(displayedDate);
             });
-            addWaterBtn.addEventListener('click', async () => {
-                const dataForDay = await getDataForDate(displayedDate);
-                if (!dataForDay) return;
-                dataForDay.water += 0.5;
-                await saveDataForDate(displayedDate, dataForDay);
-                await updateWaterDisplayForDate(displayedDate);
+            addWaterBtn.addEventListener('click', () => {
+                if (!currentDayData) return;
+                currentDayData.water += 0.5;
+                updateWaterDisplay(currentDayData.water);
+                saveDataForDate(displayedDate, currentDayData);
             });
             editWaterBtn.addEventListener('click', () => {
                 waterControlsDefault.classList.add('hidden');
@@ -1270,12 +1255,11 @@
                 waterControlsDefault.classList.remove('hidden');
                 waterControlsConfirm.classList.add('hidden');
             });
-            confirmResetBtn.addEventListener('click', async () => {
-                const dataForDay = await getDataForDate(displayedDate);
-                if (!dataForDay) return;
-                dataForDay.water = 0;
-                await saveDataForDate(displayedDate, dataForDay);
-                await updateWaterDisplayForDate(displayedDate);
+            confirmResetBtn.addEventListener('click', () => {
+                if (!currentDayData) return;
+                currentDayData.water = 0;
+                updateWaterDisplay(currentDayData.water);
+                saveDataForDate(displayedDate, currentDayData);
                 waterControlsDefault.classList.remove('hidden');
                 waterControlsConfirm.classList.add('hidden');
             });

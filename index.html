@@ -25,7 +25,7 @@
             border-left-color: #60a5fa;
         }
         .task-item {
-            transition: background-color: 0.3s ease, box-shadow: 0.3s ease;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
             border-left: 4px solid transparent;
         }
         .progress-bar {
@@ -331,7 +331,7 @@
         // --- Firebase SDK Imports ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- App Data (Constants) ---
         const schedules = {
@@ -796,28 +796,65 @@
         }
 
         async function calculateStreak() {
-            let streak = 0;
-            let date = new Date();
-            date.setDate(date.getDate() - 1); // Start from yesterday
+            if (!isAuthReady) return 0;
 
-            for (let i = 0; i < 365; i++) {
-                const data = await getDataForDate(date);
-                if (!data) break; // Stop if data fetch fails
-                const allTasksDone = data.powerList && data.powerList.length === 5 && data.powerList.every(task => task.completed);
-                if (allTasksDone) {
-                    streak++;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // We query for the last 90 days of documents to be safe.
+            const ninetyDaysAgo = new Date(today);
+            ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+
+            const dailyDataRef = collection(db, `/artifacts/${appId}/users/${userId}/dailyData`);
+            const q = query(dailyDataRef,
+                where('__name__', '>=', toISODateString(ninetyDaysAgo)),
+                where('__name__', '<', toISODateString(today)) // Don't include today
+            );
+
+            try {
+                const querySnapshot = await getDocs(q);
+                const pastData = {};
+                querySnapshot.forEach(doc => {
+                    pastData[doc.id] = doc.data();
+                });
+
+                let streak = 0;
+                let date = new Date();
+                date.setDate(date.getDate() - 1); // Start from yesterday
+
+                for (let i = 0; i < 90; i++) {
+                    const dateString = toISODateString(date);
+                    const data = pastData[dateString];
+
+                    const allTasksDone = data && data.powerList && data.powerList.length === 5 && data.powerList.every(task => task.completed);
+
+                    if (allTasksDone) {
+                        streak++;
+                    } else {
+                        break; // Streak is broken
+                    }
                     date.setDate(date.getDate() - 1);
-                } else {
-                    break;
                 }
+                return streak;
+            } catch (error) {
+                console.error("Error calculating streak:", error);
+                return 0; // Return 0 on error
             }
-            return streak;
         }
 
         async function updateStreakDisplay() {
-            const currentData = await getDataForDate(new Date());
-            if (!currentData) return;
-            const allToday = currentData.powerList && currentData.powerList.length === 5 && currentData.powerList.every(task => task.completed);
+            let todayData;
+            const isToday = toISODateString(displayedDate) === toISODateString(new Date());
+
+            if (isToday && currentDayData) {
+                todayData = currentDayData;
+            } else {
+                todayData = await getDataForDate(new Date());
+            }
+
+            if (!todayData) return;
+
+            const allToday = todayData.powerList && todayData.powerList.length === 5 && todayData.powerList.every(task => task.completed);
             let streak = await calculateStreak();
             if (allToday) {
                 streak++;

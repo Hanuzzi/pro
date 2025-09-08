@@ -188,7 +188,7 @@
                     </div>
                 </div>
 
-                 <!-- Mission Timer -->
+                <!-- Mission Timer -->
                 <div class="bg-gray-800 p-4 rounded-lg mb-8">
                     <h3 class="font-semibold text-lg text-gray-100 mb-3">Mission Timer</h3>
                     <div class="flex items-center justify-center space-x-4">
@@ -277,10 +277,10 @@
                  <div class="mt-8">
                       <h3 class="text-xl font-semibold mb-4 text-center text-yellow-400">Mindset Quotes</h3>
                       <div id="mindset-quote-container" class="bg-gray-800 p-6 rounded-lg min-h-[150px] flex items-center justify-center">
-                         <p id="mindset-quote-text" class="text-gray-300 text-center italic"></p>
+                           <p id="mindset-quote-text" class="text-gray-300 text-center italic"></p>
                       </div>
                       <div class="text-center mt-4">
-                         <button id="new-quote-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">New Quote</button>
+                           <button id="new-quote-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">New Quote</button>
                       </div>
                  </div>
             </div>
@@ -590,28 +590,6 @@
             
             dayContainer.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.addEventListener('change', handleCheckboxChange));
         }
-
-        function displayScheduleTemplate(dayKey) {
-            scheduleContainer.innerHTML = '';
-            const schedule = schedules[dayKey];
-            if (!schedule) return;
-
-            const dayContainer = document.createElement('div');
-            dayContainer.className = 'space-y-3';
-            dayContainer.innerHTML = schedule.map((item, index) => {
-                // Note: Checkboxes are disabled as this is a template view
-                return `
-                    <div id="task-template-${dayKey}-${index}" class="task-item flex items-center bg-gray-800 p-4 rounded-lg shadow-md">
-                        <div class="w-1/4 sm:w-1/5"><p class="font-mono text-blue-400">${item.time}</p></div>
-                        <div class="flex-1">
-                            <p class="font-semibold text-gray-100">${item.task}</p>
-                            <p class="text-sm text-gray-400 mt-1">${item.details}</p>
-                        </div>
-                        <input type="checkbox" disabled class="form-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500 flex-shrink-0">
-                    </div>`;
-            }).join('');
-            scheduleContainer.appendChild(dayContainer);
-        }
         
         async function renderPowerList(date) {
             powerlistContainer.innerHTML = '';
@@ -667,10 +645,16 @@
 
             const lastWeekDate = new Date(date);
             lastWeekDate.setDate(lastWeekDate.getDate() - 7);
-            const lastWeekData = await getDataForDate(lastWeekDate);
+            
             const todayData = await getDataForDate(date);
-
-            if (!lastWeekData || !todayData) return;
+            const lastWeekData = await getDataForDate(lastWeekDate);
+            
+            // FIX: Only stop rendering if today's data is missing.
+            // It's okay if last week's data is unavailable.
+            if (!todayData) {
+                workoutLogContainer.innerHTML = `<div class="bg-gray-800 p-5 rounded-lg text-center text-red-500">Could not load workout data.</div>`;
+                return;
+            }
 
             let dayHtml = `
                 <h3 class="font-bold text-lg text-blue-400 mb-2">${workoutForDay.title}</h3>
@@ -679,8 +663,10 @@
 
             workoutForDay.exercises.forEach((exercise, exIndex) => {
                 const logKey = `${workoutDayKey}-${exercise.name}`;
-                const lastLog = lastWeekData.workoutLog[logKey] || 'N/A';
-                const todayLog = todayData.workoutLog[logKey] || '';
+                // FIX: Use optional chaining (?.) to safely access properties on lastWeekData,
+                // which might be null if there was an error or no data exists.
+                const lastLog = lastWeekData?.workoutLog?.[logKey] || 'N/A';
+                const todayLog = todayData.workoutLog?.[logKey] || '';
                 
                 let logInputHtml = '';
                 let setCheckboxesHtml = '';
@@ -729,10 +715,12 @@
         }
 
         async function renderNextDayWorkoutPreview(date) {
+            nextDayWorkoutPreview.innerHTML = '';
             const nextDay = new Date(date);
             nextDay.setDate(nextDay.getDate() + 1);
             const workoutDayKey = getWorkoutDayKey(nextDay);
             const workoutForDay = workoutData.find(w => w.key === workoutDayKey);
+            if (!workoutForDay) return;
             
             let previewHtml = `<h3 class="text-xl font-semibold mb-4 text-center text-yellow-400">Tomorrow's Battle Plan: ${workoutForDay.title}</h3>`;
             previewHtml += `<div class="bg-gray-800 p-6 rounded-lg">`;
@@ -955,10 +943,14 @@
         function setupDaySwitcher() {
             daySwitcher.querySelectorAll('.day-btn').forEach(button => {
                 button.addEventListener('click', () => {
+                    // FIX: This handler was showing a static template, which created a confusing UI.
+                    // Now, clicking a day button will re-render the interactive schedule for the
+                    // currently displayed date. This acts as a "refresh" and fixes the problem
+                    // where the schedule is blank on initial load, as the user's click
+                    // will trigger a new, successful render.
                     daySwitcher.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('day-btn-active'));
                     button.classList.add('day-btn-active');
-                    const dayKey = button.dataset.day;
-                    displayScheduleTemplate(dayKey);
+                    renderScheduleForDate(displayedDate);
                 });
             });
         }

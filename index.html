@@ -331,7 +331,7 @@
         // --- Firebase SDK Imports ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeFirestore, memoryLocalCache, getDoc, setDoc, doc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- App Data (Constants) ---
         const schedules = {
@@ -1213,7 +1213,8 @@
 
             // Initialize Firebase
             const app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
+            // Use memory cache instead of IndexedDB for wider browser compatibility, especially on iOS.
+            db = initializeFirestore(app, { localCache: memoryLocalCache() });
             auth = getAuth(app);
 
             onAuthStateChanged(auth, async (user) => {
@@ -1320,3 +1321,4 @@
     </script>
 </body>
 </html>
+

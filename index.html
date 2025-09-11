@@ -54,6 +54,10 @@
             height: 1.25rem;
             cursor: pointer;
         }
+        #add-expense-btn:disabled {
+            background-color: #1e40af;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white p-4 sm:p-6 md:p-8">
@@ -188,7 +192,7 @@
                     </div>
                 </div>
 
-                <!-- Mission Timer -->
+                 <!-- Mission Timer -->
                 <div class="bg-gray-800 p-4 rounded-lg mb-8">
                     <h3 class="font-semibold text-lg text-gray-100 mb-3">Mission Timer</h3>
                     <div class="flex items-center justify-center space-x-4">
@@ -211,8 +215,8 @@
             <div id="nutrition-content" class="tab-content hidden">
                  <h2 class="text-2xl font-semibold mb-4 text-gray-200">Bulletproof Nutrition Protocol</h2>
                  <div class="bg-gray-800 p-4 rounded-lg mb-6 text-center">
-                    <p class="text-gray-400">Daily Target:</p>
-                    <p class="text-xl font-bold text-white">~2,563 kcal | ~198g Protein | ~99g Fat | ~230g Carbs</p>
+                     <p class="text-gray-400">Daily Target:</p>
+                     <p class="text-xl font-bold text-white">~2,563 kcal | ~198g Protein | ~99g Fat | ~230g Carbs</p>
                  </div>
                  <div class="space-y-8">
                     <!-- Supplement Schedule -->
@@ -254,34 +258,34 @@
             <div id="wisdom-content" class="tab-content hidden">
                  <h2 class="text-2xl font-semibold mb-6 text-yellow-400">Wisdom</h2>
                  <div class="text-center">
-                    <button id="generate-wisdom-btn" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg transition duration-300">Generate Wisdom</button>
+                     <button id="generate-wisdom-btn" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg transition duration-300">Generate Wisdom</button>
                  </div>
                  <div id="wisdom-container" class="mt-6 bg-gray-800 p-6 rounded-lg min-h-[150px] flex items-center justify-center">
-                    <p id="wisdom-text" class="text-gray-400 text-center italic">Click the button to generate a success nugget...</p>
-                    <div id="wisdom-loader" class="hidden spinner h-8 w-8 border-4 rounded-full"></div>
+                     <p id="wisdom-text" class="text-gray-400 text-center italic">Click the button to generate a success nugget...</p>
+                     <div id="wisdom-loader" class="hidden spinner h-8 w-8 border-4 rounded-full"></div>
                  </div>
-                 
+                
                  <!-- Quick Dictionary Section -->
                  <div class="mt-8">
-                    <h3 class="text-xl font-semibold mb-4 text-center text-blue-400">Quick Dictionary</h3>
-                    <div class="flex space-x-2 bg-gray-800 p-4 rounded-lg">
-                        <input type="text" id="word-input" class="flex-1 bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white" placeholder="Enter a word to simplify...">
-                        <button id="simplify-word-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Simplify</button>
-                    </div>
-                    <div id="definition-container" class="mt-4 bg-gray-800 p-6 rounded-lg min-h-[100px] flex items-center justify-center">
-                        <p id="definition-text" class="text-gray-400 text-center italic">Simplified definition will appear here...</p>
-                        <div id="definition-loader" class="hidden spinner h-8 w-8 border-4 rounded-full"></div>
-                    </div>
+                     <h3 class="text-xl font-semibold mb-4 text-center text-blue-400">Quick Dictionary</h3>
+                     <div class="flex space-x-2 bg-gray-800 p-4 rounded-lg">
+                         <input type="text" id="word-input" class="flex-1 bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white" placeholder="Enter a word to simplify...">
+                         <button id="simplify-word-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Simplify</button>
+                     </div>
+                     <div id="definition-container" class="mt-4 bg-gray-800 p-6 rounded-lg min-h-[100px] flex items-center justify-center">
+                         <p id="definition-text" class="text-gray-400 text-center italic">Simplified definition will appear here...</p>
+                         <div id="definition-loader" class="hidden spinner h-8 w-8 border-4 rounded-full"></div>
+                     </div>
                  </div>
 
                  <div class="mt-8">
-                      <h3 class="text-xl font-semibold mb-4 text-center text-yellow-400">Mindset Quotes</h3>
-                      <div id="mindset-quote-container" class="bg-gray-800 p-6 rounded-lg min-h-[150px] flex items-center justify-center">
+                       <h3 class="text-xl font-semibold mb-4 text-center text-yellow-400">Mindset Quotes</h3>
+                       <div id="mindset-quote-container" class="bg-gray-800 p-6 rounded-lg min-h-[150px] flex items-center justify-center">
                            <p id="mindset-quote-text" class="text-gray-300 text-center italic"></p>
-                      </div>
-                      <div class="text-center mt-4">
+                       </div>
+                       <div class="text-center mt-4">
                            <button id="new-quote-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">New Quote</button>
-                      </div>
+                       </div>
                  </div>
             </div>
 
@@ -309,16 +313,16 @@
                     </ul>
                 </div>
                  <div class="mt-8 bg-gray-800 p-4 rounded-lg">
-                    <h3 class="text-xl font-semibold mb-4 text-center text-blue-400">Monthly Summary</h3>
-                    <div class="flex items-center justify-center space-x-2">
-                        <select id="month-select" class="bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white"></select>
-                        <select id="year-select" class="bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white"></select>
-                        <button id="calculate-total-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Calculate</button>
-                    </div>
-                    <div id="monthly-total-container" class="mt-4 text-center">
-                        <p id="monthly-total-text" class="text-gray-400"></p>
-                    </div>
-                </div>
+                     <h3 class="text-xl font-semibold mb-4 text-center text-blue-400">Monthly Summary</h3>
+                     <div class="flex items-center justify-center space-x-2">
+                         <select id="month-select" class="bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white"></select>
+                         <select id="year-select" class="bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white"></select>
+                         <button id="calculate-total-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Calculate</button>
+                     </div>
+                     <div id="monthly-total-container" class="mt-4 text-center">
+                         <p id="monthly-total-text" class="text-gray-400"></p>
+                     </div>
+                 </div>
             </div>
 
         </main>
@@ -331,7 +335,7 @@
         // --- Firebase SDK Imports ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { initializeFirestore, memoryLocalCache, getDoc, setDoc, doc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- App Data (Constants) ---
         const schedules = {
@@ -346,9 +350,9 @@
                 { time: '08:00', task: 'Deep Work Block #1', details: 'Sacred time. Phone off. No distractions.<br><em>Principle: To be everywhere is to be nowhere. Focus is your superpower.</em>' },
                 { time: '12:00', task: 'Deliberate Recharge', details: 'Eat. Go outside. Let your mind rest.<br><em>Principle: Even a sword must be sharpened. Rest is a strategic weapon.</em>' },
                 { time: '12:45', task: 'Deep Work Block #2 (Part 1)', details: 'Sustain high-level focus. Attack your second objective.<br><em>Principle: Concentrate every minute like a Roman.</em>' },
-                { time: '14:00', task: 'Drive to pick up GF', details: '30 minute drive.<br><em>Principle: Fulfill your duties to others with your full attention.</em>' },
-                { time: '14:30', task: 'Return Drive', details: '30 minute drive.<br><em>Principle: Be present.</em>' },
-                { time: '15:00', task: 'Deep Work Block #2 (Part 2)', details: 'Return to a state of complete focus for the final work sprint.<br><em>Principle: Finish the task at hand.</em>' },
+                { time: '13:30', task: 'Drive to pick up GF', details: '30 minute drive.<br><em>Principle: Fulfill your duties to others with your full attention.</em>' },
+                { time: '14:00', task: 'Return Drive', details: '30 minute drive.<br><em>Principle: Be present.</em>' },
+                { time: '14:30', task: 'Deep Work Block #2 (Part 2)', details: 'Return to a state of complete focus for the final work sprint.<br><em>Principle: Finish the task at hand.</em>' },
                 { time: '15:45', task: 'Shallow Work', details: 'Batch all low-value tasks. Execute with speed and indifference.<br><em>Principle: Some things must be done, but they do not deserve your soul.</em>' },
                 { time: '17:00', task: 'Skill Practice', details: 'Active practice, not passive learning. Sharpen your weapons.<br><em>Principle: We are what we repeatedly do. Excellence is a habit.</em>' },
                 { time: '18:00', task: 'Dinner & Connection', details: 'Be fully present with family. No phones.<br><em>Principle: A strong foundation at home supports the empire abroad.</em>' },
@@ -367,9 +371,9 @@
                 { time: '08:00', task: 'Deep Work Block #1', details: 'Sacred time. Phone off. No distractions.<br><em>Principle: To be everywhere is to be nowhere. Focus is your superpower.</em>' },
                 { time: '12:00', task: 'Deliberate Recharge', details: 'Eat. Go outside. Let your mind rest.<br><em>Principle: Even a sword must be sharpened. Rest is a strategic weapon.</em>' },
                 { time: '12:45', task: 'Deep Work Block #2 (Part 1)', details: 'Sustain high-level focus. Attack your second objective.<br><em>Principle: Concentrate every minute like a Roman.</em>' },
-                { time: '13:30', task: 'Drive to pick up GF', details: '30 minute drive.<br><em>Principle: Fulfill your duties to others with your full attention.</em>' },
-                { time: '14:00', task: 'Return Drive', details: '30 minute drive.<br><em>Principle: Be present.</em>' },
-                { time: '14:30', task: 'Deep Work Block #2 (Part 2)', details: 'Return to a state of complete focus for the final work sprint.<br><em>Principle: Finish the task at hand.</em>' },
+                { time: '13:00', task: 'Drive to pick up GF', details: '30 minute drive.<br><em>Principle: Fulfill your duties to others with your full attention.</em>' },
+                { time: '13:30', task: 'Return Drive', details: '30 minute drive.<br><em>Principle: Be present.</em>' },
+                { time: '14:00', task: 'Deep Work Block #2 (Part 2)', details: 'Return to a state of complete focus for the final work sprint.<br><em>Principle: Finish the task at hand.</em>' },
                 { time: '15:45', task: 'Shallow Work', details: 'Batch all low-value tasks. Execute with speed and indifference.<br><em>Principle: Some things must be done, but they do not deserve your soul.</em>' },
                 { time: '17:00', task: 'Skill Practice', details: 'Active practice, not passive learning. Sharpen your weapons.<br><em>Principle: We are what we repeatedly do. Excellence is a habit.</em>' },
                 { time: '18:00', task: 'Dinner & Connection', details: 'Be fully present with family. No phones.<br><em>Principle: A strong foundation at home supports the empire abroad.</em>' },
@@ -438,8 +442,9 @@
         let timerInterval;
         let timerSeconds = 60;
         let isAuthReady = false;
+        let isSavingExpense = false;
 
-        // --- UI ELEMENT REFERENCES (will be populated in main) ---
+        // --- UI ELEMENT REFERENCES ---
         let scheduleContainer, currentDateEl, currentTimeEl, todayBtn, dailyQuoteEl, bibleVerseEl,
             tabs, tabContents, daySwitcher, addWaterBtn, waterAmountEl, waterProgressEl,
             prevDayBtn, nextDayBtn, editWaterBtn, waterControlsDefault, waterControlsConfirm,
@@ -454,19 +459,14 @@
         const toISODateString = (date) => new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
         const getDayKeyForDate = (date) => {
             const day = date.getDay();
-            if (day >= 1 && day <= 4) return 'weekdays'; // Mon-Thu
+            if (day >= 1 && day <= 4) return 'weekdays';
             if (day === 5) return 'friday';
             if (day === 6) return 'saturday';
-            if (day === 0) return 'sunday';
+            return 'sunday';
         };
         const getWorkoutDayKey = (date) => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][date.getDay()];
         
         // --- FIRESTORE DATA HANDLING ---
-        /**
-         * Fetches data for a specific date from Firestore.
-         * @param {Date} date The date to fetch data for.
-         * @returns {Promise<object>} A promise that resolves with the day's data.
-         */
         async function getDataForDate(date) {
             if (!isAuthReady) return null;
             const dateString = toISODateString(date);
@@ -476,20 +476,11 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     let powerList = data.powerList;
-                    
-                    // BUG FIX: Robustly validate and correct the powerList structure.
                     if (!Array.isArray(powerList) || powerList.length !== 5) {
                         powerList = Array.from({ length: 5 }, () => ({ text: "", completed: false }));
                     } else {
-                        // Ensure each item in the array is a valid object
-                        powerList = powerList.map(item => {
-                            if (typeof item === 'object' && item !== null && 'completed' in item && 'text' in item) {
-                                return item;
-                            }
-                            return { text: "", completed: false };
-                        });
+                        powerList = powerList.map(item => (typeof item === 'object' && item !== null && 'completed' in item && 'text' in item) ? item : { text: "", completed: false });
                     }
-
                     return {
                         water: data.water || 0,
                         checkedTasks: data.checkedTasks || [],
@@ -499,70 +490,45 @@
                         completedSets: data.completedSets || {}
                     };
                 } else {
-                    // Return a default structure if no document exists for the date
-                    return { 
-                        water: 0, 
-                        checkedTasks: [], 
-                        powerList: Array.from({ length: 5 }, () => ({ text: "", completed: false })), 
-                        expenses: [], 
-                        workoutLog: {},
-                        completedSets: {} 
-                    };
+                    return { water: 0, checkedTasks: [], powerList: Array.from({ length: 5 }, () => ({ text: "", completed: false })), expenses: [], workoutLog: {}, completedSets: {} };
                 }
             } catch (error) {
                 console.error("Error fetching data for date:", dateString, error);
-                return null; // Return null on error
+                return null;
             }
         }
 
-        /**
-         * Saves data for a specific date to Firestore.
-         * @param {Date} date The date to save data for.
-         * @param {object} data The data object to save.
-         */
         async function saveDataForDate(date, data) {
             if (!isAuthReady) return;
             const dateString = toISODateString(date);
             const docRef = doc(db, `/artifacts/${appId}/users/${userId}/dailyData`, dateString);
             try {
-                await setDoc(docRef, data, { merge: true }); // Use merge to avoid overwriting fields
+                await setDoc(docRef, data, { merge: true });
             } catch (error) {
                 console.error("Error saving data for date:", dateString, error);
             }
         }
 
-        // --- UI RENDERING (Now mostly async) ---
+        // --- UI RENDERING ---
         async function renderUIForDate(date) {
-            const dateString = toISODateString(date);
-            const todayString = toISODateString(new Date());
-            const isToday = (dateString === todayString);
-
-            // Update Date Display
+            const isToday = toISODateString(date) === toISODateString(new Date());
             currentDateEl.textContent = date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
             nextDayBtn.disabled = isToday;
-            
-            // Show/hide today button
             todayBtn.classList.toggle('hidden', isToday);
-
-            // Highlight the correct day in the switcher
             const dayKey = getDayKeyForDate(date);
-            daySwitcher.querySelectorAll('.day-btn').forEach(btn => {
-                btn.classList.remove('day-btn-active');
-                if (btn.dataset.day === dayKey) {
-                    btn.classList.add('day-btn-active');
-                }
-            });
-
-            // Render all components for the selected date
-            await renderScheduleForDate(date);
-            await renderPowerList(date);
-            await renderFinances(date);
-            await renderTrainingLogs(date);
-            await renderNextDayWorkoutPreview(date);
-            await updateWaterDisplayForDate(date);
+            daySwitcher.querySelectorAll('.day-btn').forEach(btn => btn.classList.toggle('day-btn-active', btn.dataset.day === dayKey));
+            
+            await Promise.all([
+                renderScheduleForDate(date),
+                renderPowerList(date),
+                renderFinances(date),
+                renderTrainingLogs(date),
+                renderNextDayWorkoutPreview(date),
+                updateWaterDisplayForDate(date),
+                updateStreakDisplay()
+            ]);
             updateCurrentTaskHighlight(date);
             setDailyQuote(date);
-            await updateStreakDisplay();
         }
 
         async function renderScheduleForDate(date) {
@@ -570,209 +536,147 @@
             const dayKey = getDayKeyForDate(date);
             const schedule = schedules[dayKey];
             const dataForDay = await getDataForDate(date);
-            if (!dataForDay || !schedule) return; 
-
+            if (!dataForDay || !schedule) return;
             const dayContainer = document.createElement('div');
             dayContainer.className = 'space-y-3';
-            dayContainer.innerHTML = schedule.map((item, index) => {
-                const isChecked = dataForDay.checkedTasks.includes(index);
-                return `
-                    <div id="task-${dayKey}-${index}" class="task-item flex items-center bg-gray-800 p-4 rounded-lg shadow-md">
-                        <div class="w-1/4 sm:w-1/5"><p class="font-mono text-blue-400">${item.time}</p></div>
-                        <div class="flex-1">
-                            <p class="font-semibold text-gray-100">${item.task}</p>
-                            <p class="text-sm text-gray-400 mt-1">${item.details}</p>
-                        </div>
-                        <input type="checkbox" data-task-id="${index}" class="form-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500 flex-shrink-0" ${isChecked ? 'checked' : ''}>
-                    </div>`;
-            }).join('');
+            dayContainer.innerHTML = schedule.map((item, index) => `
+                <div id="task-${dayKey}-${index}" class="task-item flex items-center bg-gray-800 p-4 rounded-lg shadow-md">
+                    <div class="w-1/4 sm:w-1/5"><p class="font-mono text-blue-400">${item.time}</p></div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-gray-100">${item.task}</p>
+                        <p class="text-sm text-gray-400 mt-1">${item.details}</p>
+                    </div>
+                    <input type="checkbox" data-task-id="${index}" class="form-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500 flex-shrink-0" ${dataForDay.checkedTasks.includes(index) ? 'checked' : ''}>
+                </div>`).join('');
             scheduleContainer.appendChild(dayContainer);
-            
-            dayContainer.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.addEventListener('change', handleCheckboxChange));
+            scheduleContainer.addEventListener('change', handleCheckboxChange);
+        }
+
+        function displayScheduleTemplate(dayKey) {
+            const schedule = schedules[dayKey];
+            if (!schedule) return;
+            scheduleContainer.innerHTML = schedule.map((item, index) => `
+                <div id="task-template-${dayKey}-${index}" class="task-item flex items-center bg-gray-800 p-4 rounded-lg shadow-md">
+                    <div class="w-1/4 sm:w-1/5"><p class="font-mono text-blue-400">${item.time}</p></div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-gray-100">${item.task}</p>
+                        <p class="text-sm text-gray-400 mt-1">${item.details}</p>
+                    </div>
+                    <input type="checkbox" disabled class="form-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500 flex-shrink-0">
+                </div>`).join('');
         }
         
         async function renderPowerList(date) {
-            powerlistContainer.innerHTML = '';
             const dataForDay = await getDataForDate(date);
             if (!dataForDay) return;
-
-            for (let i = 0; i < 5; i++) {
+            powerlistContainer.innerHTML = Array.from({ length: 5 }, (_, i) => {
                 const task = dataForDay.powerList[i] || { text: "", completed: false };
-                const itemHtml = `
+                return `
                     <div class="flex items-center bg-gray-800 p-4 rounded-lg">
                         <span class="text-yellow-400 font-bold mr-4">${i + 1}.</span>
                         <input type="text" class="powerlist-input flex-1 bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-yellow-500 text-white" placeholder="Enter critical task #${i + 1}" value="${task.text}" data-index="${i}">
                         <input type="checkbox" class="powerlist-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-yellow-500 focus:ring-yellow-500" data-index="${i}" ${task.completed ? 'checked' : ''}>
                     </div>`;
-                powerlistContainer.innerHTML += itemHtml;
-            }
-
-            powerlistContainer.querySelectorAll('.powerlist-input').forEach(input => input.addEventListener('input', handlePowerListTextChange));
-            powerlistContainer.querySelectorAll('.powerlist-checkbox').forEach(checkbox => checkbox.addEventListener('change', handlePowerListCheckChange));
+            }).join('');
+            powerlistContainer.addEventListener('input', handlePowerListTextChange);
+            powerlistContainer.addEventListener('change', handlePowerListCheckChange);
         }
 
-        async function renderFinances(date, currentData) {
-            expenseList.innerHTML = '';
-            const dataForDay = currentData || await getDataForDate(date);
-            if (!dataForDay) return;
-            
-            if (dataForDay.expenses.length === 0) {
+        async function renderFinances(date) {
+            const dataForDay = await getDataForDate(date);
+            if (!dataForDay || !dataForDay.expenses || dataForDay.expenses.length === 0) {
                 expenseList.innerHTML = `<li class="text-gray-500 italic">No expenses logged for this day.</li>`;
             } else {
-                dataForDay.expenses.forEach((expense, index) => {
-                    const li = document.createElement('li');
-                    li.className = 'flex justify-between items-center text-gray-300 bg-gray-700 p-2 rounded';
-                    li.innerHTML = `<span>${expense.category}: ${expense.amount.toFixed(2)} kr.${expense.description ? ` - <em class="text-gray-400">${expense.description}</em>` : ''}</span>`;
-                    li.innerHTML += `<button class="text-red-500 hover:text-red-400 ml-4 font-bold text-lg" data-index="${index}">&times;</button>`;
-                    expenseList.appendChild(li);
-                });
-                expenseList.querySelectorAll('button').forEach(btn => btn.addEventListener('click', handleExpenseDelete));
+                expenseList.innerHTML = dataForDay.expenses.map((expense, index) => `
+                    <li class="flex justify-between items-center text-gray-300 bg-gray-700 p-2 rounded">
+                        <span>${expense.category}: ${expense.amount.toFixed(2)} kr.${expense.description ? ` - <em class="text-gray-400">${expense.description}</em>` : ''}</span>
+                        <button class="expense-delete-btn text-red-500 hover:text-red-400 ml-4 font-bold text-lg" data-index="${index}">&times;</button>
+                    </li>`).join('');
             }
         }
 
         async function renderTrainingLogs(date) {
-            workoutLogContainer.innerHTML = '';
             const workoutDayKey = getWorkoutDayKey(date);
             const workoutForDay = workoutData.find(w => w.key === workoutDayKey);
-
             if (!workoutForDay) {
                 workoutLogContainer.innerHTML = `<div class="bg-gray-800 p-5 rounded-lg text-center text-gray-400">Rest Day. No workout scheduled.</div>`;
                 return;
             }
-
-            const dayContainer = document.createElement('div');
-            dayContainer.className = 'bg-gray-800 p-5 rounded-lg';
-
-            const lastWeekDate = new Date(date);
-            lastWeekDate.setDate(lastWeekDate.getDate() - 7);
-            
-            const todayData = await getDataForDate(date);
-            const lastWeekData = await getDataForDate(lastWeekDate);
-            
-            // FIX: Only stop rendering if today's data is missing.
-            // It's okay if last week's data is unavailable.
-            if (!todayData) {
-                workoutLogContainer.innerHTML = `<div class="bg-gray-800 p-5 rounded-lg text-center text-red-500">Could not load workout data.</div>`;
-                return;
-            }
-
-            let dayHtml = `
-                <h3 class="font-bold text-lg text-blue-400 mb-2">${workoutForDay.title}</h3>
-                <p class="text-gray-400 mb-4">${workoutForDay.focus}</p>
-                <ul class="space-y-4">`;
-
-            workoutForDay.exercises.forEach((exercise, exIndex) => {
-                const logKey = `${workoutDayKey}-${exercise.name}`;
-                // FIX: Use optional chaining (?.) to safely access properties on lastWeekData,
-                // which might be null if there was an error or no data exists.
-                const lastLog = lastWeekData?.workoutLog?.[logKey] || 'N/A';
-                const todayLog = todayData.workoutLog?.[logKey] || '';
-                
-                let logInputHtml = '';
-                let setCheckboxesHtml = '';
-
-                if (workoutForDay.loggable) {
-                    const sets = parseInt(exercise.details.split(' ')[0]);
-                    setCheckboxesHtml += '<div class="flex space-x-2 mt-2">';
-                    for (let i = 0; i < sets; i++) {
-                        const setId = `${logKey}-${i}`;
-                        const isChecked = todayData.completedSets && todayData.completedSets[setId];
-                        setCheckboxesHtml += `<input type="checkbox" class="set-checkbox bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500" data-set-id="${setId}" ${isChecked ? 'checked' : ''}>`;
-                    }
-                    setCheckboxesHtml += '</div>';
-
-                    logInputHtml = `
-                        <div class="grid grid-cols-2 gap-2 items-center mt-2">
-                            <span class="text-gray-500 text-sm">Last: ${lastLog}</span>
-                            <div class="flex items-center">
-                                <input type="text" class="workout-log-input w-full bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white text-sm p-1" placeholder="Today's Log..." value="${todayLog}" data-log-key="${logKey}">
-                                <button class="delete-log-btn text-red-500 hover:text-red-400 ml-2 font-bold ${todayLog ? '' : 'hidden'}" data-log-key="${logKey}">&times;</button>
+            const [lastWeekData, todayData] = await Promise.all([
+                getDataForDate(new Date(date.getTime() - 7 * 24 * 60 * 60 * 1000)),
+                getDataForDate(date)
+            ]);
+            if (!lastWeekData || !todayData) return;
+            workoutLogContainer.innerHTML = `
+                <div class="bg-gray-800 p-5 rounded-lg">
+                    <h3 class="font-bold text-lg text-blue-400 mb-2">${workoutForDay.title}</h3>
+                    <p class="text-gray-400 mb-4">${workoutForDay.focus}</p>
+                    <ul class="space-y-4">${workoutForDay.exercises.map(ex => {
+                        const logKey = `${workoutDayKey}-${ex.name}`;
+                        const sets = parseInt(ex.details.split(' ')[0]);
+                        return `
+                        <li class="border-t border-gray-700 pt-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-semibold text-gray-100">${ex.name}</p>
+                                    <p class="text-sm text-gray-400">${ex.details}</p>
+                                </div>
+                                ${workoutForDay.loggable ? `<div class="flex space-x-2 mt-2">${Array.from({length: sets}, (_, i) => `<input type="checkbox" class="set-checkbox bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500" data-set-id="${logKey}-${i}" ${todayData.completedSets?.[`${logKey}-${i}`] ? 'checked' : ''}>`).join('')}</div>` : ''}
                             </div>
-                        </div>`;
-                }
-
-                dayHtml += `
-                    <li class="border-t border-gray-700 pt-4">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="font-semibold text-gray-100">${exercise.name}</p>
-                                <p class="text-sm text-gray-400">${exercise.details}</p>
-                            </div>
-                            ${setCheckboxesHtml}
-                        </div>
-                        ${logInputHtml}
-                    </li>`;
-            });
-            dayHtml += `</ul><p class="mt-4 text-sm text-yellow-400"><span class="font-bold">Intensity Note:</span> ${workoutForDay.note}</p>`;
-            dayContainer.innerHTML = dayHtml;
-            workoutLogContainer.appendChild(dayContainer);
-
-            if (workoutForDay.loggable) {
-                workoutLogContainer.querySelectorAll('.workout-log-input').forEach(input => input.addEventListener('input', handleWorkoutLogChange));
-                workoutLogContainer.querySelectorAll('.delete-log-btn').forEach(button => button.addEventListener('click', handleWorkoutLogDelete));
-                workoutLogContainer.querySelectorAll('.set-checkbox').forEach(checkbox => checkbox.addEventListener('change', handleSetCheckboxChange));
-            }
+                            ${workoutForDay.loggable ? `
+                            <div class="grid grid-cols-2 gap-2 items-center mt-2">
+                                <span class="text-gray-500 text-sm">Last: ${lastWeekData.workoutLog?.[logKey] || 'N/A'}</span>
+                                <div class="flex items-center">
+                                    <input type="text" class="workout-log-input w-full bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white text-sm p-1" placeholder="Today's Log..." value="${todayData.workoutLog?.[logKey] || ''}" data-log-key="${logKey}">
+                                    <button class="delete-log-btn text-red-500 hover:text-red-400 ml-2 font-bold ${todayData.workoutLog?.[logKey] ? '' : 'hidden'}" data-log-key="${logKey}">&times;</button>
+                                </div>
+                            </div>` : ''}
+                        </li>`;
+                    }).join('')}</ul>
+                    <p class="mt-4 text-sm text-yellow-400"><span class="font-bold">Intensity Note:</span> ${workoutForDay.note}</p>
+                </div>`;
+            workoutLogContainer.addEventListener('input', handleWorkoutLogChange);
+            workoutLogContainer.addEventListener('click', handleWorkoutLogDelete);
+            workoutLogContainer.addEventListener('change', handleSetCheckboxChange);
         }
 
         async function renderNextDayWorkoutPreview(date) {
-            nextDayWorkoutPreview.innerHTML = '';
-            const nextDay = new Date(date);
-            nextDay.setDate(nextDay.getDate() + 1);
+            const nextDay = new Date(date.getTime() + 24 * 60 * 60 * 1000);
             const workoutDayKey = getWorkoutDayKey(nextDay);
             const workoutForDay = workoutData.find(w => w.key === workoutDayKey);
-            if (!workoutForDay) return;
-            
-            let previewHtml = `<h3 class="text-xl font-semibold mb-4 text-center text-yellow-400">Tomorrow's Battle Plan: ${workoutForDay.title}</h3>`;
-            previewHtml += `<div class="bg-gray-800 p-6 rounded-lg">`;
-            previewHtml += `<p class="text-gray-400 mb-4">${workoutForDay.focus}</p>`;
-            previewHtml += '<ul class="space-y-2">';
-            workoutForDay.exercises.forEach(ex => {
-                previewHtml += `<li class="text-gray-300">${ex.name} - <span class="text-gray-400">${ex.details}</span></li>`;
-            });
-            previewHtml += '</ul></div>';
-
-            nextDayWorkoutPreview.innerHTML = previewHtml;
+            nextDayWorkoutPreview.innerHTML = `
+                <h3 class="text-xl font-semibold mb-4 text-center text-yellow-400">Tomorrow's Battle Plan: ${workoutForDay.title}</h3>
+                <div class="bg-gray-800 p-6 rounded-lg">
+                    <p class="text-gray-400 mb-4">${workoutForDay.focus}</p>
+                    <ul class="space-y-2">${workoutForDay.exercises.map(ex => `<li class="text-gray-300">${ex.name} - <span class="text-gray-400">${ex.details}</span></li>`).join('')}</ul>
+                </div>`;
         }
         
         async function updateWaterDisplayForDate(date) {
             const dataForDay = await getDataForDate(date);
             if (!dataForDay) return;
             const amount = dataForDay.water || 0;
-            const waterGoal = 4.0;
             waterAmountEl.textContent = `${amount.toFixed(1)}L`;
-            const progress = Math.min((amount / waterGoal) * 100, 100);
-            waterProgressEl.style.width = `${progress}%`;
+            waterProgressEl.style.width = `${Math.min((amount / 4.0) * 100, 100)}%`;
         }
 
         function updateCurrentTaskHighlight(date) {
-            document.querySelectorAll('.task-item').forEach(item => item.classList.remove('task-current'));
+            document.querySelectorAll('.task-item.task-current').forEach(item => item.classList.remove('task-current'));
             if (toISODateString(date) !== toISODateString(new Date())) return;
-
             const now = new Date();
             const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
             const dayKey = getDayKeyForDate(now);
             const todaySchedule = schedules[dayKey];
             if (!todaySchedule) return;
-
-            let currentTaskIndex = -1;
-            for (let i = todaySchedule.length - 1; i >= 0; i--) {
-                if (currentTime >= todaySchedule[i].time) {
-                    currentTaskIndex = i;
-                    break;
-                }
-            }
+            const currentTaskIndex = todaySchedule.findLastIndex(task => currentTime >= task.time);
             if (currentTaskIndex !== -1) {
-                const currentTaskElement = document.getElementById(`task-${dayKey}-${currentTaskIndex}`);
-                if (currentTaskElement) currentTaskElement.classList.add('task-current');
+                document.getElementById(`task-${dayKey}-${currentTaskIndex}`)?.classList.add('task-current');
             }
         }
         
         function setDailyQuote(date) {
-            const start = new Date(date.getFullYear(), 0, 0);
-            const diff = date - start;
-            const oneDay = 1000 * 60 * 60 * 24;
-            const dayOfYear = Math.floor(diff / oneDay);
-            const quote = quotes[dayOfYear % quotes.length];
+            const dayOfYear = (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) - Date.UTC(date.getFullYear(), 0, 0)) / 86400000;
+            const quote = quotes[Math.floor(dayOfYear) % quotes.length];
             dailyQuoteEl.innerHTML = `<em>"${quote.text}"</em><br>- ${quote.author}`;
         }
 
@@ -786,146 +690,122 @@
             mindsetQuoteText.innerHTML = `<em>"${quote.text}"</em><br>- ${quote.author}`;
         }
 
-        async function calculateStreak() {
-            let streak = 0;
-            let date = new Date();
-            date.setDate(date.getDate() - 1); // Start from yesterday
-
-            for (let i = 0; i < 365; i++) {
-                const data = await getDataForDate(date);
-                if (!data) break; // Stop if data fetch fails
-                const allTasksDone = data.powerList && data.powerList.length === 5 && data.powerList.every(task => task.completed);
-                if (allTasksDone) {
-                    streak++;
-                    date.setDate(date.getDate() - 1);
-                } else {
-                    break;
-                }
-            }
-            return streak;
-        }
-
         async function updateStreakDisplay() {
-            const currentData = await getDataForDate(new Date());
-            if (!currentData) return;
-            const allToday = currentData.powerList && currentData.powerList.length === 5 && currentData.powerList.every(task => task.completed);
-            let streak = await calculateStreak();
-            if (allToday) {
-                streak++;
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            let streak = 0;
+            for (let i = 0; i < 365; i++) {
+                const data = await getDataForDate(yesterday);
+                if (data && data.powerList?.every(task => task.completed)) {
+                    streak++;
+                    yesterday.setDate(yesterday.getDate() - 1);
+                } else break;
             }
+            const todayData = await getDataForDate(new Date());
+            if (todayData && todayData.powerList?.every(task => task.completed)) streak++;
             streakCounter.textContent = streak;
         }
 
-        // --- EVENT HANDLERS (Now mostly async) ---
-        async function handleCheckboxChange(e) {
-            const taskId = parseInt(e.target.dataset.taskId);
-            const dataForDay = await getDataForDate(displayedDate);
-            if (!dataForDay) return;
-            if (e.target.checked) {
-                if (!dataForDay.checkedTasks.includes(taskId)) dataForDay.checkedTasks.push(taskId);
-            } else {
-                dataForDay.checkedTasks = dataForDay.checkedTasks.filter(id => id !== taskId);
+        // --- EVENT HANDLERS ---
+        function handleCheckboxChange(e) {
+            if (e.target.matches('input[type="checkbox"]')) {
+                const taskId = parseInt(e.target.dataset.taskId);
+                getDataForDate(displayedDate).then(data => {
+                    if (!data) return;
+                    const newCheckedTasks = new Set(data.checkedTasks);
+                    e.target.checked ? newCheckedTasks.add(taskId) : newCheckedTasks.delete(taskId);
+                    saveDataForDate(displayedDate, { checkedTasks: Array.from(newCheckedTasks) });
+                });
             }
-            await saveDataForDate(displayedDate, dataForDay);
         }
 
-        async function handlePowerListTextChange(e) {
-            const index = parseInt(e.target.dataset.index);
-            const dataForDay = await getDataForDate(displayedDate);
-            if (!dataForDay) return;
-            dataForDay.powerList[index].text = e.target.value;
-            await saveDataForDate(displayedDate, dataForDay);
+        function handlePowerListTextChange(e) {
+            if (e.target.matches('.powerlist-input')) {
+                const index = parseInt(e.target.dataset.index);
+                getDataForDate(displayedDate).then(data => {
+                    if (data) {
+                        data.powerList[index].text = e.target.value;
+                        saveDataForDate(displayedDate, { powerList: data.powerList });
+                    }
+                });
+            }
         }
 
-        async function handlePowerListCheckChange(e) {
-            const index = parseInt(e.target.dataset.index);
-            const dataForDay = await getDataForDate(displayedDate);
-            if (!dataForDay) return;
-            dataForDay.powerList[index].completed = e.target.checked;
-            await saveDataForDate(displayedDate, dataForDay);
-            await updateStreakDisplay();
+        function handlePowerListCheckChange(e) {
+            if (e.target.matches('.powerlist-checkbox')) {
+                const index = parseInt(e.target.dataset.index);
+                getDataForDate(displayedDate).then(data => {
+                    if (data) {
+                        data.powerList[index].completed = e.target.checked;
+                        saveDataForDate(displayedDate, { powerList: data.powerList }).then(updateStreakDisplay);
+                    }
+                });
+            }
         }
         
-        async function handleWorkoutLogChange(e) {
-            const logKey = e.target.dataset.logKey;
-            const dataForDay = await getDataForDate(displayedDate);
-            if (!dataForDay) return;
-            dataForDay.workoutLog[logKey] = e.target.value;
-            
-            // Show/hide delete button based on input value
-            const deleteBtn = e.target.nextElementSibling;
-            if (deleteBtn && deleteBtn.classList.contains('delete-log-btn')) {
-                deleteBtn.classList.toggle('hidden', !e.target.value);
+        function handleWorkoutLogChange(e) {
+            if (e.target.matches('.workout-log-input')) {
+                const logKey = e.target.dataset.logKey;
+                getDataForDate(displayedDate).then(data => {
+                    if (data) {
+                        data.workoutLog[logKey] = e.target.value;
+                        e.target.nextElementSibling?.classList.toggle('hidden', !e.target.value);
+                        saveDataForDate(displayedDate, { workoutLog: data.workoutLog });
+                    }
+                });
             }
-
-            await saveDataForDate(displayedDate, dataForDay);
         }
 
-        async function handleWorkoutLogDelete(e) {
-            const logKey = e.target.dataset.logKey;
-            const dataForDay = await getDataForDate(displayedDate);
-            if (!dataForDay) return;
-            dataForDay.workoutLog[logKey] = '';
-            await saveDataForDate(displayedDate, dataForDay);
-            await renderTrainingLogs(displayedDate);
-        }
-
-        async function handleSetCheckboxChange(e) {
-            const setId = e.target.dataset.setId;
-            const dataForDay = await getDataForDate(displayedDate);
-            if (!dataForDay) return;
-
-            if (!dataForDay.completedSets) {
-                dataForDay.completedSets = {};
+        function handleWorkoutLogDelete(e) {
+            if (e.target.matches('.delete-log-btn')) {
+                const logKey = e.target.dataset.logKey;
+                getDataForDate(displayedDate).then(data => {
+                    if (data) {
+                        delete data.workoutLog[logKey];
+                        saveDataForDate(displayedDate, { workoutLog: data.workoutLog }).then(() => renderTrainingLogs(displayedDate));
+                    }
+                });
             }
-            dataForDay.completedSets[setId] = e.target.checked;
-            await saveDataForDate(displayedDate, dataForDay);
         }
 
-        async function handleExpenseDelete(e) {
-            const index = parseInt(e.target.dataset.index);
-            const dataForDay = await getDataForDate(displayedDate);
-            if (!dataForDay) return;
-            dataForDay.expenses.splice(index, 1);
-            await saveDataForDate(displayedDate, dataForDay);
-            await renderFinances(displayedDate, dataForDay);
+        function handleSetCheckboxChange(e) {
+            if (e.target.matches('.set-checkbox')) {
+                const setId = e.target.dataset.setId;
+                getDataForDate(displayedDate).then(data => {
+                    if (data) {
+                        if (!data.completedSets) data.completedSets = {};
+                        data.completedSets[setId] = e.target.checked;
+                        saveDataForDate(displayedDate, { completedSets: data.completedSets });
+                    }
+                });
+            }
         }
 
         async function handleAddExpense() {
-            const category = expenseCategory.value;
+            if (isSavingExpense) return;
             const amount = parseFloat(expenseAmount.value);
-            const description = expenseDescription.value.trim();
-
-            if (category && !isNaN(amount) && amount > 0) {
-                const dataForDay = await getDataForDate(displayedDate);
-                if (!dataForDay) return;
-                
-                const newExpense = { category, amount, description };
-                
-                if (!dataForDay.expenses) {
-                    dataForDay.expenses = [];
+            if (expenseCategory.value && !isNaN(amount) && amount > 0) {
+                isSavingExpense = true;
+                addExpenseBtn.disabled = true;
+                addExpenseBtn.textContent = 'Adding...';
+                try {
+                    const data = await getDataForDate(displayedDate);
+                    if (!data) return;
+                    const newExpense = { category: expenseCategory.value, amount, description: expenseDescription.value.trim() };
+                    const newExpenses = [...(data.expenses || []), newExpense];
+                    await saveDataForDate(displayedDate, { expenses: newExpenses });
+                    await renderFinances(displayedDate);
+                    expenseAmount.value = '';
+                    expenseDescription.value = '';
+                } finally {
+                    isSavingExpense = false;
+                    addExpenseBtn.disabled = false;
+                    addExpenseBtn.textContent = 'Add';
                 }
-                dataForDay.expenses.push(newExpense);
-                
-                // Update UI immediately
-                renderFinances(displayedDate, dataForDay);
-                
-                // Save to Firestore in the background
-                saveDataForDate(displayedDate, dataForDay);
-
-                expenseAmount.value = '';
-                expenseDescription.value = '';
             }
         }
 
-        // --- TIMER LOGIC ---
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
-            const seconds = (timerSeconds % 60).toString().padStart(2, '0');
-            timerDisplay.textContent = `${minutes}:${seconds}`;
-        }
-
-        // --- SETUP & INITIALIZATION ---
+        // --- SETUP, UTILITY & TIMER ---
         function setupTabs() {
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
@@ -937,127 +817,24 @@
                     });
                 });
             });
-            tabs[1].click(); // Default to Dashboard tab
+            tabs[1].click();
         }
 
         function setupDaySwitcher() {
             daySwitcher.querySelectorAll('.day-btn').forEach(button => {
                 button.addEventListener('click', () => {
-                    // FIX: This handler was showing a static template, which created a confusing UI.
-                    // Now, clicking a day button will re-render the interactive schedule for the
-                    // currently displayed date. This acts as a "refresh" and fixes the problem
-                    // where the schedule is blank on initial load, as the user's click
-                    // will trigger a new, successful render.
                     daySwitcher.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('day-btn-active'));
                     button.classList.add('day-btn-active');
-                    renderScheduleForDate(displayedDate);
+                    const dayKey = button.dataset.day;
+                    displayScheduleTemplate(dayKey);
                 });
             });
         }
-        
-        async function generateWisdom() {
-            wisdomText.classList.add('hidden');
-            wisdomLoader.classList.remove('hidden');
-            generateWisdomBtn.disabled = true;
 
-            const isCanvasEnv = typeof __firebase_config !== 'undefined' && __firebase_config.trim() !== '';
-            const apiUrl = isCanvasEnv 
-                ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=`
-                : `/.netlify/functions/generate-wisdom`;
-
-            try {
-                let response;
-                if (isCanvasEnv) {
-                    const prompt = "Generate a short, actionable 'success nugget' (2-3 sentences) for an aspiring billionaire. The tone should be direct and motivating, focusing on principles of wealth creation, extreme discipline, or strategic thinking. Style of Naval Ravikant or Morgan Housel.";
-                    const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
-                    response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                } else {
-                    response = await fetch(apiUrl, { method: 'POST'});
-                }
-
-                const result = await response.json();
-                
-                if (result.candidates && result.candidates[0].content.parts[0].text) {
-                    wisdomText.textContent = result.candidates[0].content.parts[0].text;
-                } else if (result.wisdom) {
-                    wisdomText.textContent = result.wisdom;
-                } else if (result.error) {
-                    // Display the detailed error from the Netlify function
-                    wisdomText.textContent = `Error: ${result.error}`;
-                }
-                else {
-                    wisdomText.textContent = "Could not retrieve wisdom. Please try again.";
-                }
-            } catch (error) {
-                console.error("Error fetching wisdom:", error);
-                wisdomText.textContent = "An error occurred. Please check the console.";
-            } finally {
-                wisdomText.classList.remove('hidden');
-                wisdomLoader.classList.add('hidden');
-                generateWisdomBtn.disabled = false;
-            }
-        }
-
-        async function simplifyWord() {
-            const word = wordInput.value.trim();
-            if (!word) {
-                definitionText.textContent = "Please enter a word.";
-                return;
-            }
-
-            definitionText.classList.add('hidden');
-            definitionLoader.classList.remove('hidden');
-            simplifyWordBtn.disabled = true;
-
-            const isCanvasEnv = typeof __firebase_config !== 'undefined' && __firebase_config.trim() !== '';
-            const apiUrl = isCanvasEnv 
-                ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=`
-                : `/.netlify/functions/simplify-word`;
-
-            try {
-                let response;
-                if (isCanvasEnv) {
-                    const prompt = `Explain the word "${word}" in very simple terms for someone whose third language is English. Provide a short, easy-to-understand definition.`;
-                    const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
-                    response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                } else {
-                    response = await fetch(apiUrl, { 
-                        method: 'POST',
-                        body: JSON.stringify({ word: word })
-                    });
-                }
-
-                const result = await response.json();
-                
-                if (result.candidates && result.candidates[0].content.parts[0].text) {
-                    definitionText.textContent = result.candidates[0].content.parts[0].text;
-                } else if (result.definition) {
-                    definitionText.textContent = result.definition;
-                } else if (result.error) {
-                    definitionText.textContent = `Error: ${result.error}`;
-                } else {
-                    definitionText.textContent = "Could not simplify the word. Please try again.";
-                }
-            } catch (error) {
-                console.error("Error simplifying word:", error);
-                definitionText.textContent = "An error occurred. Please check the console.";
-            } finally {
-                definitionText.classList.remove('hidden');
-                definitionLoader.classList.add('hidden');
-                simplifyWordBtn.disabled = false;
-            }
-        }
-
-        function updateTime() {
-            const now = new Date();
-            const options = {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false,
-                timeZone: 'Europe/Copenhagen'
-            };
-            currentTimeEl.textContent = now.toLocaleTimeString('en-GB', options);
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
+            const seconds = (timerSeconds % 60).toString().padStart(2, '0');
+            timerDisplay.textContent = `${minutes}:${seconds}`;
         }
 
         function populateFinanceSelectors() {
@@ -1081,6 +858,18 @@
 
             monthSelect.value = new Date().getMonth();
             yearSelect.value = currentYear;
+        }
+        
+        function updateTime() {
+            const now = new Date();
+            const options = {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+                timeZone: 'Europe/Copenhagen'
+            };
+            currentTimeEl.textContent = now.toLocaleTimeString('en-GB', options);
         }
 
         async function calculateMonthlyTotal() {
@@ -1125,9 +914,84 @@
             }
         }
 
-        // --- Main App Initialization ---
+        // --- API CALLS ---
+        async function generateWisdom() {
+            wisdomText.classList.add('hidden');
+            wisdomLoader.classList.remove('hidden');
+            generateWisdomBtn.disabled = true;
+
+            const themes = [
+                'on the topic of ruthless focus',
+                'on the principle of leveraging time',
+                'on building systems that print money',
+                'on the mindset of unbreakable discipline',
+                'on the necessity of long-term vision over short-term gratification',
+                'on calculated risk-taking',
+                'on the art of negotiation and leverage',
+                'on why execution is the only thing that matters'
+            ];
+            const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+            const prompt = `Generate a single, powerful, and direct command or principle for an elite operator building an empire. The tone should be that of a no-nonsense mentor, like Jocko Willink or David Goggins. It must be short, sharp, and immediately actionable. No fluff. No motivational quotes. Just a hard-hitting directive. Focus specifically ${randomTheme}.`;
+
+            const isCanvasEnv = typeof __firebase_config !== 'undefined' && __firebase_config.trim() !== '';
+            const apiUrl = isCanvasEnv ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=` : `/.netlify/functions/generate-wisdom`;
+
+            try {
+                const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+                const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                const result = await response.json();
+                
+                const wisdom = result.candidates?.[0]?.content?.parts?.[0]?.text || result.wisdom;
+                if (wisdom) {
+                    wisdomText.textContent = wisdom;
+                } else {
+                    wisdomText.textContent = result.error || "Could not retrieve wisdom. Please try again.";
+                }
+            } catch (error) {
+                console.error("Error fetching wisdom:", error);
+                wisdomText.textContent = "An error occurred. Please check the console.";
+            } finally {
+                wisdomText.classList.remove('hidden');
+                wisdomLoader.classList.add('hidden');
+                generateWisdomBtn.disabled = false;
+            }
+        }
+
+        async function simplifyWord() {
+            const word = wordInput.value.trim();
+            if (!word) {
+                definitionText.textContent = "Please enter a word.";
+                return;
+            }
+            definitionText.classList.add('hidden');
+            definitionLoader.classList.remove('hidden');
+            simplifyWordBtn.disabled = true;
+            const isCanvasEnv = typeof __firebase_config !== 'undefined' && __firebase_config.trim() !== '';
+            const apiUrl = isCanvasEnv ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=` : `/.netlify/functions/simplify-word`;
+            try {
+                const prompt = `Explain the word "${word}" in very simple terms for someone whose third language is English. Provide a short, easy-to-understand definition.`;
+                const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+                const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                const result = await response.json();
+                const definition = result.candidates?.[0]?.content?.parts?.[0]?.text || result.definition;
+                if (definition) {
+                    definitionText.textContent = definition;
+                } else {
+                    definitionText.textContent = result.error || "Could not simplify the word. Please try again.";
+                }
+            } catch (error) {
+                console.error("Error simplifying word:", error);
+                definitionText.textContent = "An error occurred. Please check the console.";
+            } finally {
+                definitionText.classList.remove('hidden');
+                definitionLoader.classList.add('hidden');
+                simplifyWordBtn.disabled = false;
+            }
+        }
+
+        // --- MAIN INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', async () => {
-            // --- Populate UI Element References ---
+            // Assign all element references
             scheduleContainer = document.getElementById('schedule-container');
             currentDateEl = document.getElementById('current-date');
             currentTimeEl = document.getElementById('current-time');
@@ -1176,75 +1040,45 @@
             
             let firebaseConfig;
             let initialAuthToken;
-            let isCanvasEnv = typeof __firebase_config !== 'undefined' && __firebase_config.trim() !== '';
-
+            const isCanvasEnv = typeof __firebase_config !== 'undefined' && __firebase_config.trim() !== '';
             if (isCanvasEnv) {
                 try {
-                    // Try to use the credentials provided by the Canvas environment
                     firebaseConfig = JSON.parse(__firebase_config);
-                    initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : undefined;
-                    appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                    console.log("Running in Canvas environment.");
+                    initialAuthToken = __initial_auth_token;
+                    appId = __app_id || 'default-app-id';
                 } catch (e) {
-                    console.error("Could not parse Canvas Firebase config, falling back to hardcoded config.", e);
-                    isCanvasEnv = false; // Force fallback
+                    console.error("Canvas Firebase config error", e);
                 }
             }
-            
-            if (!isCanvasEnv) {
-                // Fallback for Netlify or if Canvas config fails
-                console.log("Running in standalone mode or Canvas config failed. Using hardcoded Firebase config.");
-                firebaseConfig = {
-                  apiKey: "AIzaSyC0eAiglVV-ucbsNeC1UmnNs_xxa-hgOh4",
-                  authDomain: "hanuzzi.firebaseapp.com",
-                  projectId: "hanuzzi",
-                  storageBucket: "hanuzzi.appspot.com",
-                  messagingSenderId: "223419940249",
-                  appId: "1:223419940249:web:a5b346892e67d6df312708"
-                };
+            if (!firebaseConfig) {
+                firebaseConfig = { apiKey: "AIzaSyC0eAiglVV-ucbsNeC1UmnNs_xxa-hgOh4", authDomain: "hanuzzi.firebaseapp.com", projectId: "hanuzzi", storageBucket: "hanuzzi.appspot.com", messagingSenderId: "223419940249", appId: "1:223419940249:web:a5b346892e67d6df312708" };
                 appId = firebaseConfig.appId;
             }
             
-            if (!firebaseConfig || !firebaseConfig.apiKey) {
-                console.error("Firebase config is invalid or missing.");
-                document.body.innerHTML = '<div class="text-red-500 text-center p-8">Error: Firebase configuration is invalid. The app cannot be initialized.</div>';
-                return;
-            }
-
-            // Initialize Firebase
             const app = initializeApp(firebaseConfig);
-            // Use memory cache instead of IndexedDB for wider browser compatibility, especially on iOS.
-            db = initializeFirestore(app, { localCache: memoryLocalCache() });
+            db = getFirestore(app);
             auth = getAuth(app);
 
-            onAuthStateChanged(auth, async (user) => {
+            onAuthStateChanged(auth, user => {
                 if (user) {
                     userId = user.uid;
                     isAuthReady = true;
                     console.log("Authenticated with UID:", userId);
-                    // Once authenticated, render the UI
-                    await renderUIForDate(displayedDate);
+                    renderUIForDate(displayedDate);
                 } else {
                     isAuthReady = false;
-                    console.log("User is not authenticated.");
                 }
             });
             
             try {
-                if (isCanvasEnv && initialAuthToken) {
-                    // Use the token provided by the Canvas environment
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    // Fallback to anonymous sign-in for Netlify or if token is missing
-                    await signInAnonymously(auth);
-                }
+                if (initialAuthToken) await signInWithCustomToken(auth, initialAuthToken);
+                else await signInAnonymously(auth);
             } catch (error) {
                 console.error("Authentication failed:", error);
-                document.body.innerHTML = '<div class="text-red-500 text-center p-8">Error: Authentication failed. Please refresh the page. For Netlify deployment, ensure Anonymous sign-in is enabled in your Firebase project.</div>';
+                document.body.innerHTML = '<div class="text-red-500 text-center p-8">Authentication failed. Please refresh.</div>';
                 return;
             }
 
-            // Setup static parts of the UI
             setupTabs();
             setupDaySwitcher();
             populateFinanceSelectors();
@@ -1252,63 +1086,53 @@
             setMindsetQuote();
             updateTime();
             setInterval(updateTime, 1000);
-            setInterval(setBibleVerse, 600000); // New verse every 10 minutes
-            setInterval(() => updateCurrentTaskHighlight(new Date()), 60000); // Update highlight every minute
+            setInterval(setBibleVerse, 600000);
+            setInterval(() => updateCurrentTaskHighlight(new Date()), 60000);
             
-            // Setup Event Listeners
             generateWisdomBtn.addEventListener('click', generateWisdom);
             simplifyWordBtn.addEventListener('click', simplifyWord);
             newQuoteBtn.addEventListener('click', setMindsetQuote);
-            todayBtn.addEventListener('click', () => {
-                displayedDate = new Date();
-                renderUIForDate(displayedDate);
-            });
+            todayBtn.addEventListener('click', () => { displayedDate = new Date(); renderUIForDate(displayedDate); });
             calculateTotalBtn.addEventListener('click', calculateMonthlyTotal);
             addExpenseBtn.addEventListener('click', handleAddExpense);
-            prevDayBtn.addEventListener('click', () => {
-                displayedDate.setDate(displayedDate.getDate() - 1);
-                renderUIForDate(displayedDate);
+            expenseList.addEventListener('click', e => {
+                if (e.target.matches('.expense-delete-btn')) {
+                    const index = parseInt(e.target.dataset.index);
+                    e.target.disabled = true;
+                    getDataForDate(displayedDate).then(data => {
+                        if (data?.expenses) {
+                            data.expenses.splice(index, 1);
+                            saveDataForDate(displayedDate, { expenses: data.expenses }).then(() => renderFinances(displayedDate));
+                        }
+                    });
+                }
             });
-            nextDayBtn.addEventListener('click', () => {
-                displayedDate.setDate(displayedDate.getDate() + 1);
-                renderUIForDate(displayedDate);
+            prevDayBtn.addEventListener('click', () => { displayedDate.setDate(displayedDate.getDate() - 1); renderUIForDate(displayedDate); });
+            nextDayBtn.addEventListener('click', () => { displayedDate.setDate(displayedDate.getDate() + 1); renderUIForDate(displayedDate); });
+            addWaterBtn.addEventListener('click', () => {
+                getDataForDate(displayedDate).then(data => {
+                    if (data) {
+                        data.water = (data.water || 0) + 0.5;
+                        saveDataForDate(displayedDate, { water: data.water }).then(() => updateWaterDisplayForDate(displayedDate));
+                    }
+                });
             });
-            addWaterBtn.addEventListener('click', async () => {
-                const dataForDay = await getDataForDate(displayedDate);
-                if (!dataForDay) return;
-                dataForDay.water += 0.5;
-                await saveDataForDate(displayedDate, dataForDay);
-                await updateWaterDisplayForDate(displayedDate);
-            });
-            editWaterBtn.addEventListener('click', () => {
-                waterControlsDefault.classList.add('hidden');
-                waterControlsConfirm.classList.remove('hidden');
-            });
-            cancelResetBtn.addEventListener('click', () => {
-                waterControlsDefault.classList.remove('hidden');
-                waterControlsConfirm.classList.add('hidden');
-            });
-            confirmResetBtn.addEventListener('click', async () => {
-                const dataForDay = await getDataForDate(displayedDate);
-                if (!dataForDay) return;
-                dataForDay.water = 0;
-                await saveDataForDate(displayedDate, dataForDay);
-                await updateWaterDisplayForDate(displayedDate);
-                waterControlsDefault.classList.remove('hidden');
-                waterControlsConfirm.classList.add('hidden');
+            editWaterBtn.addEventListener('click', () => { waterControlsDefault.classList.add('hidden'); waterControlsConfirm.classList.remove('hidden'); });
+            cancelResetBtn.addEventListener('click', () => { waterControlsDefault.classList.remove('hidden'); waterControlsConfirm.classList.add('hidden'); });
+            confirmResetBtn.addEventListener('click', () => {
+                saveDataForDate(displayedDate, { water: 0 }).then(() => {
+                    updateWaterDisplayForDate(displayedDate);
+                    waterControlsDefault.classList.remove('hidden');
+                    waterControlsConfirm.classList.add('hidden');
+                });
             });
             startTimerBtn.addEventListener('click', () => {
                 clearInterval(timerInterval);
-                const tick = () => {
+                timerInterval = setInterval(() => {
                     timerSeconds--;
                     updateTimerDisplay();
-                    if (timerSeconds <= 0) {
-                        clearInterval(timerInterval);
-                        return;
-                    }
-                };
-                tick();
-                timerInterval = setInterval(tick, 1000);
+                    if (timerSeconds <= 0) clearInterval(timerInterval);
+                }, 1000);
             });
             pauseTimerBtn.addEventListener('click', () => clearInterval(timerInterval));
             resetTimerBtn.addEventListener('click', () => {

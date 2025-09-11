@@ -97,7 +97,7 @@
         </div>
 
         <!-- Content Sections -->
-        <main>
+        <main id="main-content">
             <!-- Vision Section -->
             <div id="vision-content" class="tab-content hidden">
                 <h2 class="text-2xl font-semibold mb-6 text-yellow-400">The Vision: Brand-First Tech Empire</h2>
@@ -445,7 +445,7 @@
         let isSavingExpense = false;
 
         // --- UI ELEMENT REFERENCES ---
-        let scheduleContainer, currentDateEl, currentTimeEl, todayBtn, dailyQuoteEl, bibleVerseEl,
+        let mainContent, scheduleContainer, currentDateEl, currentTimeEl, todayBtn, dailyQuoteEl, bibleVerseEl,
             tabs, tabContents, daySwitcher, addWaterBtn, waterAmountEl, waterProgressEl,
             prevDayBtn, nextDayBtn, editWaterBtn, waterControlsDefault, waterControlsConfirm,
             confirmResetBtn, cancelResetBtn, startTimerBtn, pauseTimerBtn, resetTimerBtn,
@@ -511,14 +511,16 @@
 
         // --- UI RENDERING ---
         async function renderUIForDate(date) {
+            mainContent.innerHTML = `<div class="text-center p-8">Loading...</div>`;
             const isToday = toISODateString(date) === toISODateString(new Date());
+
             currentDateEl.textContent = date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
             nextDayBtn.disabled = isToday;
             todayBtn.classList.toggle('hidden', isToday);
             const dayKey = getDayKeyForDate(date);
             daySwitcher.querySelectorAll('.day-btn').forEach(btn => btn.classList.toggle('day-btn-active', btn.dataset.day === dayKey));
             
-            await Promise.all([
+            const results = await Promise.allSettled([
                 renderScheduleForDate(date),
                 renderPowerList(date),
                 renderFinances(date),
@@ -527,29 +529,48 @@
                 updateWaterDisplayForDate(date),
                 updateStreakDisplay()
             ]);
+
+            results.forEach(result => {
+                if(result.status === 'rejected') {
+                    console.error("A rendering function failed:", result.reason);
+                }
+            });
+
+            // Restore main content visibility after loading
+            mainContent.innerHTML = '';
+            tabContents.forEach(tc => mainContent.appendChild(tc));
+
+
             updateCurrentTaskHighlight(date);
             setDailyQuote(date);
         }
 
+
         async function renderScheduleForDate(date) {
-            scheduleContainer.innerHTML = '';
-            const dayKey = getDayKeyForDate(date);
-            const schedule = schedules[dayKey];
-            const dataForDay = await getDataForDate(date);
-            if (!dataForDay || !schedule) return;
-            const dayContainer = document.createElement('div');
-            dayContainer.className = 'space-y-3';
-            dayContainer.innerHTML = schedule.map((item, index) => `
-                <div id="task-${dayKey}-${index}" class="task-item flex items-center bg-gray-800 p-4 rounded-lg shadow-md">
-                    <div class="w-1/4 sm:w-1/5"><p class="font-mono text-blue-400">${item.time}</p></div>
-                    <div class="flex-1">
-                        <p class="font-semibold text-gray-100">${item.task}</p>
-                        <p class="text-sm text-gray-400 mt-1">${item.details}</p>
-                    </div>
-                    <input type="checkbox" data-task-id="${index}" class="form-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500 flex-shrink-0" ${dataForDay.checkedTasks.includes(index) ? 'checked' : ''}>
-                </div>`).join('');
-            scheduleContainer.appendChild(dayContainer);
+            try {
+                scheduleContainer.innerHTML = '';
+                const dayKey = getDayKeyForDate(date);
+                const schedule = schedules[dayKey];
+                const dataForDay = await getDataForDate(date);
+                if (!dataForDay || !schedule) return;
+                const dayContainer = document.createElement('div');
+                dayContainer.className = 'space-y-3';
+                dayContainer.innerHTML = schedule.map((item, index) => `
+                    <div id="task-${dayKey}-${index}" class="task-item flex items-center bg-gray-800 p-4 rounded-lg shadow-md">
+                        <div class="w-1/4 sm:w-1/5"><p class="font-mono text-blue-400">${item.time}</p></div>
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-100">${item.task}</p>
+                            <p class="text-sm text-gray-400 mt-1">${item.details}</p>
+                        </div>
+                        <input type="checkbox" data-task-id="${index}" class="form-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500 flex-shrink-0" ${dataForDay.checkedTasks.includes(index) ? 'checked' : ''}>
+                    </div>`).join('');
+                scheduleContainer.appendChild(dayContainer);
+            } catch (error) {
+                console.error("Error in renderScheduleForDate:", error);
+                scheduleContainer.innerHTML = `<div class="text-red-500">Error loading schedule.</div>`;
+            }
         }
+
 
         function displayScheduleTemplate(dayKey) {
             const schedule = schedules[dayKey];
@@ -566,73 +587,89 @@
         }
         
         async function renderPowerList(date) {
-            const dataForDay = await getDataForDate(date);
-            if (!dataForDay) return;
-            powerlistContainer.innerHTML = Array.from({ length: 5 }, (_, i) => {
-                const task = dataForDay.powerList[i] || { text: "", completed: false };
-                return `
-                    <div class="flex items-center bg-gray-800 p-4 rounded-lg">
-                        <span class="text-yellow-400 font-bold mr-4">${i + 1}.</span>
-                        <input type="text" class="powerlist-input flex-1 bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-yellow-500 text-white" placeholder="Enter critical task #${i + 1}" value="${task.text}" data-index="${i}">
-                        <input type="checkbox" class="powerlist-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-yellow-500 focus:ring-yellow-500" data-index="${i}" ${task.completed ? 'checked' : ''}>
-                    </div>`;
-            }).join('');
+           try {
+                const dataForDay = await getDataForDate(date);
+                if (!dataForDay) return;
+                powerlistContainer.innerHTML = Array.from({ length: 5 }, (_, i) => {
+                    const task = dataForDay.powerList[i] || { text: "", completed: false };
+                    return `
+                        <div class="flex items-center bg-gray-800 p-4 rounded-lg">
+                            <span class="text-yellow-400 font-bold mr-4">${i + 1}.</span>
+                            <input type="text" class="powerlist-input flex-1 bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-yellow-500 text-white" placeholder="Enter critical task #${i + 1}" value="${task.text}" data-index="${i}">
+                            <input type="checkbox" class="powerlist-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-yellow-500 focus:ring-yellow-500" data-index="${i}" ${task.completed ? 'checked' : ''}>
+                        </div>`;
+                }).join('');
+            } catch(error) {
+                console.error("Error rendering power list", error);
+                powerlistContainer.innerHTML = `<div class="text-red-500">Error loading power list.</div>`
+            }
         }
 
         async function renderFinances(date) {
-            const dataForDay = await getDataForDate(date);
-            if (!dataForDay || !dataForDay.expenses || dataForDay.expenses.length === 0) {
-                expenseList.innerHTML = `<li class="text-gray-500 italic">No expenses logged for this day.</li>`;
-            } else {
-                expenseList.innerHTML = dataForDay.expenses.map((expense, index) => `
-                    <li class="flex justify-between items-center text-gray-300 bg-gray-700 p-2 rounded">
-                        <span>${expense.category}: ${expense.amount.toFixed(2)} kr.${expense.description ? ` - <em class="text-gray-400">${expense.description}</em>` : ''}</span>
-                        <button class="expense-delete-btn text-red-500 hover:text-red-400 ml-4 font-bold text-lg" data-index="${index}">&times;</button>
-                    </li>`).join('');
+            try {
+                const dataForDay = await getDataForDate(date);
+                if (!dataForDay || !dataForDay.expenses || dataForDay.expenses.length === 0) {
+                    expenseList.innerHTML = `<li class="text-gray-500 italic">No expenses logged for this day.</li>`;
+                } else {
+                    expenseList.innerHTML = dataForDay.expenses.map((expense, index) => `
+                        <li class="flex justify-between items-center text-gray-300 bg-gray-700 p-2 rounded">
+                            <span>${expense.category}: ${expense.amount.toFixed(2)} kr.${expense.description ? ` - <em class="text-gray-400">${expense.description}</em>` : ''}</span>
+                            <button class="expense-delete-btn text-red-500 hover:text-red-400 ml-4 font-bold text-lg" data-index="${index}">&times;</button>
+                        </li>`).join('');
+                }
+            } catch(error) {
+                console.error("Error rendering finances", error);
+                expenseList.innerHTML = `<li class="text-red-500">Error loading expenses.</li>`;
             }
         }
 
         async function renderTrainingLogs(date) {
-            const workoutDayKey = getWorkoutDayKey(date);
-            const workoutForDay = workoutData.find(w => w.key === workoutDayKey);
-            if (!workoutForDay) {
-                workoutLogContainer.innerHTML = `<div class="bg-gray-800 p-5 rounded-lg text-center text-gray-400">Rest Day. No workout scheduled.</div>`;
-                return;
+            try {
+                const workoutDayKey = getWorkoutDayKey(date);
+                const workoutForDay = workoutData.find(w => w.key === workoutDayKey);
+                if (!workoutForDay) {
+                    workoutLogContainer.innerHTML = `<div class="bg-gray-800 p-5 rounded-lg text-center text-gray-400">Rest Day. No workout scheduled.</div>`;
+                    return;
+                }
+                const [lastWeekData, todayData] = await Promise.all([
+                    getDataForDate(new Date(date.getTime() - 7 * 24 * 60 * 60 * 1000)),
+                    getDataForDate(date)
+                ]);
+                if (!lastWeekData || !todayData) return;
+                workoutLogContainer.innerHTML = `
+                    <div class="bg-gray-800 p-5 rounded-lg">
+                        <h3 class="font-bold text-lg text-blue-400 mb-2">${workoutForDay.title}</h3>
+                        <p class="text-gray-400 mb-4">${workoutForDay.focus}</p>
+                        <ul class="space-y-4">${workoutForDay.exercises.map(ex => {
+                            const logKey = `${workoutDayKey}-${ex.name}`;
+                            const sets = parseInt(ex.details.split(' ')[0]);
+                            return `
+                            <li class="border-t border-gray-700 pt-4">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-semibold text-gray-100">${ex.name}</p>
+                                        <p class="text-sm text-gray-400">${ex.details}</p>
+                                    </div>
+                                    ${workoutForDay.loggable ? `<div class="flex space-x-2 mt-2">${Array.from({length: sets}, (_, i) => `<input type="checkbox" class="set-checkbox bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500" data-set-id="${logKey}-${i}" ${todayData.completedSets?.[`${logKey}-${i}`] ? 'checked' : ''}>`).join('')}</div>` : ''}
+                                </div>
+                                ${workoutForDay.loggable ? `
+                                <div class="grid grid-cols-2 gap-2 items-center mt-2">
+                                    <span class="text-gray-500 text-sm">Last: ${lastWeekData.workoutLog?.[logKey] || 'N/A'}</span>
+                                    <div class="flex items-center">
+                                        <input type="text" class="workout-log-input w-full bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white text-sm p-1" placeholder="Today's Log..." value="${todayData.workoutLog?.[logKey] || ''}" data-log-key="${logKey}">
+                                        <button class="delete-log-btn text-red-500 hover:text-red-400 ml-2 font-bold ${todayData.workoutLog?.[logKey] ? '' : 'hidden'}" data-log-key="${logKey}">&times;</button>
+                                    </div>
+                                </div>` : ''}
+                            </li>`;
+                        }).join('')}</ul>
+                        <p class="mt-4 text-sm text-yellow-400"><span class="font-bold">Intensity Note:</span> ${workoutForDay.note}</p>
+                    </div>`;
+            } catch(error) {
+                console.error("Error rendering training logs", error);
+                workoutLogContainer.innerHTML = `<div class="text-red-500">Error loading training logs.</div>`;
             }
-            const [lastWeekData, todayData] = await Promise.all([
-                getDataForDate(new Date(date.getTime() - 7 * 24 * 60 * 60 * 1000)),
-                getDataForDate(date)
-            ]);
-            if (!lastWeekData || !todayData) return;
-            workoutLogContainer.innerHTML = `
-                <div class="bg-gray-800 p-5 rounded-lg">
-                    <h3 class="font-bold text-lg text-blue-400 mb-2">${workoutForDay.title}</h3>
-                    <p class="text-gray-400 mb-4">${workoutForDay.focus}</p>
-                    <ul class="space-y-4">${workoutForDay.exercises.map(ex => {
-                        const logKey = `${workoutDayKey}-${ex.name}`;
-                        const sets = parseInt(ex.details.split(' ')[0]);
-                        return `
-                        <li class="border-t border-gray-700 pt-4">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <p class="font-semibold text-gray-100">${ex.name}</p>
-                                    <p class="text-sm text-gray-400">${ex.details}</p>
-                                </div>
-                                ${workoutForDay.loggable ? `<div class="flex space-x-2 mt-2">${Array.from({length: sets}, (_, i) => `<input type="checkbox" class="set-checkbox bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500" data-set-id="${logKey}-${i}" ${todayData.completedSets?.[`${logKey}-${i}`] ? 'checked' : ''}>`).join('')}</div>` : ''}
-                            </div>
-                            ${workoutForDay.loggable ? `
-                            <div class="grid grid-cols-2 gap-2 items-center mt-2">
-                                <span class="text-gray-500 text-sm">Last: ${lastWeekData.workoutLog?.[logKey] || 'N/A'}</span>
-                                <div class="flex items-center">
-                                    <input type="text" class="workout-log-input w-full bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white text-sm p-1" placeholder="Today's Log..." value="${todayData.workoutLog?.[logKey] || ''}" data-log-key="${logKey}">
-                                    <button class="delete-log-btn text-red-500 hover:text-red-400 ml-2 font-bold ${todayData.workoutLog?.[logKey] ? '' : 'hidden'}" data-log-key="${logKey}">&times;</button>
-                                </div>
-                            </div>` : ''}
-                        </li>`;
-                    }).join('')}</ul>
-                    <p class="mt-4 text-sm text-yellow-400"><span class="font-bold">Intensity Note:</span> ${workoutForDay.note}</p>
-                </div>`;
         }
+
 
         async function renderNextDayWorkoutPreview(date) {
             const nextDay = new Date(date.getTime() + 24 * 60 * 60 * 1000);
@@ -702,7 +739,7 @@
 
         // --- EVENT HANDLERS ---
         function handleCheckboxChange(e) {
-            if (e.target.matches('input[type="checkbox"]')) {
+            if (e.target.matches('.form-checkbox')) {
                 const taskId = parseInt(e.target.dataset.taskId);
                 getDataForDate(displayedDate).then(data => {
                     if (!data) return;
@@ -986,6 +1023,7 @@
         // --- MAIN INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', async () => {
             // Assign all element references
+            mainContent = document.getElementById('main-content');
             scheduleContainer = document.getElementById('schedule-container');
             currentDateEl = document.getElementById('current-date');
             currentTimeEl = document.getElementById('current-time');
@@ -1060,6 +1098,7 @@
                     console.log("Authenticated with UID:", userId);
                     renderUIForDate(displayedDate).catch(err => {
                         console.error("Critical rendering error:", err);
+                        mainContent.innerHTML = `<div class="text-red-500 text-center p-8">A critical error occurred. Please refresh the page.</div>`;
                     });
                 } else {
                     isAuthReady = false;

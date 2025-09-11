@@ -97,7 +97,10 @@
         </div>
 
         <!-- Content Sections -->
-        <main id="main-content">
+        <main id="main-content" class="relative">
+             <div id="loading-overlay" class="hidden absolute inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 rounded-lg">
+                <div class="text-white text-lg">Loading...</div>
+            </div>
             <!-- Vision Section -->
             <div id="vision-content" class="tab-content hidden">
                 <h2 class="text-2xl font-semibold mb-6 text-yellow-400">The Vision: Brand-First Tech Empire</h2>
@@ -445,7 +448,7 @@
         let isSavingExpense = false;
 
         // --- UI ELEMENT REFERENCES ---
-        let mainContent, scheduleContainer, currentDateEl, currentTimeEl, todayBtn, dailyQuoteEl, bibleVerseEl,
+        let mainContent, loadingOverlay, scheduleContainer, currentDateEl, currentTimeEl, todayBtn, dailyQuoteEl, bibleVerseEl,
             tabs, tabContents, daySwitcher, addWaterBtn, waterAmountEl, waterProgressEl,
             prevDayBtn, nextDayBtn, editWaterBtn, waterControlsDefault, waterControlsConfirm,
             confirmResetBtn, cancelResetBtn, startTimerBtn, pauseTimerBtn, resetTimerBtn,
@@ -511,7 +514,7 @@
 
         // --- UI RENDERING ---
         async function renderUIForDate(date) {
-            mainContent.innerHTML = `<div class="text-center p-8">Loading...</div>`;
+            loadingOverlay.classList.remove('hidden');
             const isToday = toISODateString(date) === toISODateString(new Date());
 
             currentDateEl.textContent = date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
@@ -520,26 +523,27 @@
             const dayKey = getDayKeyForDate(date);
             daySwitcher.querySelectorAll('.day-btn').forEach(btn => btn.classList.toggle('day-btn-active', btn.dataset.day === dayKey));
             
-            const results = await Promise.allSettled([
-                renderScheduleForDate(date),
-                renderPowerList(date),
-                renderFinances(date),
-                renderTrainingLogs(date),
-                renderNextDayWorkoutPreview(date),
-                updateWaterDisplayForDate(date),
-                updateStreakDisplay()
-            ]);
+            try {
+                const results = await Promise.allSettled([
+                    renderScheduleForDate(date),
+                    renderPowerList(date),
+                    renderFinances(date),
+                    renderTrainingLogs(date),
+                    renderNextDayWorkoutPreview(date),
+                    updateWaterDisplayForDate(date),
+                    updateStreakDisplay()
+                ]);
 
-            results.forEach(result => {
-                if(result.status === 'rejected') {
-                    console.error("A rendering function failed:", result.reason);
-                }
-            });
-
-            // Restore main content visibility after loading
-            mainContent.innerHTML = '';
-            tabContents.forEach(tc => mainContent.appendChild(tc));
-
+                results.forEach(result => {
+                    if(result.status === 'rejected') {
+                        console.error("A rendering function failed:", result.reason);
+                    }
+                });
+            } catch (error) {
+                console.error("Error during rendering process:", error);
+            } finally {
+                loadingOverlay.classList.add('hidden');
+            }
 
             updateCurrentTaskHighlight(date);
             setDailyQuote(date);
@@ -1024,6 +1028,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             // Assign all element references
             mainContent = document.getElementById('main-content');
+            loadingOverlay = document.getElementById('loading-overlay');
             scheduleContainer = document.getElementById('schedule-container');
             currentDateEl = document.getElementById('current-date');
             currentTimeEl = document.getElementById('current-time');

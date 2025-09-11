@@ -549,7 +549,6 @@
                     <input type="checkbox" data-task-id="${index}" class="form-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500 flex-shrink-0" ${dataForDay.checkedTasks.includes(index) ? 'checked' : ''}>
                 </div>`).join('');
             scheduleContainer.appendChild(dayContainer);
-            scheduleContainer.addEventListener('change', handleCheckboxChange);
         }
 
         function displayScheduleTemplate(dayKey) {
@@ -578,8 +577,6 @@
                         <input type="checkbox" class="powerlist-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-yellow-500 focus:ring-yellow-500" data-index="${i}" ${task.completed ? 'checked' : ''}>
                     </div>`;
             }).join('');
-            powerlistContainer.addEventListener('input', handlePowerListTextChange);
-            powerlistContainer.addEventListener('change', handlePowerListCheckChange);
         }
 
         async function renderFinances(date) {
@@ -635,9 +632,6 @@
                     }).join('')}</ul>
                     <p class="mt-4 text-sm text-yellow-400"><span class="font-bold">Intensity Note:</span> ${workoutForDay.note}</p>
                 </div>`;
-            workoutLogContainer.addEventListener('input', handleWorkoutLogChange);
-            workoutLogContainer.addEventListener('click', handleWorkoutLogDelete);
-            workoutLogContainer.addEventListener('change', handleSetCheckboxChange);
         }
 
         async function renderNextDayWorkoutPreview(date) {
@@ -1064,7 +1058,9 @@
                     userId = user.uid;
                     isAuthReady = true;
                     console.log("Authenticated with UID:", userId);
-                    renderUIForDate(displayedDate);
+                    renderUIForDate(displayedDate).catch(err => {
+                        console.error("Critical rendering error:", err);
+                    });
                 } else {
                     isAuthReady = false;
                 }
@@ -1079,22 +1075,18 @@
                 return;
             }
 
+            // --- SETUP LISTENERS ONCE ---
             setupTabs();
             setupDaySwitcher();
             populateFinanceSelectors();
-            setBibleVerse();
-            setMindsetQuote();
-            updateTime();
-            setInterval(updateTime, 1000);
-            setInterval(setBibleVerse, 600000);
-            setInterval(() => updateCurrentTaskHighlight(new Date()), 60000);
             
-            generateWisdomBtn.addEventListener('click', generateWisdom);
-            simplifyWordBtn.addEventListener('click', simplifyWord);
-            newQuoteBtn.addEventListener('click', setMindsetQuote);
-            todayBtn.addEventListener('click', () => { displayedDate = new Date(); renderUIForDate(displayedDate); });
-            calculateTotalBtn.addEventListener('click', calculateMonthlyTotal);
-            addExpenseBtn.addEventListener('click', handleAddExpense);
+            // Event Delegation for dynamic content
+            scheduleContainer.addEventListener('change', handleCheckboxChange);
+            powerlistContainer.addEventListener('input', handlePowerListTextChange);
+            powerlistContainer.addEventListener('change', handlePowerListCheckChange);
+            workoutLogContainer.addEventListener('input', handleWorkoutLogChange);
+            workoutLogContainer.addEventListener('click', handleWorkoutLogDelete);
+            workoutLogContainer.addEventListener('change', handleSetCheckboxChange);
             expenseList.addEventListener('click', e => {
                 if (e.target.matches('.expense-delete-btn')) {
                     const index = parseInt(e.target.dataset.index);
@@ -1107,6 +1099,14 @@
                     });
                 }
             });
+
+            // Static element listeners
+            generateWisdomBtn.addEventListener('click', generateWisdom);
+            simplifyWordBtn.addEventListener('click', simplifyWord);
+            newQuoteBtn.addEventListener('click', setMindsetQuote);
+            todayBtn.addEventListener('click', () => { displayedDate = new Date(); renderUIForDate(displayedDate); });
+            calculateTotalBtn.addEventListener('click', calculateMonthlyTotal);
+            addExpenseBtn.addEventListener('click', handleAddExpense);
             prevDayBtn.addEventListener('click', () => { displayedDate.setDate(displayedDate.getDate() - 1); renderUIForDate(displayedDate); });
             nextDayBtn.addEventListener('click', () => { displayedDate.setDate(displayedDate.getDate() + 1); renderUIForDate(displayedDate); });
             addWaterBtn.addEventListener('click', () => {
@@ -1140,6 +1140,14 @@
                 timerSeconds = 60;
                 updateTimerDisplay();
             });
+
+            // --- SETUP TIMERS ---
+            setBibleVerse();
+            setMindsetQuote();
+            updateTime();
+            setInterval(updateTime, 1000);
+            setInterval(setBibleVerse, 600000);
+            setInterval(() => updateCurrentTaskHighlight(new Date()), 60000);
         });
 
     </script>

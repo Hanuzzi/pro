@@ -157,7 +157,6 @@
                     </div>
                 </div>
 
-                <!-- FIX: Added flex-wrap and gap for better responsiveness on small screens -->
                 <div id="day-switcher" class="flex flex-wrap sm:flex-nowrap gap-1 sm:space-x-2 mb-4 bg-gray-800 p-1 rounded-lg">
                     <button class="day-btn flex-1 text-center py-2 px-3 rounded-md text-sm font-medium transition" data-day="weekdays">Mon - Thu</button>
                     <button class="day-btn flex-1 text-center py-2 px-3 rounded-md text-sm font-medium transition" data-day="friday">Friday</button>
@@ -847,12 +846,40 @@
             tabs[1].click();
         }
 
-        // FIX: Removed the click listeners from the day switcher buttons.
-        // They were replacing the data-driven schedule with a static template, causing the issue.
-        // Now they are purely informational, and the main date navigation should be used.
+        function displayScheduleTemplate(dayKey) {
+            const schedule = schedules[dayKey];
+            if (!schedule) return;
+            scheduleContainer.innerHTML = schedule.map((item, index) => `
+                <div id="task-template-${dayKey}-${index}" class="task-item flex items-center bg-gray-800 p-4 rounded-lg shadow-md">
+                    <div class="w-1/4 sm:w-1/5"><p class="font-mono text-blue-400">${item.time}</p></div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-gray-100">${item.task}</p>
+                        <p class="text-sm text-gray-400 mt-1">${item.details}</p>
+                    </div>
+                    <input type="checkbox" disabled class="form-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500 flex-shrink-0">
+                </div>`).join('');
+        }
+
         function setupDaySwitcher() {
-            // Intentionally left blank. The main renderUIForDate function now handles
-            // highlighting the correct day.
+            daySwitcher.querySelectorAll('.day-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    // Visually update which button is active
+                    daySwitcher.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('day-btn-active'));
+                    button.classList.add('day-btn-active');
+                    
+                    const clickedDayKey = button.dataset.day;
+                    const currentActualDayKey = getDayKeyForDate(displayedDate);
+
+                    if (clickedDayKey === currentActualDayKey) {
+                        // If the user clicks the button corresponding to the current date's schedule,
+                        // re-render the interactive schedule with their saved data.
+                        renderScheduleForDate(displayedDate);
+                    } else {
+                        // If the user clicks a different day's button, show a static preview template.
+                        displayScheduleTemplate(clickedDayKey);
+                    }
+                });
+            });
         }
 
         function updateTimerDisplay() {

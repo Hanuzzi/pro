@@ -337,9 +337,9 @@
 
     <script type="module">
         // --- Firebase SDK Imports ---
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         // --- App Data (Constants) ---
         const schedules = {
@@ -613,8 +613,6 @@
             }
         }
 
-        // FIX: Rewrote to be more resilient. It now fetches today's and last week's data
-        // separately, preventing a failure in one from stopping the other.
         async function renderTrainingLogs(date) {
             try {
                 const workoutDayKey = getWorkoutDayKey(date);
@@ -625,13 +623,13 @@
                     return;
                 }
 
-                const todayData = await getDataForDate(date);
+                let todayData = await getDataForDate(date);
                 const lastWeekData = await getDataForDate(new Date(date.getTime() - 7 * 24 * 60 * 60 * 1000));
 
                 if (!todayData) {
-                    console.error("Could not fetch essential data for today's training log.");
-                    workoutLogContainer.innerHTML = `<div class="text-red-500">Could not load today's training data. Please try again.</div>`;
-                    return;
+                    console.error("Could not fetch today's training data. Proceeding with an empty log for today.");
+                    // If fetching fails, create a default empty object to allow the UI to render and the user to create new data.
+                    todayData = { workoutLog: {}, completedSets: {} };
                 }
 
                 workoutLogContainer.innerHTML = `
@@ -1188,3 +1186,4 @@
     </script>
 </body>
 </html>
+

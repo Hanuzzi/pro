@@ -99,8 +99,8 @@
         <!-- Content Sections -->
         <main id="main-content" class="relative">
              <div id="loading-overlay" class="hidden absolute inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 rounded-lg">
-                <div class="text-white text-lg">Loading...</div>
-            </div>
+                 <div class="text-white text-lg">Loading...</div>
+             </div>
             <!-- Vision Section -->
             <div id="vision-content" class="tab-content hidden">
                 <h2 class="text-2xl font-semibold mb-6 text-yellow-400">The Vision: Brand-First Tech Empire</h2>
@@ -157,7 +157,8 @@
                     </div>
                 </div>
 
-                <div id="day-switcher" class="flex space-x-2 mb-4 bg-gray-800 p-1 rounded-lg">
+                <!-- FIX: Added flex-wrap and gap for better responsiveness on small screens -->
+                <div id="day-switcher" class="flex flex-wrap sm:flex-nowrap gap-1 sm:space-x-2 mb-4 bg-gray-800 p-1 rounded-lg">
                     <button class="day-btn flex-1 text-center py-2 px-3 rounded-md text-sm font-medium transition" data-day="weekdays">Mon - Thu</button>
                     <button class="day-btn flex-1 text-center py-2 px-3 rounded-md text-sm font-medium transition" data-day="friday">Friday</button>
                     <button class="day-btn flex-1 text-center py-2 px-3 rounded-md text-sm font-medium transition" data-day="saturday">Saturday</button>
@@ -187,13 +188,13 @@
             <div id="training-content" class="tab-content hidden">
                  <h2 class="text-2xl font-semibold mb-6 text-gray-200">Greg Plitt Training Protocol</h2>
                 
-                <!-- Vision Image -->
-                <div class="mb-6 rounded-lg overflow-hidden shadow-lg relative">
-                    <img id="vision-image" src="https://i.ibb.co/ZR8q3Tzx/2-0.jpg" alt="Physical Vision" class="w-full h-auto" onerror="this.onerror=null;this.src='https://placehold.co/600x400/111827/7f8c8d?text=Image+Not+Found';">
-                    <div class="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-75 p-2">
-                        <p class="text-center text-yellow-400 font-semibold">THE GOAL IS THE STANDARD</p>
-                    </div>
-                </div>
+                 <!-- Vision Image -->
+                 <div class="mb-6 rounded-lg overflow-hidden shadow-lg relative">
+                     <img id="vision-image" src="https://i.ibb.co/ZR8q3Tzx/2-0.jpg" alt="Physical Vision" class="w-full h-auto" onerror="this.onerror=null;this.src='https://placehold.co/600x400/111827/7f8c8d?text=Image+Not+Found';">
+                     <div class="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-75 p-2">
+                         <p class="text-center text-yellow-400 font-semibold">THE GOAL IS THE STANDARD</p>
+                     </div>
+                 </div>
 
                  <!-- Mission Timer -->
                 <div class="bg-gray-800 p-4 rounded-lg mb-8">
@@ -218,43 +219,43 @@
             <div id="nutrition-content" class="tab-content hidden">
                  <h2 class="text-2xl font-semibold mb-4 text-gray-200">Bulletproof Nutrition Protocol</h2>
                  <div class="bg-gray-800 p-4 rounded-lg mb-6 text-center">
-                     <p class="text-gray-400">Daily Target:</p>
-                     <p class="text-xl font-bold text-white">~2,563 kcal | ~198g Protein | ~99g Fat | ~230g Carbs</p>
+                      <p class="text-gray-400">Daily Target:</p>
+                      <p class="text-xl font-bold text-white">~2,563 kcal | ~198g Protein | ~99g Fat | ~230g Carbs</p>
                  </div>
                  <div class="space-y-8">
-                    <!-- Supplement Schedule -->
-                    <div class="bg-gray-800 p-6 rounded-lg">
-                        <h3 class="font-bold text-xl text-blue-400 mb-4">Supplement Schedule</h3>
-                        <div class="space-y-4 text-gray-300">
-                            <div>
-                                <p class="font-semibold text-gray-100">Upon Waking (~05:15):</p>
-                                <ul class="list-disc list-inside text-sm pl-4"><li><strong>Electrolytes:</strong> with a large glass of water.</li></ul>
-                            </div>
-                            <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">With Meal 1 (Post-Workout):</p><ul class="list-disc list-inside text-sm pl-4"><li>Creatine</li><li>L-Glutamine</li><li>Vitamin D & Krill Oil</li></ul></div>
-                            <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">With Meal 3 (Dinner):</p><ul class="list-disc list-inside text-sm pl-4"><li>Ashwagandha</li></ul></div>
-                            <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">Before Bed:</p><ul class="list-disc list-inside text-sm pl-4"><li>Magnesium</li><li>L-Glutamine (Optional second dose)</li></ul></div>
-                        </div>
-                    </div>
-                    <!-- Meal Plan -->
-                    <div class="bg-gray-800 p-6 rounded-lg">
-                        <h3 class="font-bold text-xl text-blue-400 mb-4">Daily Meal Plan</h3>
-                        <div class="space-y-4 text-gray-300">
-                            <div><p class="font-semibold text-gray-100">Meal 1 (Post-Workout ~07:30):</p><ul class="list-disc list-inside text-sm pl-4"><li>200g Flank Steak</li><li>3 tbsp (63g) Raw Honey</li><li>300g Pineapple Chunks</li><li>300g Mango Chunks</li><li>200g Kiwi</li></ul></div>
-                            <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">Meal 2 (Lunch ~12:30):</p><ul class="list-disc list-inside text-sm pl-4"><li>250g 90/10 Grass-Fed Ground Beef</li><li>4 Large Scrambled Eggs</li></ul></div>
-                            <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">Meal 3 (Dinner ~18:30):</p><ul class="list-disc list-inside text-sm pl-4"><li>180g Pan-Seared Salmon or Chicken Breast</li><li>200g Full-Fat Greek Yogurt</li><li>2 Large Bananas</li></ul></div>
-                        </div>
-                    </div>
-                    <!-- Important Notes -->
-                    <div class="bg-gray-800 p-6 rounded-lg">
-                        <h3 class="font-bold text-xl text-blue-400 mb-4">Important Notes</h3>
-                        <ul class="list-disc list-inside text-gray-300 space-y-2 text-sm">
-                            <li><strong>Cooking Fats:</strong> Use 1-2 tablespoons of grass-fed butter, ghee, or beef tallow for cooking throughout the day. This will help you meet your final calorie and fat targets.</li>
-                            <li><strong>Carbohydrate Target:</strong> To hit the ~236g carbohydrate goal precisely, you can add one more tablespoon of honey to your post-workout meal.</li>
-                            <li><strong>Organ Meats:</strong> For maximum nutrient density, you can substitute a portion of your ground beef (e.g., 50g) with beef liver 2-3 times per week.</li>
-                            <li><strong>Hydration:</strong> Drink plenty of water and add high-quality sea salt to your meals to maintain electrolyte balance.</li>
-                        </ul>
-                    </div>
-                 </div>
+                     <!-- Supplement Schedule -->
+                     <div class="bg-gray-800 p-6 rounded-lg">
+                         <h3 class="font-bold text-xl text-blue-400 mb-4">Supplement Schedule</h3>
+                         <div class="space-y-4 text-gray-300">
+                             <div>
+                                 <p class="font-semibold text-gray-100">Upon Waking (~05:15):</p>
+                                 <ul class="list-disc list-inside text-sm pl-4"><li><strong>Electrolytes:</strong> with a large glass of water.</li></ul>
+                             </div>
+                             <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">With Meal 1 (Post-Workout):</p><ul class="list-disc list-inside text-sm pl-4"><li>Creatine</li><li>L-Glutamine</li><li>Vitamin D & Krill Oil</li></ul></div>
+                             <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">With Meal 3 (Dinner):</p><ul class="list-disc list-inside text-sm pl-4"><li>Ashwagandha</li></ul></div>
+                             <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">Before Bed:</p><ul class="list-disc list-inside text-sm pl-4"><li>Magnesium</li><li>L-Glutamine (Optional second dose)</li></ul></div>
+                         </div>
+                     </div>
+                     <!-- Meal Plan -->
+                     <div class="bg-gray-800 p-6 rounded-lg">
+                         <h3 class="font-bold text-xl text-blue-400 mb-4">Daily Meal Plan</h3>
+                         <div class="space-y-4 text-gray-300">
+                             <div><p class="font-semibold text-gray-100">Meal 1 (Post-Workout ~07:30):</p><ul class="list-disc list-inside text-sm pl-4"><li>200g Flank Steak</li><li>3 tbsp (63g) Raw Honey</li><li>300g Pineapple Chunks</li><li>300g Mango Chunks</li><li>200g Kiwi</li></ul></div>
+                             <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">Meal 2 (Lunch ~12:30):</p><ul class="list-disc list-inside text-sm pl-4"><li>250g 90/10 Grass-Fed Ground Beef</li><li>4 Large Scrambled Eggs</li></ul></div>
+                             <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">Meal 3 (Dinner ~18:30):</p><ul class="list-disc list-inside text-sm pl-4"><li>180g Pan-Seared Salmon or Chicken Breast</li><li>200g Full-Fat Greek Yogurt</li><li>2 Large Bananas</li></ul></div>
+                         </div>
+                     </div>
+                     <!-- Important Notes -->
+                     <div class="bg-gray-800 p-6 rounded-lg">
+                         <h3 class="font-bold text-xl text-blue-400 mb-4">Important Notes</h3>
+                         <ul class="list-disc list-inside text-gray-300 space-y-2 text-sm">
+                             <li><strong>Cooking Fats:</strong> Use 1-2 tablespoons of grass-fed butter, ghee, or beef tallow for cooking throughout the day. This will help you meet your final calorie and fat targets.</li>
+                             <li><strong>Carbohydrate Target:</strong> To hit the ~236g carbohydrate goal precisely, you can add one more tablespoon of honey to your post-workout meal.</li>
+                             <li><strong>Organ Meats:</strong> For maximum nutrient density, you can substitute a portion of your ground beef (e.g., 50g) with beef liver 2-3 times per week.</li>
+                             <li><strong>Hydration:</strong> Drink plenty of water and add high-quality sea salt to your meals to maintain electrolyte balance.</li>
+                         </ul>
+                     </div>
+                </div>
             </div>
             
             <!-- Wisdom Section -->
@@ -270,25 +271,25 @@
                 
                  <!-- Quick Dictionary Section -->
                  <div class="mt-8">
-                     <h3 class="text-xl font-semibold mb-4 text-center text-blue-400">Quick Dictionary</h3>
-                     <div class="flex space-x-2 bg-gray-800 p-4 rounded-lg">
-                         <input type="text" id="word-input" class="flex-1 bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white" placeholder="Enter a word to simplify...">
-                         <button id="simplify-word-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Simplify</button>
-                     </div>
-                     <div id="definition-container" class="mt-4 bg-gray-800 p-6 rounded-lg min-h-[100px] flex items-center justify-center">
-                         <p id="definition-text" class="text-gray-400 text-center italic">Simplified definition will appear here...</p>
-                         <div id="definition-loader" class="hidden spinner h-8 w-8 border-4 rounded-full"></div>
-                     </div>
+                      <h3 class="text-xl font-semibold mb-4 text-center text-blue-400">Quick Dictionary</h3>
+                      <div class="flex space-x-2 bg-gray-800 p-4 rounded-lg">
+                          <input type="text" id="word-input" class="flex-1 bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white" placeholder="Enter a word to simplify...">
+                          <button id="simplify-word-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Simplify</button>
+                      </div>
+                      <div id="definition-container" class="mt-4 bg-gray-800 p-6 rounded-lg min-h-[100px] flex items-center justify-center">
+                          <p id="definition-text" class="text-gray-400 text-center italic">Simplified definition will appear here...</p>
+                          <div id="definition-loader" class="hidden spinner h-8 w-8 border-4 rounded-full"></div>
+                      </div>
                  </div>
 
                  <div class="mt-8">
-                       <h3 class="text-xl font-semibold mb-4 text-center text-yellow-400">Mindset Quotes</h3>
-                       <div id="mindset-quote-container" class="bg-gray-800 p-6 rounded-lg min-h-[150px] flex items-center justify-center">
-                           <p id="mindset-quote-text" class="text-gray-300 text-center italic"></p>
-                       </div>
-                       <div class="text-center mt-4">
-                           <button id="new-quote-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">New Quote</button>
-                       </div>
+                         <h3 class="text-xl font-semibold mb-4 text-center text-yellow-400">Mindset Quotes</h3>
+                         <div id="mindset-quote-container" class="bg-gray-800 p-6 rounded-lg min-h-[150px] flex items-center justify-center">
+                             <p id="mindset-quote-text" class="text-gray-300 text-center italic"></p>
+                         </div>
+                         <div class="text-center mt-4">
+                             <button id="new-quote-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">New Quote</button>
+                         </div>
                  </div>
             </div>
 
@@ -316,15 +317,15 @@
                     </ul>
                 </div>
                  <div class="mt-8 bg-gray-800 p-4 rounded-lg">
-                     <h3 class="text-xl font-semibold mb-4 text-center text-blue-400">Monthly Summary</h3>
-                     <div class="flex items-center justify-center space-x-2">
-                         <select id="month-select" class="bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white"></select>
-                         <select id="year-select" class="bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white"></select>
-                         <button id="calculate-total-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Calculate</button>
-                     </div>
-                     <div id="monthly-total-container" class="mt-4 text-center">
-                         <p id="monthly-total-text" class="text-gray-400"></p>
-                     </div>
+                      <h3 class="text-xl font-semibold mb-4 text-center text-blue-400">Monthly Summary</h3>
+                      <div class="flex items-center justify-center space-x-2">
+                          <select id="month-select" class="bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white"></select>
+                          <select id="year-select" class="bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white"></select>
+                          <button id="calculate-total-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Calculate</button>
+                      </div>
+                      <div id="monthly-total-container" class="mt-4 text-center">
+                          <p id="monthly-total-text" class="text-gray-400"></p>
+                      </div>
                  </div>
             </div>
 
@@ -574,21 +575,6 @@
                 scheduleContainer.innerHTML = `<div class="text-red-500">Error loading schedule.</div>`;
             }
         }
-
-
-        function displayScheduleTemplate(dayKey) {
-            const schedule = schedules[dayKey];
-            if (!schedule) return;
-            scheduleContainer.innerHTML = schedule.map((item, index) => `
-                <div id="task-template-${dayKey}-${index}" class="task-item flex items-center bg-gray-800 p-4 rounded-lg shadow-md">
-                    <div class="w-1/4 sm:w-1/5"><p class="font-mono text-blue-400">${item.time}</p></div>
-                    <div class="flex-1">
-                        <p class="font-semibold text-gray-100">${item.task}</p>
-                        <p class="text-sm text-gray-400 mt-1">${item.details}</p>
-                    </div>
-                    <input type="checkbox" disabled class="form-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500 flex-shrink-0">
-                </div>`).join('');
-        }
         
         async function renderPowerList(date) {
            try {
@@ -627,19 +613,27 @@
             }
         }
 
+        // FIX: Rewrote to be more resilient. It now fetches today's and last week's data
+        // separately, preventing a failure in one from stopping the other.
         async function renderTrainingLogs(date) {
             try {
                 const workoutDayKey = getWorkoutDayKey(date);
                 const workoutForDay = workoutData.find(w => w.key === workoutDayKey);
+
                 if (!workoutForDay) {
                     workoutLogContainer.innerHTML = `<div class="bg-gray-800 p-5 rounded-lg text-center text-gray-400">Rest Day. No workout scheduled.</div>`;
                     return;
                 }
-                const [lastWeekData, todayData] = await Promise.all([
-                    getDataForDate(new Date(date.getTime() - 7 * 24 * 60 * 60 * 1000)),
-                    getDataForDate(date)
-                ]);
-                if (!lastWeekData || !todayData) return;
+
+                const todayData = await getDataForDate(date);
+                const lastWeekData = await getDataForDate(new Date(date.getTime() - 7 * 24 * 60 * 60 * 1000));
+
+                if (!todayData) {
+                    console.error("Could not fetch essential data for today's training log.");
+                    workoutLogContainer.innerHTML = `<div class="text-red-500">Could not load today's training data. Please try again.</div>`;
+                    return;
+                }
+
                 workoutLogContainer.innerHTML = `
                     <div class="bg-gray-800 p-5 rounded-lg">
                         <h3 class="font-bold text-lg text-blue-400 mb-2">${workoutForDay.title}</h3>
@@ -654,11 +648,11 @@
                                         <p class="font-semibold text-gray-100">${ex.name}</p>
                                         <p class="text-sm text-gray-400">${ex.details}</p>
                                     </div>
-                                    ${workoutForDay.loggable ? `<div class="flex space-x-2 mt-2">${Array.from({length: sets}, (_, i) => `<input type="checkbox" class="set-checkbox bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500" data-set-id="${logKey}-${i}" ${todayData.completedSets?.[`${logKey}-${i}`] ? 'checked' : ''}>`).join('')}</div>` : ''}
+                                    ${workoutForDay.loggable ? `<div class="flex flex-wrap justify-end space-x-2 mt-2">${Array.from({length: sets}, (_, i) => `<input type="checkbox" class="set-checkbox bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500" data-set-id="${logKey}-${i}" ${todayData.completedSets?.[`${logKey}-${i}`] ? 'checked' : ''}>`).join('')}</div>` : ''}
                                 </div>
                                 ${workoutForDay.loggable ? `
                                 <div class="grid grid-cols-2 gap-2 items-center mt-2">
-                                    <span class="text-gray-500 text-sm">Last: ${lastWeekData.workoutLog?.[logKey] || 'N/A'}</span>
+                                    <span class="text-gray-500 text-sm">Last: ${lastWeekData?.workoutLog?.[logKey] || 'N/A'}</span>
                                     <div class="flex items-center">
                                         <input type="text" class="workout-log-input w-full bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white text-sm p-1" placeholder="Today's Log..." value="${todayData.workoutLog?.[logKey] || ''}" data-log-key="${logKey}">
                                         <button class="delete-log-btn text-red-500 hover:text-red-400 ml-2 font-bold ${todayData.workoutLog?.[logKey] ? '' : 'hidden'}" data-log-key="${logKey}">&times;</button>
@@ -855,15 +849,12 @@
             tabs[1].click();
         }
 
+        // FIX: Removed the click listeners from the day switcher buttons.
+        // They were replacing the data-driven schedule with a static template, causing the issue.
+        // Now they are purely informational, and the main date navigation should be used.
         function setupDaySwitcher() {
-            daySwitcher.querySelectorAll('.day-btn').forEach(button => {
-                button.addEventListener('click', () => {
-                    daySwitcher.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('day-btn-active'));
-                    button.classList.add('day-btn-active');
-                    const dayKey = button.dataset.day;
-                    displayScheduleTemplate(dayKey);
-                });
-            });
+            // Intentionally left blank. The main renderUIForDate function now handles
+            // highlighting the correct day.
         }
 
         function updateTimerDisplay() {
@@ -1197,4 +1188,3 @@
     </script>
 </body>
 </html>
-

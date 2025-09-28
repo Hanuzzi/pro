@@ -3,25 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hans 3.3 v7.7</title>
+    <title>Hans 3.4 - The Architect OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* Deeper blue-black */
         }
+        /* Tab Styling */
         .tab-active {
-            border-bottom-color: #fbbf24; /* Vision Yellow */
-            color: #fbbf24;
-            font-weight: 600;
+            border-bottom-width: 3px;
+            font-weight: 700;
         }
+        /* Color coding for hierarchy and focus */
+        .tab-identity.tab-active { border-bottom-color: #dc2626; color: #dc2626; } /* Red for Identity */
+        .tab-strategy.tab-active { border-bottom-color: #f59e0b; color: #f59e0b; } /* Amber for Strategy */
+        .tab-vision.tab-active, .tab-powerlist.tab-active, .tab-wisdom.tab-active { border-bottom-color: #fbbf24; color: #fbbf24; }
+        .tab-powerday.tab-active, .tab-training.tab-active, .tab-nutrition.tab-active, .tab-finances.tab-active { border-bottom-color: #3b82f6; color: #3b82f6; }
+
         .day-btn-active {
             background-color: #2563eb;
             color: #ffffff;
         }
         .task-current {
-            background-color: #1e3a8a !important; /* Darker blue for current task */
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+            background-color: #1e3a8a !important;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
             border-left-color: #60a5fa;
         }
         .task-item {
@@ -54,23 +61,53 @@
             height: 1.25rem;
             cursor: pointer;
         }
-        #add-expense-btn:disabled {
-            background-color: #1e40af;
-            cursor: not-allowed;
+        /* New styles for Strategy and Identity Inputs */
+        .app-textarea, .app-input {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .app-textarea:focus, .app-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+        /* Specific focus colors for tabs */
+        .strategy-focus:focus {
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.5);
+        }
+        .identity-focus:focus {
+            border-color: #dc2626;
+            box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.5);
+        }
+
+        .card-bg {
+           background-color: #1e293b; /* Matching the new dark theme */
+        }
+        .bg-gray-800 {
+            background-color: #1e293b;
+        }
+         .bg-gray-700 {
+            background-color: #334155;
+        }
+        /* Ensure bg-gray-900 is correct for overlays if used */
+         .bg-gray-900 {
+            background-color: #0f172a;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white p-4 sm:p-6 md:p-8">
+<body class="text-white p-4 sm:p-6 md:p-8">
 
     <div class="max-w-4xl mx-auto">
         <header class="text-center mb-8">
-            <h1 class="text-3xl sm:text-4xl font-bold text-blue-400">Hans 3.3</h1>
-            <div class="flex items-center justify-center mt-2">
+            <h1 class="text-3xl sm:text-4xl font-black text-blue-400">Hans 3.4 // Architect OS</h1>
+            <div class="flex items-center justify-center mt-4">
                 <button id="prev-day-btn" class="date-nav-btn p-2 rounded-full hover:bg-gray-700 transition">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
                 </button>
                 <div class="w-64 text-center mx-4">
-                    <p id="current-date" class="text-gray-400 text-lg"></p>
+                    <p id="current-date" class="text-gray-300 text-lg font-semibold"></p>
                     <p id="current-time" class="text-gray-500 text-sm h-5"></p>
                 </div>
                 <button id="next-day-btn" class="date-nav-btn p-2 rounded-full hover:bg-gray-700 transition">
@@ -80,47 +117,77 @@
             <button id="today-btn" class="hidden mt-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1 px-4 rounded-lg text-sm">Go to Today</button>
             <div id="daily-quote" class="text-gray-400 italic mt-4 text-sm px-4"></div>
             <div id="bible-verse" class="text-gray-300 italic mt-4 text-sm px-4 border-t border-gray-700 pt-4"></div>
-            <img src="https://www.freepnglogos.com/uploads/logo-jordan-coloring-pages-3.jpg" alt="Jumpman Logo" class="h-16 mx-auto mt-4 jumpman-logo" onerror="this.style.display='none'">
+            <img src="https://www.freepnglogos.com/uploads/logo-jordan-coloring-pages-3.jpg" alt="Jumpman Logo" class="h-12 mx-auto mt-4 jumpman-logo" onerror="this.style.display='none'">
         </header>
 
-        <!-- Tabs -->
         <div class="mb-8 border-b border-gray-700">
-            <nav class="flex flex-wrap -mb-px space-x-2 sm:space-x-4 text-xs sm:text-sm" aria-label="Tabs">
-                <button class="tab py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-yellow-400 hover:border-yellow-400" data-tab="vision">Vision</button>
-                <button class="tab py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-blue-400 hover:border-blue-400" data-tab="powerday">Power Day</button>
-                <button class="tab py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-yellow-400 hover:border-yellow-400" data-tab="powerlist">Power List</button>
-                <button class="tab py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-blue-400 hover:border-blue-400" data-tab="training">Training</button>
-                <button class="tab py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-blue-400 hover:border-blue-400" data-tab="nutrition">Nutrition</button>
-                <button class="tab py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-yellow-400 hover:border-yellow-400" data-tab="wisdom">Wisdom</button>
-                <button class="tab py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-blue-400 hover:border-blue-400" data-tab="finances">Finances</button>
+            <nav class="flex flex-wrap justify-center -mb-px space-x-1 sm:space-x-3 text-xs sm:text-sm" aria-label="Tabs">
+                <button class="tab tab-identity py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-red-600 hover:border-red-600" data-tab="identity">Identity</button>
+                <button class="tab tab-vision py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-yellow-400 hover:border-yellow-400" data-tab="vision">Vision</button>
+                <button class="tab tab-strategy py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-amber-500 hover:border-amber-500" data-tab="strategy">Strategy</button>
+                
+                <button class="tab tab-powerday py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-blue-400 hover:border-blue-400" data-tab="powerday">Power Day</button>
+                <button class="tab tab-powerlist py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-yellow-400 hover:border-yellow-400" data-tab="powerlist">Power List</button>
+                <button class="tab tab-training py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-blue-400 hover:border-blue-400" data-tab="training">Training</button>
+                <button class="tab tab-nutrition py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-blue-400 hover:border-blue-400" data-tab="nutrition">Nutrition</button>
+                <button class="tab tab-wisdom py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-yellow-400 hover:border-yellow-400" data-tab="wisdom">Wisdom</button>
+                <button class="tab tab-finances py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-blue-400 hover:border-blue-400" data-tab="finances">Finances</button>
             </nav>
         </div>
 
-        <!-- Content Sections -->
         <main id="main-content" class="relative">
              <div id="loading-overlay" class="hidden absolute inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 rounded-lg">
-                 <div class="text-white text-lg">Loading...</div>
+                  <div class="text-white text-lg">Loading...</div>
              </div>
-            <!-- Vision Section -->
+
+            <div id="identity-content" class="tab-content hidden">
+                <h2 class="text-2xl font-bold mb-6 text-red-600">THE ALTER EGO: Defining the Vessel</h2>
+                <p class="text-gray-400 mb-6">Define the identity required to achieve your vision. This is who you ARE, not who you hope to be. (This profile is persistent across all days).</p>
+
+                <div class="space-y-6">
+                    <div class="card-bg p-5 rounded-lg border-l-4 border-red-600">
+                        <h3 class="font-bold text-xl text-gray-100 mb-3">1. My Core Identity Statement</h3>
+                        <p class="text-sm text-gray-400 mb-2">"I am..." (e.g., I am a disciplined, strategic creator who generates abundance by providing exceptional value.)</p>
+                        <textarea id="identity-statement" rows="3" class="w-full rounded-md p-3 text-white app-textarea identity-focus" placeholder="Define your core identity..."></textarea>
+                    </div>
+
+                    <div class="card-bg p-5 rounded-lg border-l-4 border-red-600">
+                        <h3 class="font-bold text-xl text-gray-100 mb-3">2. My Non-Negotiable Principles</h3>
+                        <p class="text-sm text-gray-400 mb-2">The laws I live by. (e.g., I prioritize long-term vision over short-term comfort. I am radically responsible.)</p>
+                        <textarea id="identity-principles" rows="4" class="w-full rounded-md p-3 text-white app-textarea identity-focus" placeholder="List your laws..."></textarea>
+                    </div>
+
+                    <div class="card-bg p-5 rounded-lg border-l-4 border-red-600">
+                        <h3 class="font-bold text-xl text-gray-100 mb-3">3. The Anti-Vision (The Matrix)</h3>
+                        <p class="text-sm text-gray-400 mb-2">What I am moving away from. (e.g., Dependence. Distraction. Mediocrity. Trading time for money.)</p>
+                        <textarea id="identity-antivision" rows="4" class="w-full rounded-md p-3 text-white app-textarea identity-focus" placeholder="Define what you reject..."></textarea>
+                    </div>
+                </div>
+                <div class="text-center mt-8">
+                    <button id="save-identity-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300">Save Identity Profile</button>
+                    <p id="identity-save-status" class="text-sm mt-2 text-gray-500"></p>
+                </div>
+            </div>
+
             <div id="vision-content" class="tab-content hidden">
-                <h2 class="text-2xl font-semibold mb-6 text-yellow-400">The Vision: Brand-First Tech Empire</h2>
+                <h2 class="text-2xl font-bold mb-6 text-yellow-400">THE TRAJECTORY: Brand-First Tech Empire</h2>
                 <div class="space-y-8">
-                    <div class="bg-gray-800 p-5 rounded-lg border-l-4 border-yellow-400">
+                    <div class="card-bg p-5 rounded-lg border-l-4 border-yellow-400">
                         <h3 class="font-bold text-xl text-gray-100 mb-2">Phase 1: Build the Audience (The Foundation)</h3>
                         <p class="text-gray-300">This is where it all begins. Your primary mission is to provide immense, undeniable value for free. Through your YouTube channel, you will teach the principles of mindset, health, and discipline. You are not just creating content; you are building a tribe. This community, built on trust and your authentic expertise, is the bedrock of the entire empire. It is your single most valuable asset.</p>
                         <p class="mt-3 text-sm text-yellow-500"><span class="font-bold">Goal:</span> Become the go-to authority in personal transformation for your niche.</p>
                     </div>
-                    <div class="bg-gray-800 p-5 rounded-lg border-l-4 border-yellow-400">
+                    <div class="card-bg p-5 rounded-lg border-l-4 border-yellow-400">
                         <h3 class="font-bold text-xl text-gray-100 mb-2">Phase 2: Monetize with E-commerce (The Fuel)</h3>
                         <p class="text-gray-300">Once the community is established, you will introduce the uniform for your tribe. This is not just "gym clothing." It is a physical representation of the identity and values you teach. When someone wears your brand, they are making a statement about who they are and what they stand for. This phase generates the initial cash flow, proving the commercial viability of your brand and providing the seed capital for the next stage. You are funding your own dream.</p>
                          <p class="mt-3 text-sm text-yellow-500"><span class="font-bold">Goal:</span> Generate self-sustaining cash flow and build brand identity.</p>
                     </div>
-                    <div class="bg-gray-800 p-5 rounded-lg border-l-4 border-yellow-400">
+                    <div class="card-bg p-5 rounded-lg border-l-4 border-yellow-400">
                         <h3 class="font-bold text-xl text-gray-100 mb-2">Phase 3: Introduce Digital Products (The Engine)</h3>
                         <p class="text-gray-300">With cash flow and a loyal audience, you now escalate. You will launch infinitely scalable, high-margin digital products. Think premium online courses ("The 30-Day Mindset Overhaul"), paid mastermind communities, and detailed e-books. Unlike a t-shirt, a digital product costs nothing to replicate. This is where you transition to tech company economics, building a significant capital base for the final assault.</p>
                          <p class="mt-3 text-sm text-yellow-500"><span class="font-bold">Goal:</span> Dramatically increase profit margins and deepen customer engagement.</p>
                     </div>
-                    <div class="bg-gray-800 p-5 rounded-lg border-l-4 border-yellow-400">
+                    <div class="card-bg p-5 rounded-lg border-l-4 border-yellow-400">
                         <h3 class="font-bold text-xl text-gray-100 mb-2">Phase 4: Launch the SaaS Platform (The Empire)</h3>
                         <p class="text-gray-300">This is the culmination of all previous phases. With a massive audience, a powerful brand, strong cash flow, and deep customer insight, you now have everything you need to launch the "Success OS" as a full-fledged SaaS platform. It's no longer a risky idea; it's the inevitable solution your community is demanding. This platform will lock in your audience with recurring revenue, scale globally, and become the billion-dollar engine of your vision.</p>
                          <p class="mt-3 text-sm text-yellow-500"><span class="font-bold">Goal:</span> Achieve global scale and create a recurring revenue machine.</p>
@@ -128,11 +195,47 @@
                 </div>
             </div>
 
-            <!-- Power Day Section -->
+             <div id="strategy-content" class="tab-content hidden">
+                <h2 class="text-2xl font-bold mb-6 text-amber-500">STRATEGIC COMMAND CENTER</h2>
+
+                <div class="card-bg p-6 rounded-lg mb-8 shadow-xl">
+                    <h3 class="font-bold text-xl text-gray-100 mb-4 border-b border-gray-700 pb-2">Weekly Objectives (The Battle Plan)</h3>
+                    <p class="text-gray-400 mb-4 text-sm">Define the 3 most critical outcomes that must be achieved this week to advance the Vision. (Data stored weekly, starting Monday).</p>
+                    <div id="weekly-objectives-container" class="space-y-4">
+                        </div>
+                </div>
+
+                <div class="card-bg p-6 rounded-lg mb-8 shadow-xl">
+                    <h3 class="font-bold text-xl text-red-500 mb-4 border-b border-gray-700 pb-2">The Crucible (Intentional Adversity)</h3>
+                    <p class="text-gray-400 mb-4 text-sm">Define one task this week that forces you outside your comfort zone. Growth occurs only through resistance.</p>
+                    <div id="crucible-container">
+                        </div>
+                </div>
+
+                <div class="card-bg p-6 rounded-lg shadow-xl">
+                    <h3 class="font-bold text-xl text-gray-100 mb-4 border-b border-gray-700 pb-2">Nightly Reflection (The Feedback Loop)</h3>
+                    <p class="text-gray-400 mb-4 text-sm">Analyze the day. Calibrate the trajectory. (Data stored daily).</p>
+                    <div class="space-y-6">
+                        <div>
+                            <label for="reflection-wins" class="block text-sm font-medium text-gray-300 mb-2">1. What were today's definitive wins?</label>
+                            <textarea id="reflection-wins" rows="3" class="app-textarea strategy-focus w-full rounded-md p-3 text-white" placeholder="List specific achievements..."></textarea>
+                        </div>
+                        <div>
+                            <label for="reflection-lessons" class="block text-sm font-medium text-gray-300 mb-2">2. What did I learn? (Analyze failures and successes)</label>
+                            <textarea id="reflection-lessons" rows="3" class="app-textarea strategy-focus w-full rounded-md p-3 text-white" placeholder="Extract the wisdom..."></textarea>
+                        </div>
+                        <div>
+                            <label for="reflection-identity" class="block text-sm font-medium text-gray-300 mb-2">3. Did I embody my Ideal Self (from the Identity tab) today? Where did I align, and where did I falter?</label>
+                            <textarea id="reflection-identity" rows="4" class="app-textarea strategy-focus w-full rounded-md p-3 text-white" placeholder="Be honest and ruthless..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <div id="powerday-content" class="tab-content">
                 <h2 class="text-2xl font-semibold mb-4 text-gray-200">Power Day</h2>
                 
-                <!-- Water Tracker -->
                 <div class="bg-gray-800 p-4 rounded-lg mb-6">
                     <h3 class="font-semibold text-lg text-gray-100 mb-3">Daily Water Intake</h3>
                     <div class="flex items-center space-x-4">
@@ -164,11 +267,9 @@
                     <button class="day-btn flex-1 text-center py-2 px-3 rounded-md text-sm font-medium transition" data-day="sunday">Sunday</button>
                 </div>
                 <div id="schedule-container">
-                    <!-- Schedule will be injected here by JS -->
-                </div>
+                    </div>
             </div>
 
-            <!-- Power List Section -->
             <div id="powerlist-content" class="tab-content hidden">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-semibold text-yellow-400">Daily Power List</h2>
@@ -177,26 +278,34 @@
                         <p id="streak-counter" class="text-3xl font-bold text-yellow-400">0</p>
                     </div>
                 </div>
-                <p class="text-gray-400 mb-6">Define and conquer the 5 critical tasks that will win the day. No excuses.</p>
+                <p class="text-gray-400 mb-6">Define the 5 critical tasks. Link each task to the relevant Phase of your Vision.</p>
                 <div id="powerlist-container" class="space-y-4">
-                    <!-- Power List items will be injected here -->
-                </div>
+                    </div>
             </div>
 
-            <!-- Training Section -->
             <div id="training-content" class="tab-content hidden">
-                 <h2 class="text-2xl font-semibold mb-6 text-gray-200">Greg Plitt Training Protocol</h2>
+                 <h2 class="text-2xl font-semibold mb-6 text-gray-200">Architect PPL Protocol (6-Day)</h2>
                 
-                 <!-- Vision Image -->
+                 <div class="bg-gray-800 p-6 rounded-lg mb-8 border-l-4 border-yellow-400">
+                    <h3 class="font-bold text-xl text-yellow-400 mb-4">The Law of Progressive Overload (Double Progression)</h3>
+                    <p class="text-gray-300 mb-4">To force growth, you must systematically increase the demands placed upon your muscles. Use this for every exercise:</p>
+                    <ol class="list-decimal list-inside text-gray-300 space-y-2 text-sm">
+                        <li><strong>Choose a Rep Range:</strong> (e.g., 5-8 reps).</li>
+                        <li><strong>Select a Weight:</strong> Choose a weight that allows you to hit the lower end of the rep range (e.g., 5 reps) with perfect form.</li>
+                        <li><strong>Progress in Reps:</strong> In subsequent workouts, strive to increase the repetitions with that <em>same</em> weight.</li>
+                        <li><strong>Increase the Load:</strong> Once you complete all sets at the <em>top</em> end of the rep range (e.g., 8 reps for all sets), increase the weight by the smallest possible increment in the next session.</li>
+                    </ol>
+                </div>
+
+
                  <div class="mb-6 rounded-lg overflow-hidden shadow-lg relative">
                      <img id="vision-image" src="https://i.ibb.co/ZR8q3Tzx/2-0.jpg" alt="Physical Vision" class="w-full h-auto" onerror="this.onerror=null;this.src='https://placehold.co/600x400/111827/7f8c8d?text=Image+Not+Found';">
                      <div class="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-75 p-2">
-                         <p class="text-center text-yellow-400 font-semibold">THE GOAL IS THE STANDARD</p>
+                          <p class="text-center text-yellow-400 font-semibold">THE GOAL IS THE STANDARD</p>
                      </div>
                  </div>
 
-                 <!-- Mission Timer -->
-                <div class="bg-gray-800 p-4 rounded-lg mb-8">
+                 <div class="bg-gray-800 p-4 rounded-lg mb-8">
                     <h3 class="font-semibold text-lg text-gray-100 mb-3">Mission Timer</h3>
                     <div class="flex items-center justify-center space-x-4">
                         <div id="timer-display" class="font-mono text-5xl text-blue-400">01:00</div>
@@ -209,90 +318,87 @@
                 </div>
                 
                 <div id="workout-log-container" class="space-y-8">
-                    <!-- Workout logs will be injected here by JS -->
-                </div>
+                    </div>
                 <div id="next-day-workout-preview" class="mt-8"></div>
             </div>
 
-            <!-- Nutrition Section -->
-            <div id="nutrition-content" class="tab-content hidden">
-                 <h2 class="text-2xl font-semibold mb-4 text-gray-200">Bulletproof Nutrition Protocol</h2>
+             <div id="nutrition-content" class="tab-content hidden">
+                 <h2 class="text-2xl font-semibold mb-4 text-gray-200">The Architect Protocol (Budget Optimized)</h2>
                  <div class="bg-gray-800 p-4 rounded-lg mb-6 text-center">
-                      <p class="text-gray-400">Daily Target:</p>
-                      <p class="text-xl font-bold text-white">~2,563 kcal | ~198g Protein | ~99g Fat | ~230g Carbs</p>
+                       <p class="text-gray-400">Daily Target:</p>
+                       <p class="text-xl font-bold text-white">~2,500 kcal | 185g Protein | 70g Fat | 280g Carbs</p>
                  </div>
                  <div class="space-y-8">
-                     <!-- Supplement Schedule -->
-                     <div class="bg-gray-800 p-6 rounded-lg">
-                         <h3 class="font-bold text-xl text-blue-400 mb-4">Supplement Schedule</h3>
-                         <div class="space-y-4 text-gray-300">
-                             <div>
-                                 <p class="font-semibold text-gray-100">Upon Waking (~05:15):</p>
-                                 <ul class="list-disc list-inside text-sm pl-4"><li><strong>Electrolytes:</strong> with a large glass of water.</li></ul>
-                             </div>
-                             <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">With Meal 1 (Post-Workout):</p><ul class="list-disc list-inside text-sm pl-4"><li>Creatine</li><li>L-Glutamine</li><li>Vitamin D & Krill Oil</li></ul></div>
-                             <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">With Meal 3 (Dinner):</p><ul class="list-disc list-inside text-sm pl-4"><li>Ashwagandha</li></ul></div>
-                             <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">Before Bed:</p><ul class="list-disc list-inside text-sm pl-4"><li>Magnesium</li><li>L-Glutamine (Optional second dose)</li></ul></div>
-                         </div>
-                     </div>
-                     <!-- Meal Plan -->
-                     <div class="bg-gray-800 p-6 rounded-lg">
-                         <h3 class="font-bold text-xl text-blue-400 mb-4">Daily Meal Plan</h3>
-                         <div class="space-y-4 text-gray-300">
-                             <div><p class="font-semibold text-gray-100">Meal 1 (Post-Workout ~07:30):</p><ul class="list-disc list-inside text-sm pl-4"><li>200g Flank Steak</li><li>3 tbsp (63g) Raw Honey</li><li>300g Pineapple Chunks</li><li>300g Mango Chunks</li><li>200g Kiwi</li></ul></div>
-                             <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">Meal 2 (Lunch ~12:30):</p><ul class="list-disc list-inside text-sm pl-4"><li>250g 90/10 Grass-Fed Ground Beef</li><li>4 Large Scrambled Eggs</li></ul></div>
-                             <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">Meal 3 (Dinner ~18:30):</p><ul class="list-disc list-inside text-sm pl-4"><li>180g Pan-Seared Salmon or Chicken Breast</li><li>200g Full-Fat Greek Yogurt</li><li>2 Large Bananas</li></ul></div>
-                         </div>
-                     </div>
-                     <!-- Important Notes -->
-                     <div class="bg-gray-800 p-6 rounded-lg">
-                         <h3 class="font-bold text-xl text-blue-400 mb-4">Important Notes</h3>
-                         <ul class="list-disc list-inside text-gray-300 space-y-2 text-sm">
-                             <li><strong>Cooking Fats:</strong> Use 1-2 tablespoons of grass-fed butter, ghee, or beef tallow for cooking throughout the day. This will help you meet your final calorie and fat targets.</li>
-                             <li><strong>Carbohydrate Target:</strong> To hit the ~236g carbohydrate goal precisely, you can add one more tablespoon of honey to your post-workout meal.</li>
-                             <li><strong>Organ Meats:</strong> For maximum nutrient density, you can substitute a portion of your ground beef (e.g., 50g) with beef liver 2-3 times per week.</li>
-                             <li><strong>Hydration:</strong> Drink plenty of water and add high-quality sea salt to your meals to maintain electrolyte balance.</li>
-                         </ul>
-                     </div>
+                      <div class="bg-gray-800 p-6 rounded-lg">
+                           <h3 class="font-bold text-xl text-blue-400 mb-4">Supplement & Ignition Schedule</h3>
+                           <div class="space-y-4 text-gray-300">
+                                 <div>
+                                      <p class="font-semibold text-gray-100">Upon Waking (~05:15) - The Ignition Mix:</p>
+                                      <ul class="list-disc list-inside text-sm pl-4">
+                                        <li>500ml Water</li>
+                                        <li>Generous Pinch of Sea Salt (Electrolytes)</li>
+                                        <li>1 Cup Black Coffee (Focus)</li>
+                                        <li>(Optional) 1 Tbsp Honey (Immediate Fuel)</li>
+                                    </ul>
+                                 </div>
+                                 <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">With Meal 1 (Post-Workout):</p><ul class="list-disc list-inside text-sm pl-4"><li>Creatine Monohydrate (5g)</li><li>Vitamin D (If sunlight is limited)</li></ul></div>
+                                 <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">Before Bed:</p><ul class="list-disc list-inside text-sm pl-4"><li>Magnesium (Optional, for sleep quality)</li></ul></div>
+                           </div>
+                      </div>
+                      <div class="bg-gray-800 p-6 rounded-lg">
+                           <h3 class="font-bold text-xl text-blue-400 mb-4">Daily Meal Plan</h3>
+                           <div class="space-y-4 text-gray-300">
+                                 <div><p class="font-semibold text-gray-100">Meal 1 (Post-Workout ~07:30):</p><ul class="list-disc list-inside text-sm pl-4"><li>100g Oats (cooked in water or milk)</li><li>5 Large Eggs (Scrambled or boiled)</li></ul></div>
+                                 <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">Meal 2 (Lunch ~12:30):</p><ul class="list-disc list-inside text-sm pl-4"><li>200g Chicken Breast (cooked weight)</li><li>200g White Rice (cooked weight)</li><li>1 Cup Frozen Green Beans or Broccoli</li></ul></div>
+                                 <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">Meal 3 (Dinner ~18:30):</p><ul class="list-disc list-inside text-sm pl-4"><li>200g Ground Beef (90% lean or better)</li><li>300g Potato (baked or boiled)</li><li>Large Mixed Salad with 1 tbsp Olive Oil dressing</li></ul></div>
+                                  <div class="border-t border-gray-700 pt-4"><p class="font-semibold text-gray-100">Meal 4 (Before Bed ~20:30):</p><ul class="list-disc list-inside text-sm pl-4"><li>250g Greek Yogurt (0-2% fat) or Cottage Cheese</li></ul></div>
+                           </div>
+                      </div>
+                      <div class="bg-gray-800 p-6 rounded-lg">
+                           <h3 class="font-bold text-xl text-blue-400 mb-4">Important Notes</h3>
+                           <ul class="list-disc list-inside text-gray-300 space-y-2 text-sm">
+                                 <li><strong>Precision is Key:</strong> Weigh your food (especially Rice, Oats, Potato, and Meat) to ensure accuracy. Estimation prevents leanness.</li>
+                                 <li><strong>Cost Efficiency:</strong> Buy rice, oats, and potatoes in bulk. Utilize frozen vegetables. Choose the most cost-effective lean meat available that week.</li>
+                                 <li><strong>Hydration:</strong> Maintain high water intake (4L) and ensure adequate salt intake throughout the day, starting with the Ignition Mix.</li>
+                                 <li><strong>Adaptation:</strong> If weight loss stalls, reduce carb portions slightly (e.g., reduce rice by 50g). If energy crashes, ensure sleep is 8 hours before increasing calories.</li>
+                           </ul>
+                      </div>
                 </div>
             </div>
             
-            <!-- Wisdom Section -->
             <div id="wisdom-content" class="tab-content hidden">
                  <h2 class="text-2xl font-semibold mb-6 text-yellow-400">Wisdom</h2>
                  <div class="text-center">
-                     <button id="generate-wisdom-btn" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg transition duration-300">Generate Wisdom</button>
+                      <button id="generate-wisdom-btn" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg transition duration-300">Generate Wisdom</button>
                  </div>
                  <div id="wisdom-container" class="mt-6 bg-gray-800 p-6 rounded-lg min-h-[150px] flex items-center justify-center">
-                     <p id="wisdom-text" class="text-gray-400 text-center italic">Click the button to generate a success nugget...</p>
-                     <div id="wisdom-loader" class="hidden spinner h-8 w-8 border-4 rounded-full"></div>
+                      <p id="wisdom-text" class="text-gray-400 text-center italic">Click the button to generate a success nugget...</p>
+                      <div id="wisdom-loader" class="hidden spinner h-8 w-8 border-4 rounded-full"></div>
                  </div>
                 
-                 <!-- Quick Dictionary Section -->
                  <div class="mt-8">
-                      <h3 class="text-xl font-semibold mb-4 text-center text-blue-400">Quick Dictionary</h3>
-                      <div class="flex space-x-2 bg-gray-800 p-4 rounded-lg">
-                          <input type="text" id="word-input" class="flex-1 bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white" placeholder="Enter a word to simplify...">
-                          <button id="simplify-word-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Simplify</button>
-                      </div>
-                      <div id="definition-container" class="mt-4 bg-gray-800 p-6 rounded-lg min-h-[100px] flex items-center justify-center">
-                          <p id="definition-text" class="text-gray-400 text-center italic">Simplified definition will appear here...</p>
-                          <div id="definition-loader" class="hidden spinner h-8 w-8 border-4 rounded-full"></div>
-                      </div>
+                       <h3 class="text-xl font-semibold mb-4 text-center text-blue-400">Quick Dictionary</h3>
+                       <div class="flex space-x-2 bg-gray-800 p-4 rounded-lg">
+                            <input type="text" id="word-input" class="flex-1 bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white" placeholder="Enter a word to simplify...">
+                            <button id="simplify-word-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Simplify</button>
+                       </div>
+                       <div id="definition-container" class="mt-4 bg-gray-800 p-6 rounded-lg min-h-[100px] flex items-center justify-center">
+                            <p id="definition-text" class="text-gray-400 text-center italic">Simplified definition will appear here...</p>
+                            <div id="definition-loader" class="hidden spinner h-8 w-8 border-4 rounded-full"></div>
+                       </div>
                  </div>
 
                  <div class="mt-8">
-                         <h3 class="text-xl font-semibold mb-4 text-center text-yellow-400">Mindset Quotes</h3>
-                         <div id="mindset-quote-container" class="bg-gray-800 p-6 rounded-lg min-h-[150px] flex items-center justify-center">
-                             <p id="mindset-quote-text" class="text-gray-300 text-center italic"></p>
-                         </div>
-                         <div class="text-center mt-4">
-                             <button id="new-quote-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">New Quote</button>
-                         </div>
+                          <h3 class="text-xl font-semibold mb-4 text-center text-yellow-400">Mindset Quotes</h3>
+                          <div id="mindset-quote-container" class="bg-gray-800 p-6 rounded-lg min-h-[150px] flex items-center justify-center">
+                               <p id="mindset-quote-text" class="text-gray-300 text-center italic"></p>
+                          </div>
+                          <div class="text-center mt-4">
+                               <button id="new-quote-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">New Quote</button>
+                          </div>
                  </div>
             </div>
 
-            <!-- Finances Section -->
             <div id="finances-content" class="tab-content hidden">
                 <h2 class="text-2xl font-semibold mb-4 text-blue-400">Daily Expense Log</h2>
                 <div class="bg-gray-800 p-4 rounded-lg">
@@ -305,6 +411,7 @@
                                 <option>Dining Out</option>
                                 <option>Shopping</option>
                                 <option>Utilities</option>
+                                <option>Business Investment</option>
                                 <option>Other</option>
                             </select>
                             <input type="number" id="expense-amount" class="w-1/2 bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white" placeholder="Amount">
@@ -312,25 +419,24 @@
                         </div>
                     </div>
                     <ul id="expense-list" class="mt-4 space-y-2">
-                        <!-- Expenses will be injected here -->
-                    </ul>
+                        </ul>
                 </div>
                  <div class="mt-8 bg-gray-800 p-4 rounded-lg">
-                      <h3 class="text-xl font-semibold mb-4 text-center text-blue-400">Monthly Summary</h3>
-                      <div class="flex items-center justify-center space-x-2">
-                          <select id="month-select" class="bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white"></select>
-                          <select id="year-select" class="bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white"></select>
-                          <button id="calculate-total-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Calculate</button>
-                      </div>
-                      <div id="monthly-total-container" class="mt-4 text-center">
-                          <p id="monthly-total-text" class="text-gray-400"></p>
-                      </div>
+                       <h3 class="text-xl font-semibold mb-4 text-center text-blue-400">Monthly Summary</h3>
+                       <div class="flex items-center justify-center space-x-2">
+                            <select id="month-select" class="bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white"></select>
+                            <select id="year-select" class="bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 text-white"></select>
+                            <button id="calculate-total-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Calculate</button>
+                       </div>
+                       <div id="monthly-total-container" class="mt-4 text-center">
+                            <p id="monthly-total-text" class="text-gray-400"></p>
+                       </div>
                  </div>
             </div>
 
         </main>
         <footer class="text-center text-gray-500 text-xs mt-12">
-            <p>&copy; 2025 Hans. All Rights Reserved.</p>
+            <p>&copy; 2025 Hans. Architect Your Destiny.</p>
         </footer>
     </div>
 
@@ -341,92 +447,162 @@
         import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         // --- App Data (Constants) ---
+        // Schedules updated with new sleep times (21:00) and Pre-Workout Ignition Mix
         const schedules = {
             weekdays: [
-                { time: '05:00', task: 'Wake Up & Ignition Sequence', details: 'No snooze. Get out of bed immediately.<br><em>Principle: The first victory of the day is over the self.</em>' },
+                { time: '05:00', task: 'Wake Up & Hydrate', details: 'No snooze. Immediate action.<br><em>Principle: The first victory of the day is over the self.</em>' },
+                { time: '05:15', task: 'Ignition Mix & Mental Prep', details: '500ml Water, Sea Salt, Coffee, (Optional Honey). Review the mission.<br><em>Principle: Prime the engine before the race.</em>' },
                 { time: '05:20', task: 'Drive & Learn', details: 'University on Wheels. High-value audiobook or podcast.<br><em>Principle: Do not waste a single moment. Memento Mori.</em>' },
                 { time: '05:40', task: 'Resistance Training', details: 'Forge the body to strengthen the mind. Execute with intensity.<br><em>Principle: The obstacle is the way. The iron is the obstacle.</em>' },
                 { time: '06:40', task: 'Stairmaster (10 min)', details: 'Finish the session with a short, intense cardio blast.<br><em>Principle: Finish strong.</em>' },
                 { time: '06:50', task: 'Return Drive & Learn', details: 'Continue absorbing knowledge.<br><em>Principle: An empty mind is a liability.</em>' },
-                { time: '07:10', task: 'Post-Workout Recovery & Fuel', details: 'Refuel the machine with high-quality nutrients.<br><em>Principle: A warrior honors his vessel.</em>' },
-                { time: '07:30', task: 'Meditation & Strategic Journaling', details: 'Calibrate your mind. Define your mission for the day.<br><em>Principle: You have power over your mind, not outside events.</em>' },
+                { time: '07:10', task: 'Post-Workout Recovery & Fuel (Meal 1)', details: 'Refuel the machine. Oats and Eggs.<br><em>Principle: A warrior honors his vessel.</em>' },
+                { time: '07:45', task: 'Meditation & Strategic Journaling', details: 'Calibrate your mind. Define your mission for the day.<br><em>Principle: You have power over your mind, not outside events.</em>' },
                 { time: '08:00', task: 'Deep Work Block #1', details: 'Sacred time. Phone off. No distractions.<br><em>Principle: To be everywhere is to be nowhere. Focus is your superpower.</em>' },
-                { time: '12:00', task: 'Deliberate Recharge', details: 'Eat. Go outside. Let your mind rest.<br><em>Principle: Even a sword must be sharpened. Rest is a strategic weapon.</em>' },
+                { time: '12:00', task: 'Deliberate Recharge (Meal 2)', details: 'Chicken and Rice. Go outside. Let your mind rest.<br><em>Principle: Rest is a strategic weapon.</em>' },
                 { time: '12:45', task: 'Deep Work Block #2 (Part 1)', details: 'Sustain high-level focus. Attack your second objective.<br><em>Principle: Concentrate every minute like a Roman.</em>' },
                 { time: '13:30', task: 'Drive to pick up GF', details: '30 minute drive.<br><em>Principle: Fulfill your duties to others with your full attention.</em>' },
                 { time: '14:00', task: 'Return Drive', details: '30 minute drive.<br><em>Principle: Be present.</em>' },
                 { time: '14:30', task: 'Deep Work Block #2 (Part 2)', details: 'Return to a state of complete focus for the final work sprint.<br><em>Principle: Finish the task at hand.</em>' },
-                { time: '15:45', task: 'Shallow Work', details: 'Batch all low-value tasks. Execute with speed and indifference.<br><em>Principle: Some things must be done, but they do not deserve your soul.</em>' },
+                { time: '15:45', task: 'Shallow Work', details: 'Batch all low-value tasks. Execute with speed.<br><em>Principle: Some things must be done, but they do not deserve your soul.</em>' },
                 { time: '17:00', task: 'Skill Practice', details: 'Active practice, not passive learning. Sharpen your weapons.<br><em>Principle: We are what we repeatedly do. Excellence is a habit.</em>' },
-                { time: '18:00', task: 'Dinner & Connection', details: 'Be fully present with family. No phones.<br><em>Principle: A strong foundation at home supports the empire abroad.</em>' },
-                { time: '19:00', task: '45 min walk', details: 'Active recovery and mental decompression.<br><em>Principle: An unexamined day is a day wasted.</em>' },
-                { time: '19:45', task: 'Prepare for Tomorrow & Kill Screens', details: 'KILL THE SCREENS. Read biography. Prepare for victory.<br><em>Principle: The wise warrior wins the battle before it is fought.</em>' },
-                { time: '20:30', task: 'Sleep', details: 'Cool, dark, quiet. This is a non-negotiable duty.<br><em>Principle: Sleep is not a luxury; it is a weapon of recovery.</em>' },
+                { time: '18:00', task: 'Dinner (Meal 3) & Connection', details: 'Beef and Potato. Be fully present with family. No phones.<br><em>Principle: A strong foundation at home supports the empire abroad.</em>' },
+                { time: '19:00', task: '45 min walk', details: 'Active recovery and mental decompression.<br><em>Principle: Solvitur ambulando (It is solved by walking).</em>' },
+                { time: '19:45', task: 'Nightly Reflection & Prep', details: 'Open Strategy Tab. Complete Reflection. Prepare gear. KILL THE SCREENS.<br><em>Principle: The wise warrior wins the battle before it is fought.</em>' },
+                { time: '20:30', task: 'Pre-Sleep Fuel (Meal 4)', details: 'Greek Yogurt. Read biography.<br><em>Principle: Sustain the muscle-building signal.</em>' },
+                { time: '21:00', task: 'Sleep', details: 'Cool, dark, quiet. 8 hours non-negotiable.<br><em>Principle: Sleep is not a luxury; it is a weapon of recovery.</em>' },
             ],
             friday: [
-                { time: '05:00', task: 'Wake Up & Ignition Sequence', details: 'No snooze. Get out of bed immediately.<br><em>Principle: The first victory of the day is over the self.</em>' },
+                 { time: '05:00', task: 'Wake Up & Hydrate', details: 'No snooze. Immediate action.<br><em>Principle: The first victory of the day is over the self.</em>' },
+                 { time: '05:15', task: 'Ignition Mix & Mental Prep', details: '500ml Water, Sea Salt, Coffee, (Optional Honey). Review the mission.<br><em>Principle: Prime the engine before the race.</em>' },
                 { time: '05:20', task: 'Drive & Learn', details: 'University on Wheels. High-value audiobook or podcast.<br><em>Principle: Do not waste a single moment. Memento Mori.</em>' },
                 { time: '05:40', task: 'Resistance Training', details: 'Forge the body to strengthen the mind. Execute with intensity.<br><em>Principle: The obstacle is the way. The iron is the obstacle.</em>' },
                 { time: '06:40', task: 'Stairmaster (10 min)', details: 'Finish the session with a short, intense cardio blast.<br><em>Principle: Finish strong.</em>' },
                 { time: '06:50', task: 'Return Drive & Learn', details: 'Continue absorbing knowledge.<br><em>Principle: An empty mind is a liability.</em>' },
-                { time: '07:10', task: 'Post-Workout Recovery & Fuel', details: 'Refuel the machine with high-quality nutrients.<br><em>Principle: A warrior honors his vessel.</em>' },
-                { time: '07:30', task: 'Meditation & Strategic Journaling', details: 'Calibrate your mind. Define your mission for the day.<br><em>Principle: You have power over your mind, not outside events.</em>' },
+                { time: '07:10', task: 'Post-Workout Recovery & Fuel (Meal 1)', details: 'Refuel the machine. Oats and Eggs.<br><em>Principle: A warrior honors his vessel.</em>' },
+                { time: '07:45', task: 'Meditation & Strategic Journaling', details: 'Calibrate your mind. Define your mission for the day.<br><em>Principle: You have power over your mind, not outside events.</em>' },
                 { time: '08:00', task: 'Deep Work Block #1', details: 'Sacred time. Phone off. No distractions.<br><em>Principle: To be everywhere is to be nowhere. Focus is your superpower.</em>' },
-                { time: '12:00', task: 'Deliberate Recharge', details: 'Eat. Go outside. Let your mind rest.<br><em>Principle: Even a sword must be sharpened. Rest is a strategic weapon.</em>' },
+                { time: '12:00', task: 'Deliberate Recharge (Meal 2)', details: 'Chicken and Rice. Go outside. Let your mind rest.<br><em>Principle: Rest is a strategic weapon.</em>' },
                 { time: '12:45', task: 'Deep Work Block #2 (Part 1)', details: 'Sustain high-level focus. Attack your second objective.<br><em>Principle: Concentrate every minute like a Roman.</em>' },
                 { time: '13:00', task: 'Drive to pick up GF', details: '30 minute drive.<br><em>Principle: Fulfill your duties to others with your full attention.</em>' },
                 { time: '13:30', task: 'Return Drive', details: '30 minute drive.<br><em>Principle: Be present.</em>' },
                 { time: '14:00', task: 'Deep Work Block #2 (Part 2)', details: 'Return to a state of complete focus for the final work sprint.<br><em>Principle: Finish the task at hand.</em>' },
-                { time: '15:45', task: 'Shallow Work', details: 'Batch all low-value tasks. Execute with speed and indifference.<br><em>Principle: Some things must be done, but they do not deserve your soul.</em>' },
+                { time: '15:45', task: 'Shallow Work', details: 'Batch all low-value tasks. Execute with speed.<br><em>Principle: Some things must be done, but they do not deserve your soul.</em>' },
                 { time: '17:00', task: 'Skill Practice', details: 'Active practice, not passive learning. Sharpen your weapons.<br><em>Principle: We are what we repeatedly do. Excellence is a habit.</em>' },
-                { time: '18:00', task: 'Dinner & Connection', details: 'Be fully present with family. No phones.<br><em>Principle: A strong foundation at home supports the empire abroad.</em>' },
-                { time: '19:00', task: '45 min walk', details: 'Active recovery and mental decompression.<br><em>Principle: An unexamined day is a day wasted.</em>' },
-                { time: '19:45', task: 'Prepare for Tomorrow & Kill Screens', details: 'KILL THE SCREENS. Read biography. Prepare for victory.<br><em>Principle: The wise warrior wins the battle before it is fought.</em>' },
-                { time: '20:30', task: 'Sleep', details: 'Cool, dark, quiet. This is a non-negotiable duty.<br><em>Principle: Sleep is not a luxury; it is a weapon of recovery.</em>' },
+                { time: '18:00', task: 'Dinner (Meal 3) & Connection', details: 'Beef and Potato. Be fully present with family. No phones.<br><em>Principle: A strong foundation at home supports the empire abroad.</em>' },
+                { time: '19:00', task: '45 min walk', details: 'Active recovery and mental decompression.<br><em>Principle: Solvitur ambulando (It is solved by walking).</em>' },
+                { time: '19:45', task: 'Nightly Reflection & Prep', details: 'Open Strategy Tab. Complete Reflection. Prepare gear. KILL THE SCREENS.<br><em>Principle: The wise warrior wins the battle before it is fought.</em>' },
+                 { time: '20:30', task: 'Pre-Sleep Fuel (Meal 4)', details: 'Greek Yogurt. Read biography.<br><em>Principle: Sustain the muscle-building signal.</em>' },
+                { time: '21:00', task: 'Sleep', details: 'Cool, dark, quiet. 8 hours non-negotiable.<br><em>Principle: Sleep is not a luxury; it is a weapon of recovery.</em>' },
             ],
             saturday: [
                 { time: '07:00', task: 'Wake Up & Morning Routine', details: 'Consistency builds discipline. Maintain the standard.<br><em>Principle: Discipline in all things is the foundation of power.</em>' },
-                { time: '08:00', task: 'Calisthenics', details: 'Master your own bodyweight. Focus on perfect form.<br><em>Principle: Strength is control.</em>' },
-                { time: '09:00', task: '45 min walk', details: 'Low-intensity cardio and fresh air.<br><em>Principle: Movement is life.</em>' },
+                { time: '08:00', task: 'Resistance Training (LEGS B)', details: 'Saturday Leg Day. High volume and intensity.<br><em>Principle: Strength is control.</em>' },
+                { time: '09:15', task: '45 min walk', details: 'Low-intensity cardio and fresh air.<br><em>Principle: Movement is life.</em>' },
                 { time: '10:00', task: 'The CEO Block: Work ON Your Vision', details: 'Zoom out. Strategize the war, not just the daily battles.<br><em>Principle: A man without a plan is a ship without a rudder.</em>' },
                 { time: '13:00', task: 'Lunch & Recharge', details: 'Refuel for the afternoon mission.<br><em>Principle: Efficiency in all things.</em>' },
                 { time: '14:00', task: 'Deep Skill Development', details: 'Invest in your intellectual capital. Acquire new assets.<br><em>Principle: The more you know, the more you are worth.</em>' },
                 { time: '17:00', task: 'Complete Disconnect & Recharge', details: 'True rest. Engage in activities that restore your energy.<br><em>Principle: The bow that is always bent will break.</em>' },
-                { time: '20:30', task: 'Sleep', details: 'Prepare for the final day of the week.<br><em>Principle: Recovery is part of the training.</em>' },
+                { time: '19:45', task: 'Nightly Reflection', details: 'Open Strategy Tab. Complete Reflection.<br><em>Principle: Accountability accelerates progress.</em>' },
+                { time: '21:00', task: 'Sleep', details: 'Prepare for the final day of the week.<br><em>Principle: Recovery is part of the training.</em>' },
             ],
             sunday: [
                 { time: '08:00', task: 'Wake Up & Hydrate', details: 'Start the day with water and electrolytes.<br><em>Principle: A Sunday well spent brings a week of content.</em>' },
-                { time: '09:00', task: 'Stairmaster (Longer Session)', details: 'Build your engine with a sustained cardio effort.<br><em>Principle: Forge an unbreakable will.</em>' },
+                { time: '09:00', task: 'Active Recovery & Core', details: 'Mobility, core work, and low-intensity movement.<br><em>Principle: Forge an unbreakable will.</em>' },
                 { time: '10:00', task: '45 min walk', details: 'Cool down and active recovery.<br><em>Principle: To be interesting, be interested.</em>' },
                 { time: '11:00', task: 'Life Administration & Meal Prep', details: 'Systemize your life to reduce weekly friction. Prepare for success.<br><em>Principle: Order and calm in your environment create order and calm in your mind.</em>' },
                 { time: '14:00', task: 'Free Time / Family Time', details: 'Strengthen your core support system.<br><em>Principle: No success is worth failure at home.</em>' },
-                { time: '19:00', task: 'Prepare for the Week', details: 'Review the upcoming week’s battle plan.<br><em>Principle: Luck is what happens when preparation meets opportunity.</em>' },
-                { time: '20:30', task: 'Sleep', details: 'Full recovery to start the week at 100% capacity.<br><em>Principle: Enter the week as a lion, not a lamb.</em>' },
+                { time: '18:00', task: 'Weekly Strategy Session', details: 'Open the Strategy Tab. Define Weekly Objectives and The Crucible.<br><em>Principle: Luck is what happens when preparation meets opportunity.</em>' },
+                { time: '19:45', task: 'Nightly Reflection', details: 'Open Strategy Tab. Complete Reflection.<br><em>Principle: Enter the week with clarity.</em>' },
+                { time: '21:00', task: 'Sleep', details: 'Full recovery to start the week at 100% capacity.<br><em>Principle: Enter the week as a lion, not a lamb.</em>' },
             ]
         };
 
+        // UPDATED WORKOUT DATA: PPL 6-Day Protocol with DUP
         const workoutData = [
-            { day: "Monday", key: "monday", title: "Chest Annihilation", focus: "Build thickness and width across the entire pectoral region.", exercises: [
-                { name: "Incline Barbell Press", details: "4 sets x 8-12 reps" }, { name: "Flat Dumbbell Press", details: "4 sets x 8-12 reps" }, { name: "Decline Hammer Strength Press", details: "3 sets x 10-15 reps" }, { name: "Cable Crossovers", details: "3 sets x 12-15 reps (high-to-low)" }, { name: "Push-ups", details: "3 sets to failure" }, { name: "Dumbbell Pullovers", details: "3 sets x 15 reps (focus on the stretch)" }
-            ], note: "On the last set of every exercise, perform a dropset. Immediately reduce the weight by 30-40% and rep to failure.", loggable: true },
-            { day: "Tuesday", key: "tuesday", title: "Back Demolition", focus: "Develop V-taper width and dense thickness.", exercises: [
-                { name: "Weighted Pull-ups", details: "4 sets x 6-10 reps (or to failure)" }, { name: "Barbell Bent-Over Rows", details: "4 sets x 8-12 reps" }, { name: "T-Bar Rows", details: "3 sets x 10-15 reps" }, { name: "Seated Cable Rows (Wide Grip)", details: "3 sets x 12-15 reps" }, { name: "Straight-Arm Pulldowns", details: "3 sets x 15-20 reps (to isolate lats)" }
-            ], note: "Keep rest periods to 60 seconds maximum. Focus on squeezing the back muscles, not just pulling with your arms.", loggable: true },
-            { day: "Wednesday", key: "wednesday", title: "Shoulder Shock", focus: "Build round, 3D deltoids.", exercises: [
-                { name: "Seated Dumbbell Press", details: "4 sets x 8-12 reps" }, { name: "Lateral Raises", details: "3 sets x 12-15 reps" }, { name: "Front Raises", details: "3 sets x 12-15 reps" }, { name: "Bent-Over Rear Delt Raises", details: "3 sets x 12-15 reps" }, { name: "Upright Rows (with EZ bar)", details: "3 sets x 10-12 reps" }, { name: "Barbell Shrugs", details: "4 sets x 15-20 reps" }
-            ], note: "Focus on continuous movement and muscle burn, especially on the raises.", loggable: true },
-            { day: "Thursday", key: "thursday", title: "Arms Warfare", focus: "High-volume supersets to maximize the pump.", exercises: [
-                { name: "Barbell Curls", details: "4 sets x 8-12 reps" }, { name: "Triceps Pushdowns (Rope)", details: "4 sets x 12-15 reps" }, { name: "Incline Dumbbell Curls", details: "4 sets x 10-15 reps" }, { name: "Skull Crushers", details: "4 sets x 10-15 reps" }, { name: "Hammer Curls", details: "3 sets x 12-15 reps" }, { name: "Overhead Dumbbell Extension", details: "3 sets x 12-15 reps" }
-            ], note: "Superset the first two bicep exercises with the first two tricep exercises. Rest only 60 seconds after each superset.", loggable: true },
-            { day: "Friday", key: "friday", title: "Legit Legs", focus: "Build a powerful foundation. This will be the hardest day.", exercises: [
-                { name: "Barbell Squats", details: "5 sets x 8-12 reps" }, { name: "Leg Press", details: "4 sets x 15-20 reps" }, { name: "Walking Lunges", details: "3 sets x 20 steps per leg" }, { name: "Lying Leg Curls", details: "4 sets x 12-15 reps" }, { name: "Seated Calf Raises", details: "5 sets x 20-25 reps" }
-            ], note: "Do not be afraid of high reps on legs. Push past the burn. Your mental strength is built here.", loggable: true },
-            { day: "Saturday", key: "saturday", title: "Calisthenics & Core", focus: "Master your bodyweight and forge a rock-solid core.", exercises: [
-                { name: "Weighted Pull-ups / Chin-ups", details: "5 sets to failure" }, { name: "Dips", details: "5 sets to failure" }, { name: "Hanging Leg Raises", details: "4 sets to failure" }, { name: "Push-up Variations", details: "4 sets to failure" }, { name: "Plank", details: "3 sets, hold as long as possible" }
-            ], note: "Focus on perfect, controlled form. Rest 90 seconds between sets.", loggable: false },
-            { day: "Sunday", key: "sunday", title: "Cardio & Recovery", focus: "Build cardiovascular endurance and promote active recovery.", exercises: [
-                { name: "Stairmaster", details: "30-45 minute session (steady pace)" }, { name: "45 min Walk", details: "Low intensity walk outdoors or on a treadmill" }
-            ], note: "The goal is to increase your work capacity and burn calories, not to train to failure.", loggable: false }
+            // --- PPL ROTATION: A (Strength/Power Focus) ---
+            { 
+                day: "Monday", key: "monday", title: "PUSH A (Strength Focus)", focus: "Chest, Shoulders, Triceps. Focus on heavy compound lifts.", 
+                exercises: [
+                    { name: "Barbell Bench Press", details: "3 sets x 5-8 reps" }, 
+                    { name: "Incline Dumbbell Press", details: "3 sets x 6-10 reps" }, 
+                    { name: "Overhead Press (Barbell or Dumbbell)", details: "3 sets x 6-10 reps" }, 
+                    { name: "Weighted Dips (or Close Grip Bench)", details: "3 sets x 8-12 reps" },
+                    { name: "Cable Lateral Raises", details: "3 sets x 10-15 reps" }
+                ], 
+                note: "Progression Model: Once you hit the top end of the rep range for ALL sets, increase the weight next session. Rest 2-3 minutes between heavy sets.", loggable: true 
+            },
+            { 
+                day: "Tuesday", key: "tuesday", title: "PULL A (Strength Focus)", focus: "Back, Biceps, Rear Delts. Building width and thickness.", 
+                exercises: [
+                    { name: "Weighted Pull-ups (or Lat Pulldown)", details: "3 sets x 5-8 reps" }, 
+                    { name: "Barbell Bent-Over Rows", details: "3 sets x 6-10 reps" }, 
+                    { name: "T-Bar or Seated Cable Row", details: "3 sets x 8-12 reps" }, 
+                    { name: "Face Pulls (Shoulder Health)", details: "3 sets x 12-15 reps" },
+                    { name: "Barbell Curls", details: "3 sets x 8-12 reps" }
+                ], 
+                note: "Focus on controlling the negative portion of the lift. Maintain strict form. Use the Double Progression model.", loggable: true 
+            },
+            { 
+                day: "Wednesday", key: "wednesday", title: "LEGS A (Strength Focus)", focus: "The foundation. Quads, Hamstrings, Calves.", 
+                exercises: [
+                    { name: "Barbell Back Squats", details: "3 sets x 5-8 reps" }, 
+                    { name: "Romanian Deadlifts (RDLs)", details: "3 sets x 8-12 reps" }, 
+                    { name: "Leg Press", details: "3 sets x 10-15 reps" }, 
+                    { name: "Lying Leg Curls", details: "3 sets x 10-15 reps" },
+                    { name: "Standing Calf Raises", details: "4 sets x 10-15 reps" }
+                ], 
+                note: "Squat depth is paramount. Do not sacrifice form for weight. Rest 3 minutes between Squat sets. Use the Double Progression model.", loggable: true 
+            },
+
+            // --- PPL ROTATION: B (Hypertrophy/Volume Focus) ---
+            { 
+                day: "Thursday", key: "thursday", title: "PUSH B (Hypertrophy Focus)", focus: "Chest, Shoulders, Triceps. Focus on volume and the pump.", 
+                exercises: [
+                    { name: "Incline Barbell Press", details: "3 sets x 8-12 reps" },
+                    { name: "Flat Dumbbell Flyes or Pec Deck", details: "3 sets x 10-15 reps" },
+                    { name: "Seated Dumbbell Shoulder Press", details: "3 sets x 8-12 reps" },
+                    { name: "Triceps Pushdowns (Rope)", details: "3 sets x 10-15 reps" },
+                    { name: "Dumbbell Lateral Raises", details: "4 sets x 12-15 reps" }
+                ], 
+                note: "Keep rest periods shorter (60-90 seconds). Focus on the squeeze and the mind-muscle connection. Use the Double Progression model.", loggable: true 
+            },
+            { 
+                day: "Friday", key: "friday", title: "PULL B (Hypertrophy Focus)", focus: "Back, Biceps, Rear Delts. High volume and isolation.", 
+                exercises: [
+                    { name: "Lat Pulldowns (Wide Grip)", details: "3 sets x 10-15 reps" },
+                    { name: "Dumbbell Rows (Single Arm)", details: "3 sets x 10-15 reps per arm" },
+                    { name: "Straight-Arm Pulldowns", details: "3 sets x 12-15 reps" },
+                    { name: "Reverse Pec Deck (Rear Delts)", details: "3 sets x 15-20 reps" },
+                    { name: "Incline Dumbbell Curls", details: "3 sets x 10-15 reps" },
+                    { name: "Hammer Curls", details: "3 sets x 10-15 reps" }
+                ], 
+                note: "Maximize the stretch on every rep. Squeeze the back at the peak contraction. Use the Double Progression model.", loggable: true 
+            },
+            { 
+                // Note: Updated Saturday schedule to reflect Leg Day B
+                day: "Saturday", key: "saturday", title: "LEGS B (Hypertrophy/Volume)", focus: "Volume and detail work for complete leg development.", 
+                exercises: [
+                    { name: "Front Squats (or Hack Squats)", details: "3 sets x 8-12 reps" },
+                    { name: "Bulgarian Split Squats", details: "3 sets x 10-15 reps per leg" },
+                    { name: "Leg Extensions", details: "3 sets x 15-20 reps" },
+                    { name: "Seated Leg Curls", details: "3 sets x 15-20 reps" },
+                    { name: "Seated Calf Raises", details: "4 sets x 15-20 reps" }
+                ], 
+                note: "This day is about time under tension. Control the weight; do not let it control you. Use the Double Progression model.", loggable: true 
+            },
+
+            // --- RECOVERY ---
+            { 
+                day: "Sunday", key: "sunday", title: "Active Recovery & Core", focus: "Promote blood flow, mobility, and core strength.", 
+                exercises: [
+                    { name: "Low-Intensity Cardio (Walk/Bike)", details: "30-45 minutes (Zone 2)" },
+                    { name: "Hanging Leg Raises", details: "3 sets to failure" },
+                    { name: "Plank Variations", details: "3 sets, hold as long as possible" },
+                    { name: "Foam Rolling/Stretching", details: "15 minutes" }
+                ], 
+                note: "The goal is recovery, not exhaustion. Prepare the body for the week ahead.", loggable: false 
+            }
         ];
 
         const quotes = [
@@ -448,18 +624,20 @@
         let isSavingExpense = false;
 
         // --- UI ELEMENT REFERENCES ---
-        let mainContent, loadingOverlay, scheduleContainer, currentDateEl, currentTimeEl, todayBtn, dailyQuoteEl, bibleVerseEl,
-            tabs, tabContents, daySwitcher, addWaterBtn, waterAmountEl, waterProgressEl,
-            prevDayBtn, nextDayBtn, editWaterBtn, waterControlsDefault, waterControlsConfirm,
-            confirmResetBtn, cancelResetBtn, startTimerBtn, pauseTimerBtn, resetTimerBtn,
-            timerDisplay, generateWisdomBtn, wisdomText, wisdomLoader, newQuoteBtn,
-            mindsetQuoteText, powerlistContainer, streakCounter, addExpenseBtn, expenseList,
-            workoutLogContainer, wordInput, simplifyWordBtn, definitionText, definitionLoader,
-            monthSelect, yearSelect, calculateTotalBtn, monthlyTotalText, expenseCategory,
-            expenseAmount, expenseDescription, nextDayWorkoutPreview;
+        // (References initialized in DOMContentLoaded)
 
         // --- UTILITY FUNCTIONS ---
         const toISODateString = (date) => new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+        
+        // Get the start of the week (Monday) for strategy storage
+        const getStartOfWeek = (date) => {
+            const d = new Date(date);
+            d.setHours(0, 0, 0, 0);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+            return new Date(d.setDate(diff));
+        };
+
         const getDayKeyForDate = (date) => {
             const day = date.getDay();
             if (day >= 1 && day <= 4) return 'weekdays';
@@ -469,60 +647,161 @@
         };
         const getWorkoutDayKey = (date) => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][date.getDay()];
         
+        // Debounce function
+        const debounce = (func, delay) => {
+            let timeoutId;
+            return (...args) => {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        };
+
         // --- FIRESTORE DATA HANDLING ---
-        async function getDataForDate(date) {
+
+         // Generalized function to get data from a specific collection/document
+        async function getDocumentData(collectionPath, docId) {
             if (!isAuthReady) return null;
-            const dateString = toISODateString(date);
-            const docRef = doc(db, `/artifacts/${appId}/users/${userId}/dailyData`, dateString);
+            const docRef = doc(db, collectionPath, docId);
             try {
                 const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    let powerList = data.powerList;
-                    if (!Array.isArray(powerList) || powerList.length !== 5) {
-                        powerList = Array.from({ length: 5 }, () => ({ text: "", completed: false }));
-                    } else {
-                        powerList = powerList.map(item => (typeof item === 'object' && item !== null && 'completed' in item && 'text' in item) ? item : { text: "", completed: false });
-                    }
-                    return {
-                        water: data.water || 0,
-                        checkedTasks: data.checkedTasks || [],
-                        powerList: powerList,
-                        expenses: data.expenses || [],
-                        workoutLog: data.workoutLog || {},
-                        completedSets: data.completedSets || {}
-                    };
-                } else {
-                    return { water: 0, checkedTasks: [], powerList: Array.from({ length: 5 }, () => ({ text: "", completed: false })), expenses: [], workoutLog: {}, completedSets: {} };
-                }
+                return docSnap.exists() ? docSnap.data() : {};
             } catch (error) {
-                console.error("Error fetching data for date:", dateString, error);
+                console.error("Error fetching document data:", collectionPath, docId, error);
                 return null;
             }
         }
 
-        async function saveDataForDate(date, data) {
-            if (!isAuthReady) return;
-            const dateString = toISODateString(date);
-            const docRef = doc(db, `/artifacts/${appId}/users/${userId}/dailyData`, dateString);
+        // Generalized function to save data
+        async function saveDocumentData(collectionPath, docId, data) {
+            if (!isAuthReady) return false;
+            const docRef = doc(db, collectionPath, docId);
             try {
                 await setDoc(docRef, data, { merge: true });
+                return true;
             } catch (error) {
-                console.error("Error saving data for date:", dateString, error);
+                console.error("Error saving document data:", collectionPath, docId, error);
+                return false;
             }
         }
 
+        // Specific implementation for User Profile (Identity)
+        async function getUserProfile() {
+             const collectionPath = `/artifacts/${appId}/users/${userId}/profileData`;
+             const data = await getDocumentData(collectionPath, 'mainProfile');
+             return data || { statement: "", principles: "", antivision: "" };
+        }
+
+        async function saveUserProfile(data) {
+            const collectionPath = `/artifacts/${appId}/users/${userId}/profileData`;
+            return await saveDocumentData(collectionPath, 'mainProfile', data);
+        }
+
+
+        // Specific implementation for Daily Data
+        async function getDataForDate(date) {
+            const dateString = toISODateString(date);
+            const collectionPath = `/artifacts/${appId}/users/${userId}/dailyData`;
+            const data = await getDocumentData(collectionPath, dateString);
+
+            // Define defaults
+            const defaultPowerList = Array.from({ length: 5 }, () => ({ text: "", completed: false, phase: "1" }));
+            const defaultReflection = { wins: "", lessons: "", identity: "" };
+
+            if (data && Object.keys(data).length > 0) {
+                // Data sanitization and defaults
+                let powerList = data.powerList;
+                 if (!Array.isArray(powerList) || powerList.length !== 5) {
+                        powerList = defaultPowerList;
+                    } else {
+                        powerList = powerList.map(item => (typeof item === 'object' && item !== null && 'completed' in item && 'text' in item) ? 
+                            {...item, phase: item.phase || "1"} : // Default to Phase 1 if missing
+                            { text: "", completed: false, phase: "1" });
+                    }
+                
+                const reflection = (typeof data.reflection === 'object' && data.reflection !== null) ? { ...defaultReflection, ...data.reflection } : defaultReflection;
+
+
+                return {
+                    water: data.water || 0,
+                    checkedTasks: data.checkedTasks || [],
+                    powerList: powerList,
+                    expenses: data.expenses || [],
+                    workoutLog: data.workoutLog || {},
+                    completedSets: data.completedSets || {},
+                    reflection: reflection
+                };
+            } else {
+                // Return defaults if no document exists
+                return { water: 0, checkedTasks: [], powerList: defaultPowerList, expenses: [], workoutLog: {}, completedSets: {}, reflection: defaultReflection };
+            }
+        }
+
+        async function saveDataForDate(date, data) {
+            const dateString = toISODateString(date);
+            const collectionPath = `/artifacts/${appId}/users/${userId}/dailyData`;
+            await saveDocumentData(collectionPath, dateString, data);
+        }
+
+        // Specific implementation for Weekly Strategy
+        async function getWeeklyStrategy(date) {
+            const startOfWeek = getStartOfWeek(date);
+            const weekString = toISODateString(startOfWeek);
+            const collectionPath = `/artifacts/${appId}/users/${userId}/weeklyStrategy`;
+            const data = await getDocumentData(collectionPath, weekString);
+
+            const defaultObjectives = Array.from({ length: 3 }, () => ({ text: "", completed: false }));
+            const defaultCrucible = { text: "", completed: false };
+
+            if (data && Object.keys(data).length > 0) {
+                let objectives = data.objectives;
+                if (!Array.isArray(objectives) || objectives.length !== 3) {
+                    objectives = defaultObjectives;
+                }
+
+                let crucible = data.crucible;
+                if (typeof crucible !== 'object' || crucible === null || !('text' in crucible)) {
+                    crucible = defaultCrucible;
+                }
+
+                return { objectives, crucible };
+            } else {
+                return {
+                    objectives: defaultObjectives,
+                    crucible: defaultCrucible
+                };
+            }
+        }
+
+        async function saveWeeklyStrategy(date, data) {
+            const startOfWeek = getStartOfWeek(date);
+            const weekString = toISODateString(startOfWeek);
+            const collectionPath = `/artifacts/${appId}/users/${userId}/weeklyStrategy`;
+            await saveDocumentData(collectionPath, weekString, data);
+        }
+
+
         // --- UI RENDERING ---
         async function renderUIForDate(date) {
-            loadingOverlay.classList.remove('hidden');
+            document.getElementById('loading-overlay').classList.remove('hidden');
             const isToday = toISODateString(date) === toISODateString(new Date());
 
-            currentDateEl.textContent = date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-            nextDayBtn.disabled = isToday;
-            todayBtn.classList.toggle('hidden', isToday);
+            document.getElementById('current-date').textContent = date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+            document.getElementById('next-day-btn').disabled = isToday;
+            document.getElementById('today-btn').classList.toggle('hidden', isToday);
             const dayKey = getDayKeyForDate(date);
-            daySwitcher.querySelectorAll('.day-btn').forEach(btn => btn.classList.toggle('day-btn-active', btn.dataset.day === dayKey));
             
+            // Ensure the day switcher correctly reflects the displayed date's schedule type
+             document.getElementById('day-switcher').querySelectorAll('.day-btn').forEach(btn => {
+                 if (btn.dataset.day === dayKey) {
+                     btn.classList.add('day-btn-active');
+                 } else {
+                     btn.classList.remove('day-btn-active');
+                 }
+             });
+
+
             try {
                 const results = await Promise.allSettled([
                     renderScheduleForDate(date),
@@ -531,7 +810,9 @@
                     renderTrainingLogs(date),
                     renderNextDayWorkoutPreview(date),
                     updateWaterDisplayForDate(date),
-                    updateStreakDisplay()
+                    updateStreakDisplay(),
+                    renderStrategy(date),
+                    renderIdentity() // Render Identity data (only needs rendering once, but safe to call here)
                 ]);
 
                 results.forEach(result => {
@@ -542,21 +823,75 @@
             } catch (error) {
                 console.error("Error during rendering process:", error);
             } finally {
-                loadingOverlay.classList.add('hidden');
+                document.getElementById('loading-overlay').classList.add('hidden');
             }
 
             updateCurrentTaskHighlight(date);
             setDailyQuote(date);
         }
 
+         // Render Identity Profile
+        async function renderIdentity() {
+            try {
+                const profile = await getUserProfile();
+                if (profile) {
+                    document.getElementById('identity-statement').value = profile.statement || "";
+                    document.getElementById('identity-principles').value = profile.principles || "";
+                    document.getElementById('identity-antivision').value = profile.antivision || "";
+                }
+            } catch (error) {
+                console.error("Error rendering identity", error);
+            }
+        }
+
+         // Render Strategy Tab
+        async function renderStrategy(date) {
+            try {
+                const [dailyData, weeklyStrategy] = await Promise.all([getDataForDate(date), getWeeklyStrategy(date)]);
+                if (!dailyData || !weeklyStrategy) return;
+
+                // 1. Render Reflections (Daily Data)
+                document.getElementById('reflection-wins').value = dailyData.reflection.wins || "";
+                document.getElementById('reflection-lessons').value = dailyData.reflection.lessons || "";
+                document.getElementById('reflection-identity').value = dailyData.reflection.identity || "";
+
+                // 2. Render Weekly Objectives (Weekly Data)
+                document.getElementById('weekly-objectives-container').innerHTML = weeklyStrategy.objectives.map((obj, i) => `
+                    <div class="flex items-center space-x-3">
+                        <span class="text-gray-400 font-bold">${i + 1}.</span>
+                        <input type="text" class="app-input strategy-focus weekly-objective-input flex-1 rounded-md p-2 text-white" placeholder="Objective #${i + 1}" value="${obj.text}" data-index="${i}">
+                        <input type="checkbox" class="weekly-objective-checkbox h-5 w-5 bg-gray-700 border-gray-600 rounded text-amber-500 focus:ring-amber-500" data-index="${i}" ${obj.completed ? 'checked' : ''}>
+                    </div>`).join('');
+
+                // 3. Render The Crucible (Weekly Data)
+                document.getElementById('crucible-container').innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <input type="text" id="crucible-input" class="app-input strategy-focus flex-1 rounded-md p-2 text-white" placeholder="Define the challenge..." value="${weeklyStrategy.crucible.text}">
+                        <input type="checkbox" id="crucible-checkbox" class="h-5 w-5 bg-gray-700 border-gray-600 rounded text-red-500 focus:ring-red-500" ${weeklyStrategy.crucible.completed ? 'checked' : ''}>
+                    </div>`;
+
+            } catch (error) {
+                console.error("Error rendering strategy tab", error);
+                document.getElementById('strategy-content').innerHTML = `<div class="text-red-500">Error loading strategy data.</div>`;
+            }
+        }
+
 
         async function renderScheduleForDate(date) {
+            const scheduleContainer = document.getElementById('schedule-container');
             try {
-                scheduleContainer.innerHTML = '';
                 const dayKey = getDayKeyForDate(date);
                 const schedule = schedules[dayKey];
                 const dataForDay = await getDataForDate(date);
                 if (!dataForDay || !schedule) return;
+
+                // We only render the interactive schedule if the active button matches the date's key
+                const activeDayButton = document.querySelector('.day-btn-active');
+                if (activeDayButton && activeDayButton.dataset.day !== dayKey) {
+                    // If the user switched dates, the renderUIForDate ensures the button is updated.
+                    // If we are here, it means we should render the schedule for the new date.
+                }
+                
                 const dayContainer = document.createElement('div');
                 dayContainer.className = 'space-y-3';
                 dayContainer.innerHTML = schedule.map((item, index) => `
@@ -568,6 +903,8 @@
                         </div>
                         <input type="checkbox" data-task-id="${index}" class="form-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500 flex-shrink-0" ${dataForDay.checkedTasks.includes(index) ? 'checked' : ''}>
                     </div>`).join('');
+                
+                scheduleContainer.innerHTML = ''; // Clear now before appending
                 scheduleContainer.appendChild(dayContainer);
             } catch (error) {
                 console.error("Error in renderScheduleForDate:", error);
@@ -575,15 +912,29 @@
             }
         }
         
+        // Enhanced Power List Renderer
         async function renderPowerList(date) {
+            const powerlistContainer = document.getElementById('powerlist-container');
            try {
                 const dataForDay = await getDataForDate(date);
                 if (!dataForDay) return;
+
+                 // Helper function to generate the phase selector HTML
+                const generatePhaseSelector = (selectedIndex, currentPhase) => {
+                    const phases = ["1", "2", "3", "4"];
+                    return `
+                        <select class="powerlist-phase bg-gray-700 border-gray-600 border rounded-md focus:ring-2 focus:ring-yellow-500 text-white text-sm mr-3 w-24 py-2 px-1" data-index="${selectedIndex}">
+                            ${phases.map(phase => `<option value="${phase}" ${currentPhase === phase ? 'selected' : ''}>Phase ${phase}</option>`).join('')}
+                        </select>
+                    `;
+                };
+                
                 powerlistContainer.innerHTML = Array.from({ length: 5 }, (_, i) => {
-                    const task = dataForDay.powerList[i] || { text: "", completed: false };
+                    const task = dataForDay.powerList[i] || { text: "", completed: false, phase: "1" };
                     return `
                         <div class="flex items-center bg-gray-800 p-4 rounded-lg">
                             <span class="text-yellow-400 font-bold mr-4">${i + 1}.</span>
+                             ${generatePhaseSelector(i, task.phase)}
                             <input type="text" class="powerlist-input flex-1 bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-yellow-500 text-white" placeholder="Enter critical task #${i + 1}" value="${task.text}" data-index="${i}">
                             <input type="checkbox" class="powerlist-checkbox h-6 w-6 ml-4 bg-gray-700 border-gray-600 rounded text-yellow-500 focus:ring-yellow-500" data-index="${i}" ${task.completed ? 'checked' : ''}>
                         </div>`;
@@ -594,7 +945,9 @@
             }
         }
 
-        async function renderFinances(date) {
+
+         async function renderFinances(date) {
+             const expenseList = document.getElementById('expense-list');
             try {
                 const dataForDay = await getDataForDate(date);
                 if (!dataForDay || !dataForDay.expenses || dataForDay.expenses.length === 0) {
@@ -613,17 +966,23 @@
         }
 
         async function renderTrainingLogs(date) {
+            const workoutLogContainer = document.getElementById('workout-log-container');
             try {
                 const workoutDayKey = getWorkoutDayKey(date);
                 const workoutForDay = workoutData.find(w => w.key === workoutDayKey);
 
                 if (!workoutForDay) {
-                    workoutLogContainer.innerHTML = `<div class="bg-gray-800 p-5 rounded-lg text-center text-gray-400">Rest Day. No workout scheduled.</div>`;
+                    workoutLogContainer.innerHTML = `<div class="bg-gray-800 p-5 rounded-lg text-center text-gray-400">Rest Day or No Workout Scheduled.</div>`;
                     return;
                 }
 
                 let todayData = await getDataForDate(date);
-                const lastWeekData = await getDataForDate(new Date(date.getTime() - 7 * 24 * 60 * 60 * 1000));
+                
+                // Calculate the date of the last corresponding workout (e.g., last Monday if today is Monday)
+                const lastWeekDate = new Date(date.getTime());
+                lastWeekDate.setDate(lastWeekDate.getDate() - 7);
+                const lastWeekData = await getDataForDate(lastWeekDate);
+
 
                 if (!todayData) {
                     console.error("Could not fetch today's training data. Proceeding with an empty log for today.");
@@ -637,7 +996,14 @@
                         <p class="text-gray-400 mb-4">${workoutForDay.focus}</p>
                         <ul class="space-y-4">${workoutForDay.exercises.map(ex => {
                             const logKey = `${workoutDayKey}-${ex.name}`;
-                            const sets = parseInt(ex.details.split(' ')[0]);
+                            
+                            // Use regex to safely find the number of sets
+                            const setsMatch = ex.details.match(/(\d+)\s+sets/i);
+                            const sets = setsMatch ? parseInt(setsMatch[1]) : 0;
+
+                            // Handle "sets to failure" or other non-numeric set definitions
+                            const isFailureBased = ex.details.toLowerCase().includes('failure') || sets === 0;
+
                             return `
                             <li class="border-t border-gray-700 pt-4">
                                 <div class="flex justify-between items-start">
@@ -645,7 +1011,7 @@
                                         <p class="font-semibold text-gray-100">${ex.name}</p>
                                         <p class="text-sm text-gray-400">${ex.details}</p>
                                     </div>
-                                    ${workoutForDay.loggable ? `<div class="flex flex-wrap justify-end space-x-2 mt-2">${Array.from({length: sets}, (_, i) => `<input type="checkbox" class="set-checkbox bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500" data-set-id="${logKey}-${i}" ${todayData.completedSets?.[`${logKey}-${i}`] ? 'checked' : ''}>`).join('')}</div>` : ''}
+                                    ${workoutForDay.loggable && !isFailureBased ? `<div class="flex flex-wrap justify-end space-x-2 mt-2">${Array.from({length: sets}, (_, i) => `<input type="checkbox" class="set-checkbox bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-500" data-set-id="${logKey}-${i}" ${todayData.completedSets?.[`${logKey}-${i}`] ? 'checked' : ''}>`).join('')}</div>` : ''}
                                 </div>
                                 ${workoutForDay.loggable ? `
                                 <div class="grid grid-cols-2 gap-2 items-center mt-2">
@@ -667,9 +1033,16 @@
 
 
         async function renderNextDayWorkoutPreview(date) {
+            const nextDayWorkoutPreview = document.getElementById('next-day-workout-preview');
             const nextDay = new Date(date.getTime() + 24 * 60 * 60 * 1000);
             const workoutDayKey = getWorkoutDayKey(nextDay);
             const workoutForDay = workoutData.find(w => w.key === workoutDayKey);
+            
+            if (!workoutForDay) {
+                nextDayWorkoutPreview.innerHTML = '';
+                return;
+            }
+
             nextDayWorkoutPreview.innerHTML = `
                 <h3 class="text-xl font-semibold mb-4 text-center text-yellow-400">Tomorrow's Battle Plan: ${workoutForDay.title}</h3>
                 <div class="bg-gray-800 p-6 rounded-lg">
@@ -682,16 +1055,22 @@
             const dataForDay = await getDataForDate(date);
             if (!dataForDay) return;
             const amount = dataForDay.water || 0;
-            waterAmountEl.textContent = `${amount.toFixed(1)}L`;
-            waterProgressEl.style.width = `${Math.min((amount / 4.0) * 100, 100)}%`;
+            document.getElementById('water-amount').textContent = `${amount.toFixed(1)}L`;
+            document.getElementById('water-progress').style.width = `${Math.min((amount / 4.0) * 100, 100)}%`;
         }
 
         function updateCurrentTaskHighlight(date) {
             document.querySelectorAll('.task-item.task-current').forEach(item => item.classList.remove('task-current'));
             if (toISODateString(date) !== toISODateString(new Date())) return;
+            
+            // Ensure we only highlight if the currently active day view is the actual schedule for today
+            const dayKey = getDayKeyForDate(date);
+            const activeDayButton = document.querySelector('.day-btn-active');
+            if (activeDayButton && activeDayButton.dataset.day !== dayKey) return;
+
+
             const now = new Date();
             const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-            const dayKey = getDayKeyForDate(now);
             const todaySchedule = schedules[dayKey];
             if (!todaySchedule) return;
             const currentTaskIndex = todaySchedule.findLastIndex(task => currentTime >= task.time);
@@ -703,24 +1082,25 @@
         function setDailyQuote(date) {
             const dayOfYear = (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) - Date.UTC(date.getFullYear(), 0, 0)) / 86400000;
             const quote = quotes[Math.floor(dayOfYear) % quotes.length];
-            dailyQuoteEl.innerHTML = `<em>"${quote.text}"</em><br>- ${quote.author}`;
+            document.getElementById('daily-quote').innerHTML = `<em>"${quote.text}"</em><br>- ${quote.author}`;
         }
 
         function setBibleVerse() {
             const verse = bibleVerses[Math.floor(Math.random() * bibleVerses.length)];
-            bibleVerseEl.innerHTML = `<em>"${verse.text}"</em><br>- ${verse.reference}`;
+            document.getElementById('bible-verse').innerHTML = `<em>"${verse.text}"</em><br>- ${verse.reference}`;
         }
 
         function setMindsetQuote() {
             const quote = mindsetQuotes[Math.floor(Math.random() * mindsetQuotes.length)];
-            mindsetQuoteText.innerHTML = `<em>"${quote.text}"</em><br>- ${quote.author}`;
+            document.getElementById('mindset-quote-text').innerHTML = `<em>"${quote.text}"</em><br>- ${quote.author}`;
         }
 
         async function updateStreakDisplay() {
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
             let streak = 0;
-            for (let i = 0; i < 365; i++) {
+            // Optimized: Limit streak check to 30 days for performance
+            for (let i = 0; i < 30; i++) {
                 const data = await getDataForDate(yesterday);
                 if (data && data.powerList?.every(task => task.completed)) {
                     streak++;
@@ -729,10 +1109,126 @@
             }
             const todayData = await getDataForDate(new Date());
             if (todayData && todayData.powerList?.every(task => task.completed)) streak++;
-            streakCounter.textContent = streak;
+            document.getElementById('streak-counter').textContent = streak;
         }
 
-        // --- EVENT HANDLERS ---
+        // --- EVENT HANDLERS (Updated and New) ---
+
+        // Debounced Save Handlers (500ms delay)
+        const debouncedSaveDailyData = debounce(async (date, data) => {
+            await saveDataForDate(date, data);
+        }, 500);
+
+        const debouncedSaveWeeklyStrategy = debounce(async (date, data) => {
+            await saveWeeklyStrategy(date, data);
+        }, 500);
+
+
+        // Handle Reflection Input (Daily)
+        function handleReflectionInput(e) {
+            if (e.target.matches('.app-textarea') && e.target.closest('#strategy-content')) {
+                getDataForDate(displayedDate).then(data => {
+                    if (data) {
+                        const reflectionKey = e.target.id.split('-')[1]; // e.g., 'wins', 'lessons', 'identity'
+                        if (!data.reflection) data.reflection = {};
+                        data.reflection[reflectionKey] = e.target.value;
+                        // Use debounced save
+                        debouncedSaveDailyData(displayedDate, { reflection: data.reflection });
+                    }
+                });
+            }
+        }
+
+         // Handle Weekly Strategy Input/Change
+        async function handleWeeklyStrategyChange(e) {
+            // Check if the event target is within the strategy content area
+            if (!e.target.closest('#strategy-content')) return;
+
+            const strategy = await getWeeklyStrategy(displayedDate);
+            if (!strategy) return;
+
+            let needsSave = false;
+
+            // Handle Objective Text Input
+            if (e.target.matches('.weekly-objective-input')) {
+                const index = parseInt(e.target.dataset.index);
+                strategy.objectives[index].text = e.target.value;
+                needsSave = true;
+            }
+            // Handle Objective Checkbox Change
+            else if (e.target.matches('.weekly-objective-checkbox')) {
+                const index = parseInt(e.target.dataset.index);
+                strategy.objectives[index].completed = e.target.checked;
+                needsSave = true;
+            }
+            // Handle Crucible Text Input
+            else if (e.target.matches('#crucible-input')) {
+                strategy.crucible.text = e.target.value;
+                needsSave = true;
+            }
+            // Handle Crucible Checkbox Change
+            else if (e.target.matches('#crucible-checkbox')) {
+                strategy.crucible.completed = e.target.checked;
+                needsSave = true;
+            }
+
+            // Save the updated strategy using debounced save for inputs, immediate for checkboxes
+            if (needsSave) {
+                if (e.type === 'input') {
+                    debouncedSaveWeeklyStrategy(displayedDate, strategy);
+                } else {
+                    // Immediate save for checkboxes
+                    saveWeeklyStrategy(displayedDate, strategy);
+                }
+            }
+        }
+
+        // Updated Power List Handler (Text and Phase)
+        function handlePowerListInputChange(e) {
+            const index = parseInt(e.target.dataset.index);
+            if (isNaN(index)) return;
+
+            getDataForDate(displayedDate).then(data => {
+                if (data) {
+                    if (e.target.matches('.powerlist-input')) {
+                        data.powerList[index].text = e.target.value;
+                    } else if (e.target.matches('.powerlist-phase')) {
+                        data.powerList[index].phase = e.target.value;
+                    }
+                    
+                    // Use debounced save for text input, immediate for phase change
+                     if (e.target.matches('.powerlist-input')) {
+                        debouncedSaveDailyData(displayedDate, { powerList: data.powerList });
+                    } else {
+                        // Immediate save for phase dropdown
+                        saveDataForDate(displayedDate, { powerList: data.powerList });
+                    }
+                }
+            });
+        }
+
+         // Handle Save Identity
+        async function handleSaveIdentity() {
+            const saveIdentityBtn = document.getElementById('save-identity-btn');
+            const identitySaveStatus = document.getElementById('identity-save-status');
+            saveIdentityBtn.disabled = true;
+            identitySaveStatus.textContent = "Saving...";
+            const data = {
+                statement: document.getElementById('identity-statement').value.trim(),
+                principles: document.getElementById('identity-principles').value.trim(),
+                antivision: document.getElementById('identity-antivision').value.trim()
+            };
+            const success = await saveUserProfile(data);
+            saveIdentityBtn.disabled = false;
+            if (success) {
+                identitySaveStatus.textContent = "Identity Profile Saved Successfully.";
+                setTimeout(() => identitySaveStatus.textContent = "", 3000);
+            } else {
+                identitySaveStatus.textContent = "Error saving identity. Please try again.";
+            }
+        }
+
+
         function handleCheckboxChange(e) {
             if (e.target.matches('.form-checkbox')) {
                 const taskId = parseInt(e.target.dataset.taskId);
@@ -741,18 +1237,6 @@
                     const newCheckedTasks = new Set(data.checkedTasks);
                     e.target.checked ? newCheckedTasks.add(taskId) : newCheckedTasks.delete(taskId);
                     saveDataForDate(displayedDate, { checkedTasks: Array.from(newCheckedTasks) });
-                });
-            }
-        }
-
-        function handlePowerListTextChange(e) {
-            if (e.target.matches('.powerlist-input')) {
-                const index = parseInt(e.target.dataset.index);
-                getDataForDate(displayedDate).then(data => {
-                    if (data) {
-                        data.powerList[index].text = e.target.value;
-                        saveDataForDate(displayedDate, { powerList: data.powerList });
-                    }
                 });
             }
         }
@@ -774,9 +1258,11 @@
                 const logKey = e.target.dataset.logKey;
                 getDataForDate(displayedDate).then(data => {
                     if (data) {
+                        if (!data.workoutLog) data.workoutLog = {};
                         data.workoutLog[logKey] = e.target.value;
                         e.target.nextElementSibling?.classList.toggle('hidden', !e.target.value);
-                        saveDataForDate(displayedDate, { workoutLog: data.workoutLog });
+                        // Use debounced save for workout logs
+                        debouncedSaveDailyData(displayedDate, { workoutLog: data.workoutLog });
                     }
                 });
             }
@@ -786,7 +1272,7 @@
             if (e.target.matches('.delete-log-btn')) {
                 const logKey = e.target.dataset.logKey;
                 getDataForDate(displayedDate).then(data => {
-                    if (data) {
+                    if (data && data.workoutLog) {
                         delete data.workoutLog[logKey];
                         saveDataForDate(displayedDate, { workoutLog: data.workoutLog }).then(() => renderTrainingLogs(displayedDate));
                     }
@@ -809,6 +1295,11 @@
 
         async function handleAddExpense() {
             if (isSavingExpense) return;
+            const expenseAmount = document.getElementById('expense-amount');
+            const expenseCategory = document.getElementById('expense-category');
+            const expenseDescription = document.getElementById('expense-description');
+            const addExpenseBtn = document.getElementById('add-expense-btn');
+
             const amount = parseFloat(expenseAmount.value);
             if (expenseCategory.value && !isNaN(amount) && amount > 0) {
                 isSavingExpense = true;
@@ -833,6 +1324,8 @@
 
         // --- SETUP, UTILITY & TIMER ---
         function setupTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     tabs.forEach(t => t.classList.remove('tab-active'));
@@ -843,14 +1336,16 @@
                     });
                 });
             });
-            tabs[1].click();
+            // Default to Power Day
+            document.querySelector('[data-tab="powerday"]').click();
         }
 
         function displayScheduleTemplate(dayKey) {
+            const scheduleContainer = document.getElementById('schedule-container');
             const schedule = schedules[dayKey];
             if (!schedule) return;
             scheduleContainer.innerHTML = schedule.map((item, index) => `
-                <div id="task-template-${dayKey}-${index}" class="task-item flex items-center bg-gray-800 p-4 rounded-lg shadow-md">
+                <div id="task-template-${dayKey}-${index}" class="task-item flex items-center bg-gray-800 p-4 rounded-lg shadow-md opacity-70">
                     <div class="w-1/4 sm:w-1/5"><p class="font-mono text-blue-400">${item.time}</p></div>
                     <div class="flex-1">
                         <p class="font-semibold text-gray-100">${item.task}</p>
@@ -861,19 +1356,22 @@
         }
 
         function setupDaySwitcher() {
+            const daySwitcher = document.getElementById('day-switcher');
             daySwitcher.querySelectorAll('.day-btn').forEach(button => {
                 button.addEventListener('click', () => {
-                    // Visually update which button is active
-                    daySwitcher.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('day-btn-active'));
-                    button.classList.add('day-btn-active');
                     
                     const clickedDayKey = button.dataset.day;
                     const currentActualDayKey = getDayKeyForDate(displayedDate);
+
+                    // Visually update which button is active
+                    daySwitcher.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('day-btn-active'));
+                    button.classList.add('day-btn-active');
 
                     if (clickedDayKey === currentActualDayKey) {
                         // If the user clicks the button corresponding to the current date's schedule,
                         // re-render the interactive schedule with their saved data.
                         renderScheduleForDate(displayedDate);
+                        updateCurrentTaskHighlight(displayedDate); // Ensure highlight is updated if it's today
                     } else {
                         // If the user clicks a different day's button, show a static preview template.
                         displayScheduleTemplate(clickedDayKey);
@@ -882,13 +1380,17 @@
             });
         }
 
+
         function updateTimerDisplay() {
+            const timerDisplay = document.getElementById('timer-display');
             const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
             const seconds = (timerSeconds % 60).toString().padStart(2, '0');
             timerDisplay.textContent = `${minutes}:${seconds}`;
         }
 
         function populateFinanceSelectors() {
+            const monthSelect = document.getElementById('month-select');
+            const yearSelect = document.getElementById('year-select');
             const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             const currentYear = new Date().getFullYear();
             
@@ -912,6 +1414,7 @@
         }
         
         function updateTime() {
+            const currentTimeEl = document.getElementById('current-time');
             const now = new Date();
             const options = {
                 hour: '2-digit',
@@ -924,6 +1427,10 @@
         }
 
         async function calculateMonthlyTotal() {
+            const monthlyTotalText = document.getElementById('monthly-total-text');
+            const monthSelect = document.getElementById('month-select');
+            const yearSelect = document.getElementById('year-select');
+
             if (!isAuthReady) {
                 monthlyTotalText.textContent = "Authentication not ready.";
                 return;
@@ -938,6 +1445,9 @@
             monthlyTotalText.textContent = "Calculating...";
 
             try {
+                // This approach iterates through days and fetches documents one by one. 
+                // While Firestore doesn't support aggregation queries directly on the client SDK like this, 
+                // for a personal app with daily data stored by date string, this is the necessary approach.
                 for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
                     const data = await getDataForDate(new Date(d));
                     if (data && data.expenses) {
@@ -965,8 +1475,12 @@
             }
         }
 
-        // --- API CALLS ---
+         // --- API CALLS ---
         async function generateWisdom() {
+            const wisdomText = document.getElementById('wisdom-text');
+            const wisdomLoader = document.getElementById('wisdom-loader');
+            const generateWisdomBtn = document.getElementById('generate-wisdom-btn');
+
             wisdomText.classList.add('hidden');
             wisdomLoader.classList.remove('hidden');
             generateWisdomBtn.disabled = true;
@@ -985,13 +1499,20 @@
             const prompt = `Generate a single, powerful, and direct command or principle for an elite operator building an empire. The tone should be that of a no-nonsense mentor, like Jocko Willink or David Goggins. It must be short, sharp, and immediately actionable. No fluff. No motivational quotes. Just a hard-hitting directive. Focus specifically ${randomTheme}.`;
 
             const isCanvasEnv = typeof __firebase_config !== 'undefined' && __firebase_config.trim() !== '';
+            // Dynamically determining the API endpoint based on the environment (Canvas/Hosted vs Local/Netlify)
             const apiUrl = isCanvasEnv ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=` : `/.netlify/functions/generate-wisdom`;
 
             try {
                 const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
                 const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                
+                if (!response.ok) {
+                     throw new Error(`API request failed with status ${response.status}`);
+                }
+
                 const result = await response.json();
                 
+                // Adapting to different response structures based on the API used
                 const wisdom = result.candidates?.[0]?.content?.parts?.[0]?.text || result.wisdom;
                 if (wisdom) {
                     wisdomText.textContent = wisdom;
@@ -1000,7 +1521,7 @@
                 }
             } catch (error) {
                 console.error("Error fetching wisdom:", error);
-                wisdomText.textContent = "An error occurred. Please check the console.";
+                wisdomText.textContent = "An error occurred. Please check the console or network tab.";
             } finally {
                 wisdomText.classList.remove('hidden');
                 wisdomLoader.classList.add('hidden');
@@ -1009,6 +1530,11 @@
         }
 
         async function simplifyWord() {
+            const wordInput = document.getElementById('word-input');
+            const definitionText = document.getElementById('definition-text');
+            const definitionLoader = document.getElementById('definition-loader');
+            const simplifyWordBtn = document.getElementById('simplify-word-btn');
+
             const word = wordInput.value.trim();
             if (!word) {
                 definitionText.textContent = "Please enter a word.";
@@ -1017,12 +1543,19 @@
             definitionText.classList.add('hidden');
             definitionLoader.classList.remove('hidden');
             simplifyWordBtn.disabled = true;
+            
             const isCanvasEnv = typeof __firebase_config !== 'undefined' && __firebase_config.trim() !== '';
             const apiUrl = isCanvasEnv ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=` : `/.netlify/functions/simplify-word`;
+            
             try {
                 const prompt = `Explain the word "${word}" in very simple terms for someone whose third language is English. Provide a short, easy-to-understand definition.`;
                 const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
                 const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                 
+                if (!response.ok) {
+                     throw new Error(`API request failed with status ${response.status}`);
+                }
+
                 const result = await response.json();
                 const definition = result.candidates?.[0]?.content?.parts?.[0]?.text || result.definition;
                 if (definition) {
@@ -1032,7 +1565,7 @@
                 }
             } catch (error) {
                 console.error("Error simplifying word:", error);
-                definitionText.textContent = "An error occurred. Please check the console.";
+                definitionText.textContent = "An error occurred. Please check the console or network tab.";
             } finally {
                 definitionText.classList.remove('hidden');
                 definitionLoader.classList.add('hidden');
@@ -1040,59 +1573,13 @@
             }
         }
 
-        // --- MAIN INITIALIZATION ---
+        // --- MAIN INITIALIZATION (DOMContentLoaded) ---
         document.addEventListener('DOMContentLoaded', async () => {
-            // Assign all element references
-            mainContent = document.getElementById('main-content');
-            loadingOverlay = document.getElementById('loading-overlay');
-            scheduleContainer = document.getElementById('schedule-container');
-            currentDateEl = document.getElementById('current-date');
-            currentTimeEl = document.getElementById('current-time');
-            todayBtn = document.getElementById('today-btn');
-            dailyQuoteEl = document.getElementById('daily-quote');
-            bibleVerseEl = document.getElementById('bible-verse');
-            tabs = document.querySelectorAll('.tab');
-            tabContents = document.querySelectorAll('.tab-content');
-            daySwitcher = document.getElementById('day-switcher');
-            addWaterBtn = document.getElementById('add-water-btn');
-            waterAmountEl = document.getElementById('water-amount');
-            waterProgressEl = document.getElementById('water-progress');
-            prevDayBtn = document.getElementById('prev-day-btn');
-            nextDayBtn = document.getElementById('next-day-btn');
-            editWaterBtn = document.getElementById('edit-water-btn');
-            waterControlsDefault = document.getElementById('water-controls-default');
-            waterControlsConfirm = document.getElementById('water-controls-confirm');
-            confirmResetBtn = document.getElementById('confirm-reset-btn');
-            cancelResetBtn = document.getElementById('cancel-reset-btn');
-            startTimerBtn = document.getElementById('start-timer-btn');
-            pauseTimerBtn = document.getElementById('pause-timer-btn');
-            resetTimerBtn = document.getElementById('reset-timer-btn');
-            timerDisplay = document.getElementById('timer-display');
-            generateWisdomBtn = document.getElementById('generate-wisdom-btn');
-            wisdomText = document.getElementById('wisdom-text');
-            wisdomLoader = document.getElementById('wisdom-loader');
-            newQuoteBtn = document.getElementById('new-quote-btn');
-            mindsetQuoteText = document.getElementById('mindset-quote-text');
-            powerlistContainer = document.getElementById('powerlist-container');
-            streakCounter = document.getElementById('streak-counter');
-            addExpenseBtn = document.getElementById('add-expense-btn');
-            expenseList = document.getElementById('expense-list');
-            workoutLogContainer = document.getElementById('workout-log-container');
-            wordInput = document.getElementById('word-input');
-            simplifyWordBtn = document.getElementById('simplify-word-btn');
-            definitionText = document.getElementById('definition-text');
-            definitionLoader = document.getElementById('definition-loader');
-            monthSelect = document.getElementById('month-select');
-            yearSelect = document.getElementById('year-select');
-            calculateTotalBtn = document.getElementById('calculate-total-btn');
-            monthlyTotalText = document.getElementById('monthly-total-text');
-            expenseCategory = document.getElementById('expense-category');
-            expenseAmount = document.getElementById('expense-amount');
-            expenseDescription = document.getElementById('expense-description');
-            nextDayWorkoutPreview = document.getElementById('next-day-workout-preview');
             
+            // Firebase Initialization
             let firebaseConfig;
             let initialAuthToken;
+            // Check if running in the Canvas environment (detecting injected variables)
             const isCanvasEnv = typeof __firebase_config !== 'undefined' && __firebase_config.trim() !== '';
             if (isCanvasEnv) {
                 try {
@@ -1103,6 +1590,8 @@
                     console.error("Canvas Firebase config error", e);
                 }
             }
+            
+            // Fallback configuration (for local development or hosting outside Canvas)
             if (!firebaseConfig) {
                 firebaseConfig = { apiKey: "AIzaSyC0eAiglVV-ucbsNeC1UmnNs_xxa-hgOh4", authDomain: "hanuzzi.firebaseapp.com", projectId: "hanuzzi", storageBucket: "hanuzzi.appspot.com", messagingSenderId: "223419940249", appId: "1:223419940249:web:a5b346892e67d6df312708" };
                 appId = firebaseConfig.appId;
@@ -1112,6 +1601,7 @@
             db = getFirestore(app);
             auth = getAuth(app);
 
+            // Authentication State Listener
             onAuthStateChanged(auth, user => {
                 if (user) {
                     userId = user.uid;
@@ -1119,16 +1609,17 @@
                     console.log("Authenticated with UID:", userId);
                     renderUIForDate(displayedDate).catch(err => {
                         console.error("Critical rendering error:", err);
-                        mainContent.innerHTML = `<div class="text-red-500 text-center p-8">A critical error occurred. Please refresh the page.</div>`;
+                        document.getElementById('main-content').innerHTML = `<div class="text-red-500 text-center p-8">A critical error occurred. Please refresh the page.</div>`;
                     });
                 } else {
                     isAuthReady = false;
                 }
             });
             
+            // Perform Sign-in
             try {
                 if (initialAuthToken) await signInWithCustomToken(auth, initialAuthToken);
-                else await signInAnonymously(auth);
+                else await signInAnonymously(auth); // Anonymous auth for non-Canvas environments
             } catch (error) {
                 console.error("Authentication failed:", error);
                 document.body.innerHTML = '<div class="text-red-500 text-center p-8">Authentication failed. Please refresh.</div>';
@@ -1140,13 +1631,44 @@
             setupDaySwitcher();
             populateFinanceSelectors();
             
-            // Event Delegation for dynamic content
+            // Event Delegation Setup
+            const mainContent = document.getElementById('main-content');
+            const scheduleContainer = document.getElementById('schedule-container');
+            const powerlistContainer = document.getElementById('powerlist-container');
+            const workoutLogContainer = document.getElementById('workout-log-container');
+            const expenseList = document.getElementById('expense-list');
+
+
+            // Strategy Handlers (Daily Reflection and Weekly Strategy)
+            // Using 'input' for textareas (triggers debounce) and 'change' for checkboxes (triggers immediate save)
+            mainContent.addEventListener('input', handleReflectionInput);
+            mainContent.addEventListener('input', handleWeeklyStrategyChange);
+            mainContent.addEventListener('change', handleWeeklyStrategyChange);
+
+            // Power List Handlers
+            powerlistContainer.addEventListener('input', handlePowerListInputChange);
+            powerlistContainer.addEventListener('change', (e) => {
+                 if (e.target.matches('.powerlist-checkbox')) {
+                    handlePowerListCheckChange(e);
+                } else if (e.target.matches('.powerlist-phase')) {
+                    handlePowerListInputChange(e); // Handles phase dropdown change
+                }
+            });
+
+            // Identity Handler
+            document.getElementById('save-identity-btn').addEventListener('click', handleSaveIdentity);
+
+            // Schedule Handlers
             scheduleContainer.addEventListener('change', handleCheckboxChange);
-            powerlistContainer.addEventListener('input', handlePowerListTextChange);
-            powerlistContainer.addEventListener('change', handlePowerListCheckChange);
+
+            // Workout Handlers
             workoutLogContainer.addEventListener('input', handleWorkoutLogChange);
             workoutLogContainer.addEventListener('click', handleWorkoutLogDelete);
             workoutLogContainer.addEventListener('change', handleSetCheckboxChange);
+
+            // Finance Handlers
+            document.getElementById('add-expense-btn').addEventListener('click', handleAddExpense);
+            document.getElementById('calculate-total-btn').addEventListener('click', calculateMonthlyTotal);
             expenseList.addEventListener('click', e => {
                 if (e.target.matches('.expense-delete-btn')) {
                     const index = parseInt(e.target.dataset.index);
@@ -1160,16 +1682,13 @@
                 }
             });
 
-            // Static element listeners
-            generateWisdomBtn.addEventListener('click', generateWisdom);
-            simplifyWordBtn.addEventListener('click', simplifyWord);
-            newQuoteBtn.addEventListener('click', setMindsetQuote);
-            todayBtn.addEventListener('click', () => { displayedDate = new Date(); renderUIForDate(displayedDate); });
-            calculateTotalBtn.addEventListener('click', calculateMonthlyTotal);
-            addExpenseBtn.addEventListener('click', handleAddExpense);
-            prevDayBtn.addEventListener('click', () => { displayedDate.setDate(displayedDate.getDate() - 1); renderUIForDate(displayedDate); });
-            nextDayBtn.addEventListener('click', () => { displayedDate.setDate(displayedDate.getDate() + 1); renderUIForDate(displayedDate); });
-            addWaterBtn.addEventListener('click', () => {
+            // Date Navigation
+            document.getElementById('today-btn').addEventListener('click', () => { displayedDate = new Date(); renderUIForDate(displayedDate); });
+            document.getElementById('prev-day-btn').addEventListener('click', () => { displayedDate.setDate(displayedDate.getDate() - 1); renderUIForDate(displayedDate); });
+            document.getElementById('next-day-btn').addEventListener('click', () => { displayedDate.setDate(displayedDate.getDate() + 1); renderUIForDate(displayedDate); });
+            
+            // Water Tracker Handlers
+            document.getElementById('add-water-btn').addEventListener('click', () => {
                 getDataForDate(displayedDate).then(data => {
                     if (data) {
                         data.water = (data.water || 0) + 0.5;
@@ -1177,16 +1696,18 @@
                     }
                 });
             });
-            editWaterBtn.addEventListener('click', () => { waterControlsDefault.classList.add('hidden'); waterControlsConfirm.classList.remove('hidden'); });
-            cancelResetBtn.addEventListener('click', () => { waterControlsDefault.classList.remove('hidden'); waterControlsConfirm.classList.add('hidden'); });
-            confirmResetBtn.addEventListener('click', () => {
+            document.getElementById('edit-water-btn').addEventListener('click', () => { document.getElementById('water-controls-default').classList.add('hidden'); document.getElementById('water-controls-confirm').classList.remove('hidden'); });
+            document.getElementById('cancel-reset-btn').addEventListener('click', () => { document.getElementById('water-controls-default').classList.remove('hidden'); document.getElementById('water-controls-confirm').classList.add('hidden'); });
+            document.getElementById('confirm-reset-btn').addEventListener('click', () => {
                 saveDataForDate(displayedDate, { water: 0 }).then(() => {
                     updateWaterDisplayForDate(displayedDate);
-                    waterControlsDefault.classList.remove('hidden');
-                    waterControlsConfirm.classList.add('hidden');
+                    document.getElementById('water-controls-default').classList.remove('hidden');
+                    document.getElementById('water-controls-confirm').classList.add('hidden');
                 });
             });
-            startTimerBtn.addEventListener('click', () => {
+
+            // Timer Handlers
+            document.getElementById('start-timer-btn').addEventListener('click', () => {
                 clearInterval(timerInterval);
                 timerInterval = setInterval(() => {
                     timerSeconds--;
@@ -1194,23 +1715,28 @@
                     if (timerSeconds <= 0) clearInterval(timerInterval);
                 }, 1000);
             });
-            pauseTimerBtn.addEventListener('click', () => clearInterval(timerInterval));
-            resetTimerBtn.addEventListener('click', () => {
+            document.getElementById('pause-timer-btn').addEventListener('click', () => clearInterval(timerInterval));
+            document.getElementById('reset-timer-btn').addEventListener('click', () => {
                 clearInterval(timerInterval);
                 timerSeconds = 60;
                 updateTimerDisplay();
             });
+
+            // Wisdom Handlers
+            document.getElementById('generate-wisdom-btn').addEventListener('click', generateWisdom);
+            document.getElementById('simplify-word-btn').addEventListener('click', simplifyWord);
+            document.getElementById('new-quote-btn').addEventListener('click', setMindsetQuote);
+
 
             // --- SETUP TIMERS ---
             setBibleVerse();
             setMindsetQuote();
             updateTime();
             setInterval(updateTime, 1000);
-            setInterval(setBibleVerse, 600000);
-            setInterval(() => updateCurrentTaskHighlight(new Date()), 60000);
+            setInterval(setBibleVerse, 600000); // Update verse every 10 mins
+            setInterval(() => updateCurrentTaskHighlight(new Date()), 60000); // Update task highlight every minute
         });
 
     </script>
 </body>
 </html>
-

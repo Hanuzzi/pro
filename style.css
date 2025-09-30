@@ -1,0 +1,273 @@
+/* Global Reset and Variables - The Austerity Mandate */
+:root {
+    /* Color: Stark, Brutal, Uncompromising. */
+    --color-accent: #FF0000; /* Blood Red. Uncompromising. */
+    --color-accent-hover: #990000;
+    --color-bg-main: #000000; /* Absolute Black. */
+    --color-bg-secondary: #1a1a1a; /* Oppressive Gray. */
+    --color-text: #FFFFFF; /* Stark White. */
+    /* Font: Functional, Monotonous, Stark. Elegance is rejected. */
+    --font-header: 'Courier New', Courier, monospace;
+    --font-body: 'Courier New', Courier, monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    /* Comfort is rejected. No smooth scrolling. */
+    scroll-behavior: auto;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-bg-main);
+    color: var(--color-text);
+    line-height: 1.4; /* Compressed line height. Less comfort. */
+}
+
+/* Utility Classes */
+.container {
+    max-width: 1000px; /* Narrower focus. */
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Header and Navigation */
+header {
+    background-color: var(--color-bg-main);
+    border-bottom: 1px solid var(--color-text);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: var(--font-header);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-text);
+    text-transform: uppercase;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav a {
+    color: var(--color-text);
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+/* No transition effects. Aesthetics are Trivialities. */
+nav a:hover {
+    color: var(--color-accent);
+}
+
+.channel-link {
+    font-weight: 700;
+}
+
+/* Main Content */
+main {
+    padding: 2rem 0;
+}
+
+h1, h2, h3 {
+    font-family: var(--font-header);
+    margin-bottom: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* Introduction Section */
+.intro {
+    text-align: left; /* Centered text is weak. */
+    margin-bottom: 3rem;
+    padding: 1.5rem;
+    background-color: var(--color-bg-secondary);
+    /* Rounded corners and shadows are Bribes. */
+    border-radius: 0;
+    border: 1px solid var(--color-text);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+.intro p {
+    margin-bottom: 1rem;
+}
+
+.disclosure-top {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: #aaa;
+    border-top: 1px solid #444;
+    padding-top: 1rem;
+}
+
+/* Category Sections */
+.category-section {
+    margin-bottom: 3rem;
+}
+
+/* Styling for the descriptive text added in the HTML revision */
+.category-section > p {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+h2 {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-accent);
+}
+
+/* Featured Video Container */
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    background: #000;
+    border-radius: 0;
+    box-shadow: none;
+    border: 1px solid var(--color-text);
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Product Grid */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Product Cards */
+.product-card {
+    background-color: var(--color-bg-secondary);
+    padding: 1rem;
+    border: 1px solid #444;
+    border-radius: 0;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    transition: none; /* Movement is a distraction. */
+}
+
+/* Stop seeking dopamine hits from Trivialities. */
+.product-card:hover {
+    transform: none;
+    border-color: var(--color-text);
+}
+
+.product-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0;
+    margin-bottom: 1rem;
+    object-fit: cover;
+    align-self: center;
+    filter: grayscale(100%); /* Color is a Bribe. */
+}
+
+h3 {
+    font-size: 1.1rem;
+    color: var(--color-text);
+}
+
+.product-card p {
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+    font-size: 0.9rem;
+}
+
+/* Affiliate Button */
+.buy-button {
+    display: inline-block;
+    background-color: var(--color-accent);
+    color: #000;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 0;
+    text-align: center;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: none;
+}
+
+.buy-button:hover {
+    background-color: var(--color-accent-hover);
+    color: #fff;
+}
+
+/* Footer */
+footer {
+    background-color: var(--color-bg-main);
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-top: 3rem;
+    border-top: 1px solid var(--color-text);
+}
+
+/* Responsive Design (Mobile) - Function over Form */
+@media (max-width: 768px) {
+    header .container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .logo {
+        margin-bottom: 1rem;
+    }
+
+    nav ul {
+        /* Functional wrapping, not aesthetic refinement. */
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    nav ul li {
+        margin: 0.5rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+}
